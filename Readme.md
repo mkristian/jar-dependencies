@@ -1,12 +1,12 @@
-# jar-depedencies #
+# jar-dependencies #
 
 manage jar dependencies for gems and keep track which jar was already loaded using maven artifact coordinates. it warns on version conflicts and loads only ONE jar assuming the first one is compatible to the second one otherwise your project needs to lock down the right version.
 
 # create a gem with jar dependencies #
 
-see add you jar dependency declaration in gemspec via the **requirements**, see [sample.gemspec](sample.gemspec). add the **Rakefile** as extension and using the **setup** tasks from [ruby-maven](rubygems.org/gem/ruby-maven) to install the jar dependencies on installation of the gem.
+see add you jar dependency declaration in gemspec via the **requirements**, see [sample.gemspec](sample.gemspec). add the **Rakefile** as extension and using the **setup** tasks from [ruby-maven](http://rubygems.org/gem/ruby-maven) to install the jar dependencies on installation of the gem - see [sample.Rakefile](sample.Rakefile).
 
-the gem itself also needs **jar-dependencies** as runtime-dependency since that is used to load the jar or let [jbundler](rubygems.org/gem/jbundler) or similar frameworks deal with the jar dependencies.
+the gem itself also needs **jar-dependencies** as runtime-dependency since that is used to load the jar or let [jbundler](http://rubygems.org/gem/jbundler) or similar frameworks deal with the jar dependencies.
 
 # motivation #
 
