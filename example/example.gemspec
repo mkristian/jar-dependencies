@@ -1,19 +1,19 @@
 #-*- mode: ruby -*-
 
 Gem::Specification.new do |s|
-  s.name = 'sample'
+  s.name = 'example'
   s.version = "2"
-  s.author = 'sample person'
+  s.author = 'example person'
   s.email = [ 'mail@example.com' ]
   s.summary = 'gem with jar'
   s.description = 'gem with empty jar and jar dependencies'
 
-  s.extensions << 'Rakefile'
+  s.extensions << 'ext/extconf.rb'
 
   s.files << Dir[ 'lib/**/*.rb' ]
   s.files << Dir[ 'lib/**/*.jar' ]
   s.files << Dir[ '*file' ]
-  s.files << 'sample.gemspec'
+  s.files << 'example.gemspec'
 
   s.add_runtime_dependency 'jar-dependencies', '0.0.1'
 
@@ -22,4 +22,3 @@ Gem::Specification.new do |s|
 end
 
 # vim: syntax=Ruby
-

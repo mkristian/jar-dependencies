@@ -1,0 +1,5 @@
+
+The following files have been resolved:
+   org.bouncycastle:bcpkix-jdk15on:jar:1.49:compile:/usr/local/repository/org/bouncycastle/bcpkix-jdk15on/1.49/bcpkix-jdk15on-1.49.jar
+   org.bouncycastle:bcprov-jdk15on:jar:1.49:compile:/usr/local/repository/org/bouncycastle/bcprov-jdk15on/1.49/bcprov-jdk15on-1.49.jar
+

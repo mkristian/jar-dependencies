@@ -1,0 +1,13 @@
+#-*- mode: ruby -*-
+
+require 'maven/ruby/tasks'
+require 'maven/ruby/gem_setup'
+
+task :default => :maven
+
+# overwrites empty tasks from ruby-maven
+task :maven do
+  Maven::Ruby::GemSetup.setup( 'example.gemspec' )
+end
+
+# vim: syntax=Ruby
