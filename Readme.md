@@ -16,6 +16,8 @@ the gem is tiny on purpose since the all gems with jar dependencies should use a
 
 see add you jar dependency declaration in gemspec via the **requirements**, see [example.gemspec](example/example.gemspec). create an extension **ext/extconf.rb** and use the **setup** from [ruby-maven](http://rubygems.org/gem/ruby-maven) to install the jar dependencies on installation of the gem - see [ext/extconf.rb](example/ext/extconf.rb). this setup will create **{gem.name}\_jars.rb** inside the lib directory (**require_path** of the gemspec) of your gem .
 
+note: you need ruby-maven-3.1.1.0.3.dev or newer for the GemSetup class
+
 your gem just need require this **{gem.name}_jars.rb** in your code whenever you want to load these jars (see [lib/example.rb](example/lib/example.rb)).
 
 the gem itself also needs the **jar-dependencies** gem as runtime-dependency since that is used to load the jar or let [jbundler](http://rubygems.org/gem/jbundler) or similar frameworks deal with the jar dependencies.
