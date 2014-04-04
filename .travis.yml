@@ -1,0 +1,17 @@
+language: ruby
+bundler_args: --without copyright
+rvm:
+  - jruby-18mode
+  - jruby-19mode
+  - jruby-20mode
+jdk:
+  - openjdk6
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
+matrix:
+  include:
+    - rvm: jruby-head
+      jdk: openjdk7
+  allow_failures:
+    - rvm: jruby-head

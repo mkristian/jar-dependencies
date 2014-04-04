@@ -19,32 +19,27 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-def require_jar( groupId, artifactId, *classifier_version )
-  require_jarfile( nil, groupId, artifactId, *classifier_version )
+def require_jar( group_id, artifact_id, *classifier_version )
+  require_jarfile( nil, group_id, artifact_id, *classifier_version )
 end
 
-def require_jarfile( file, groupId, artifactId, *classifier_version )
-  skip = java.lang.System.get_property( 'jruby.skip.jars' ) || ENV[ 'JRUBY_SKIP_JARS' ] || java.lang.System.get_property( 'jbundler.skip' ) || ENV[ 'JBUNDLER_SKIP' ]
+def require_jarfile( file, group_id, artifact_id, *classifier_version )
+  skip = java.lang.System.get_property( 'jruby.jars.skip' ) || ENV[ 'JRUBY_JARS_SKIP' ] || java.lang.System.get_property( 'jbundler.skip' ) || ENV[ 'JBUNDLER_SKIP' ]
   return false if skip == 'true'
 
-  if classifier_version.size == 1
-    version = classifier_version[ 0 ]
-    classifier = nil
-  else
-    version = classifier_version[ 1 ]
-    classifier = classifier_version[ 0 ]
-  end
+  version = classifier_version[ -1 ]
+  classifier = classifier_version[ -2 ]
 
   # if no file given than it is vendored
   # if the file does not exists we assume it is vendored
   if file.nil? || !File.exists?( file )
-    file = "#{groupId}/#{artifactId}-#{version}"
+    file = "#{group_id.gsub( /\./, '/' )}/#{artifact_id}/#{version}/#{artifact_id}-#{version}"
     file += "-#{classifier}" if classifier
     file += '.jar'
   end
 
   @@jars ||= {}
-  coordinate = "#{groupId}:#{artifactId}"
+  coordinate = "#{group_id}:#{artifact_id}"
   coordinate += ":#{classifier}" if classifier
   if @@jars.key? coordinate
     if @@jars[ coordinate ] != version
@@ -52,16 +47,11 @@ def require_jarfile( file, groupId, artifactId, *classifier_version )
     end
     false
   else
-    begin
-      if require file
-        @@jars[ coordinate ] = version
-        true
-      else
-        raise LoadError.new( "coordindate #{coordinate} not found" )
-      end
-    rescue LoadError => e
-      warn 'you might need to restall that gem which needs the missing jar'
-      raise e
-    end
+    require file
+    @@jars[ coordinate ] = version
+    true
   end
+rescue LoadError => e
+  warn 'you might need to reinstall the gem which depends on the missing jar'
+  raise e
 end

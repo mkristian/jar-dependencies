@@ -1,2 +1,4 @@
 pkg
-*.jar
+# no Gemfile.lock
+*.lock
+.ruby-version

@@ -8,14 +8,11 @@ Gem::Specification.new do |s|
   s.summary = 'gem with jar'
   s.description = 'gem with empty jar and jar dependencies'
 
-  s.extensions << 'ext/extconf.rb'
-
-  s.files << Dir[ 'lib/**/*.rb' ]
-  s.files << Dir[ 'lib/**/*.jar' ]
+  s.files << Dir[ 'lib/**/*.rb' ].reject{ |d| d == 'lib/example_jars.rb' }
   s.files << Dir[ '*file' ]
   s.files << 'example.gemspec'
 
-  s.add_runtime_dependency 'jar-dependencies', '0.0.1'
+  s.add_runtime_dependency 'jar-dependencies', '~>0.0.2'
 
   s.requirements << "jar org.bouncycastle:bcpkix-jdk15on, 1.49"
   s.requirements << "jar org.bouncycastle:bcprov-jdk15on, 1.49"

@@ -1,4 +1,4 @@
-require 'example_jars.rb'
+require 'example_jars'
 require 'example.jar'
 
 Java::App.new
