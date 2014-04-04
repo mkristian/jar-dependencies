@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
 
   s.description = 'manage jar dependencies for gems and keep track which jar was already loaded using maven artifact coordinates. it warns on version conflicts and loads only ONE jar assuming the first one is compatible to the second one otherwise your project needs to lock down the right version.'
 
+  s.add_runtime_dependency 'rake', '~> 10.2.2'
   s.add_runtime_dependency 'ruby-maven', '~> 3.1.1.0'
 end
 
