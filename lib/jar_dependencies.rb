@@ -24,9 +24,6 @@ def require_jar( group_id, artifact_id, *classifier_version )
 end
 
 def require_jarfile( file, group_id, artifact_id, *classifier_version )
-  skip = java.lang.System.get_property( 'jruby.jars.skip' ) || ENV[ 'JRUBY_JARS_SKIP' ] || java.lang.System.get_property( 'jbundler.skip' ) || ENV[ 'JBUNDLER_SKIP' ]
-  return false if skip == 'true'
-
   version = classifier_version[ -1 ]
   classifier = classifier_version[ -2 ]
 
@@ -52,6 +49,6 @@ def require_jarfile( file, group_id, artifact_id, *classifier_version )
     true
   end
 rescue LoadError => e
-  warn 'you might need to reinstall the gem which depends on the missing jar'
+  warn 'you might need to reinstall the gem which depends on the missing jar.'
   raise e
 end

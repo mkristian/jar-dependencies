@@ -62,6 +62,7 @@ describe JarInstaller do
   end
 
   it 'does install_jars and vendor_jars' do
+    ENV[ 'JRUBY_JARS_VENDOR' ] = nil
     jar = JarInstaller.new( example_spec )
     jar.install_jars
     jar.vendor.must_equal false

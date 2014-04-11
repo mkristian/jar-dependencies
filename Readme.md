@@ -1,26 +1,25 @@
 # jar-dependencies #
 
-manage jar dependencies for gems and keep track which jar was already loaded using maven artifact coordinates. it warns on version conflicts and loads only ONE jar assuming the first one is compatible to the second one otherwise your project needs to lock down the right version.
+add gem dependencies for jar files to ruby gems.
 
-via environment variable or system properties the jar loading can be switched of completely, allowing the servlet container or jbundler or any other container to take care of the jar loading.
+## features ##
 
-in case the jars are vendored using the following path convention
+    * vendors jar dependencies during installion of the gem
+	* jar dependencies are declared in the gemspec of the gem
+	* jar declaration uses the same notations as jbundler
+	* transitive jar dependencies will be resolved as well
+	* when there are two gems with different versions of the same jar dependency an warning will be given and the first version wins, i.e. no two versions of the same jar in the jruby-classloader
+	* it hooks into gem, i.e. once the jar-dependency gem is installed the feature can be used by any gem
 
-**{group\_id}/{artifact\_id}-{version}.jar**
+## some drawbacks ##
 
-it will be loaded in case the local maven repository does not have it (maybe the preference should be the other way around ?).
+    * first you need to install the jar-dependency gem with its development dependencies installed
+	* bundler does not install the jar-dependencies
+	* gems need an extra dependency on jar-dependencies during runtime and for development and installation you need ruby-maven installed as well(which you get via the development dependencies)
 
-the gem is tiny on purpose since the all gems with jar dependencies should use and funny double loaded jars can be avoided in future. also java project using the jruby ScriptingContainer can manage their jar dependencies including those coming from the gem files.
+## just look at the example ##
 
-# create a gem with jar dependencies #
-
-see add you jar dependency declaration in gemspec via the **requirements**, see [example.gemspec](example/example.gemspec). create an extension **ext/extconf.rb** and use the **setup** from [ruby-maven](http://rubygems.org/gem/ruby-maven) to install the jar dependencies on installation of the gem - see [ext/extconf.rb](example/ext/extconf.rb). this setup will create **{gem.name}\_jars.rb** inside the lib directory (**require_path** of the gemspec) of your gem .
-
-note: you need ruby-maven-3.1.1.0.3.dev or newer for the GemSetup class
-
-your gem just need require this **{gem.name}_jars.rb** in your code whenever you want to load these jars (see [lib/example.rb](example/lib/example.rb)).
-
-the gem itself also needs the **jar-dependencies** gem as runtime-dependency since that is used to load the jar or let [jbundler](http://rubygems.org/gem/jbundler) or similar frameworks deal with the jar dependencies.
+the [readme.md](example/Readme.md) walks you through an example and shows how development works and shows what happens during installation.
 
 # motivation #
 

@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.description = 'gem with empty jar and jar dependencies'
 
   s.files << Dir[ 'lib/**/*.rb' ].reject{ |d| d == 'lib/example_jars.rb' }
+  s.files << 'lib/example.jar'
   s.files << Dir[ '*file' ]
   s.files << 'example.gemspec'
 
