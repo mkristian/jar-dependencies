@@ -6,8 +6,8 @@ add gem dependencies for jar files to ruby gems.
 
     * vendors jar dependencies during installion of the gem
 	* jar dependencies are declared in the gemspec of the gem
-	* jar declaration uses the same notations as jbundler
-	* transitive jar dependencies will be resolved as well
+	* jar declaration uses the same notation as jbundler
+	* transitive jar dependencies will be resolved as well using maven
 	* when there are two gems with different versions of the same jar dependency an warning will be given and the first version wins, i.e. no two versions of the same jar in the jruby-classloader
 	* it hooks into gem, i.e. once the jar-dependency gem is installed the feature can be used by any gem
 

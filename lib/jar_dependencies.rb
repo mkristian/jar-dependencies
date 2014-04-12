@@ -19,35 +19,77 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-def require_jar( group_id, artifact_id, *classifier_version )
-  require_jarfile( nil, group_id, artifact_id, *classifier_version )
-end
+module Jars
+  def self.home
+    if @_jars_home_.nil?
+      if ENV.key?( 'JARS_HOME' )
+        @_jars_home_ = File.expand_path( ENV['JARS_HOME'] )
+      else
+        begin
+          require 'rexml/document'
+          settings = File.join( ENV[ 'HOME' ], '.m2', 'settings.xml' )
+          doc = REXML::Document.new( File.read( settings ) )
+          REXML::XPath.first( doc, "//settings/localRepository").tap do |e|  
+            @_jars_home_ = e.text.sub( /\\/, '/') if e
+          end
+        rescue
+          # ignore
+        end
+      end
+      @_jars_home_ ||= File.join( ENV[ 'HOME' ], '.m2', 'repository' )
+    end
+    @_jars_home_
+  end
 
-def require_jarfile( file, group_id, artifact_id, *classifier_version )
-  version = classifier_version[ -1 ]
-  classifier = classifier_version[ -2 ]
+  def self.require_jar( group_id, artifact_id, *classifier_version )
+    version = classifier_version[ -1 ]
+    classifier = classifier_version[ -2 ]
 
-  # if no file given than it is vendored
-  # if the file does not exists we assume it is vendored
-  if file.nil? || !File.exists?( file )
+    @@jars ||= {}
+    coordinate = "#{group_id}:#{artifact_id}"
+    coordinate += ":#{classifier}" if classifier
+    if @@jars.key? coordinate
+      if @@jars[ coordinate ] == version
+        false
+      else
+        # version of already registered jar
+        @@jars[ coordinate ]
+      end
+    else
+      @@jars[ coordinate ] = version
+      do_require( group_id, artifact_id, version, classifier )
+    end
+  end
+
+  private
+
+  def self.to_jar( group_id, artifact_id, version, classifier )
     file = "#{group_id.gsub( /\./, '/' )}/#{artifact_id}/#{version}/#{artifact_id}-#{version}"
     file += "-#{classifier}" if classifier
     file += '.jar'
+    file
   end
 
-  @@jars ||= {}
-  coordinate = "#{group_id}:#{artifact_id}"
-  coordinate += ":#{classifier}" if classifier
-  if @@jars.key? coordinate
-    if @@jars[ coordinate ] != version
-      warn "coordinate #{coordinate} already loaded with version #{@@jars[ coordinate ]}"
+  def self.do_require( *args )
+    jar = to_jar( *args )
+    file = File.join( home, jar )
+    # use jar from local repository if exists
+    if File.exists?( file )
+      require file
+    else
+      # otherwise try to find it on the load path
+      require jar
     end
-    false
-  else
-    require file
-    @@jars[ coordinate ] = version
-    true
   end
+end
+
+def require_jar( *args )
+  result = Jars.require_jar( *args )
+  if result.is_a? String
+    warn "jar coordinate #{args.join( ':' )} already loaded with version #{result}"
+    return false
+  end
+  result
 rescue LoadError => e
   warn 'you might need to reinstall the gem which depends on the missing jar.'
   raise e

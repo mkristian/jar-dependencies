@@ -2,11 +2,13 @@ require 'setup'
 require 'jar_installer'
 require 'fileutils'
 class JarInstaller
-  def do_install( vendor )
+  def do_install( vendor, write )
     @vendor = vendor
+    @write = write
   end
 
   attr_reader :vendor
+  attr_reader :write
 end
 describe JarInstaller do
 
@@ -35,8 +37,8 @@ describe JarInstaller do
     deps = JarInstaller.load_from_maven( file )
     JarInstaller.install_deps( deps, dir, jars, false )
     File.read( jars ).each_line do |line|
-      if line.size > 30
-        line.match( /^require_jarfile\(/ ).wont_be_nil
+      if line.size > 30 && !line.match( /^#/ )
+        line.match( /^require_jar\(/ ).wont_be_nil
       end
     end
     Dir[ File.join( dir, '**' ) ].size.must_equal 1
@@ -46,7 +48,7 @@ describe JarInstaller do
     deps = JarInstaller.load_from_maven( file )
     JarInstaller.install_deps( deps, dir, jars, true )
     File.read( jars ).each_line do |line|
-      if line.size > 30
+      if line.size > 30 && !line.match( /^#/ )
         line.match( /^require_jar\(/ ).wont_be_nil
       end
     end

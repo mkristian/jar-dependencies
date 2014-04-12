@@ -55,23 +55,28 @@ class JarInstaller
   end
 
   def self.install_deps( deps, dir, require_filename, vendor )
-    FileUtils.mkdir_p( File.dirname( require_filename ) )
-    File.open( require_filename, 'w' ) do |f|
-      f.puts "require 'jar_dependencies'"
-      f.puts
-      deps.each do |dep|
-        next if dep.type != :jar || dep.scope != :runtime
-        args = dep.gav.gsub( /:/, "', '" )
-        if vendor
-          vendored = File.join( dir, dep.path )
-          FileUtils.mkdir_p( File.dirname( vendored ) )
-          FileUtils.cp( dep.file, vendored )
-          f.puts( "require_jar( '#{args}' )" )
-        else
-          f.puts( "require_jarfile( '#{dep.file}', '#{args}' )" )
-        end
+    if require_filename
+      FileUtils.mkdir_p( File.dirname( require_filename ) )
+      comment = '# this is a generated file, to avoid over-writing it just delete this comment'
+      if ! File.exists?( require_filename ) || File.read( require_filename ).match( comment )
+        f = File.open( require_filename, 'w' )
+        f.puts comment
+        f.puts "require 'jar_dependencies'"
+        f.puts
       end
     end
+    deps.each do |dep|
+      next if dep.type != :jar || dep.scope != :runtime
+      args = dep.gav.gsub( /:/, "', '" )
+      if vendor
+        vendored = File.join( dir, dep.path )
+        FileUtils.mkdir_p( File.dirname( vendored ) )
+        FileUtils.cp( dep.file, vendored )
+      end
+      f.puts( "require_jar( '#{args}' )" ) if f
+    end
+  ensure
+    f.close if f
   end
 
   def initialize( spec = nil )
@@ -100,24 +105,25 @@ class JarInstaller
   def vendor_jars
     return if @spec.requirements.empty?
     really_vendor = java.lang.System.get_property( 'jruby.jars.vendor' ) || ENV[ 'JRUBY_JARS_VENDOR' ] || 'true'
-    do_install( really_vendor == 'true' )
+    do_install( really_vendor == 'true', false )
   end
 
   def install_jars
     return if @spec.requirements.empty?
-    do_install( false )
+    do_install( false, true )
   end
 
   private
 
-  def do_install( vendor )
+  def do_install( vendor, write_require_file )
     vendor_dir = File.join( @basedir, @spec.require_path )
-    jars_file = File.join( vendor_dir, "#{@spec.name}_jars.rb" )
+    if write_require_file
+      jars_file = File.join( vendor_dir, "#{@spec.name}_jars.rb" )
 
-    return if File.exists?( jars_file ) && 
-      File.mtime( @specfile ) < File.mtime( jars_file )
-
-    self.class.install_deps( install_dependencies, vendor_dir, 
+      return if File.exists?( jars_file ) && 
+        File.mtime( @specfile ) < File.mtime( jars_file )
+    end
+    self.class.install_deps( install_dependencies, vendor_dir,
                              jars_file, vendor )
   end
 
@@ -143,7 +149,13 @@ class JarInstaller
 EOF
 
     maven = Maven::Ruby::Maven.new
-    maven.exec 'dependency:list', "-DoutputFile=#{deps}", '-DincludeScope=runtime', '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile, '--quiet'
+    args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DincludeScope=runtime', '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile, '--quiet' ]
+    
+    if dir = ENV[ 'JARS_HOME' ]
+      args << "-Dmaven.repo.local=#{java.io.File.new( dir ).absolute_path}"
+    end
+
+    maven.exec *args
 
     self.class.load_from_maven( deps )
   ensure
