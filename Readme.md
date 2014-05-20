@@ -7,19 +7,44 @@ add gem dependencies for jar files to ruby gems.
     * vendors jar dependencies during installion of the gem
 	* jar dependencies are declared in the gemspec of the gem
 	* jar declaration uses the same notation as jbundler
-	* transitive jar dependencies will be resolved as well using maven
-	* when there are two gems with different versions of the same jar dependency an warning will be given and the first version wins, i.e. no two versions of the same jar in the jruby-classloader
+	* transitive jar dependencies will be resolved as well using (ruby-)maven
+	* when there are two gems with different versions of the same jar dependency an warning will be given and the first version wins, i.e. **only one** version of the a library inside the jruby-classloader
 	* it hooks into gem, i.e. once the jar-dependency gem is installed the feature can be used by any gem
+	* offer 'bundle-with-jars' command which hooks the jar_installer into rubytems before delegating all arguments to bundler
+	* it integrates with an existing maven local repository and obeys the maven setup in ~/.m2/settings.xml, like mirrors, proxieds, etc
 
 ## some drawbacks ##
 
-    * first you need to install the jar-dependency gem with its development dependencies installed
+    * first you need to install the jar-dependency gem with its development dependencies installed (then ruby-maven gets installed as well)
 	* bundler does not install the jar-dependencies
-	* gems need an extra dependency on jar-dependencies during runtime and for development and installation you need ruby-maven installed as well(which you get via the development dependencies)
+	* gems need an extra dependency on jar-dependencies during runtime and for development and installation you need ruby-maven installed as well (which you get via the development dependencies)
 
 ## just look at the example ##
 
 the [readme.md](example/Readme.md) walks you through an example and shows how development works and shows what happens during installation.
+
+# configuration #
+
+<table border='1'>
+<tr>
+<td>ENV</td><td>java system property</td><td>default</td><td>description</td>
+</tr>
+<tr>
+<td>`JARS_DEBUG`</td><td>jars.debug</td><td>false</td><td>if set to true it will produce lots of debug out (maven -X switch)</td>
+</tr>
+<tr>
+<td>`JARS_VERBOSE`</td><td>jars.verbose</td><td>false</td><td>if set to true it will produce some extra output</td>
+</tr>
+<tr>
+<td>`JARS_HOME`</td><td>jars.home</td><td>$HOME/.m2/repository</td><td>filesystem location where to store the jar files and some metadata</td>
+</tr>
+<tr>
+<td>`JARS_MAVEN_SETTINGS`</td><td>jars.maven.settings</td><td>$HOME/.m2/settings.xml</td><td>setting.xml for maven to use</td>
+</tr>
+<tr>
+<td>`JARS_VENDOR`</td><td>jars.vendor</td><td>true</td><td>set to true means that the jars will be stored in JARS_HOME only</td>
+</tr>
+</table>
 
 # motivation #
 

@@ -1,3 +1,4 @@
+require 'jar_dependencies'
 class JarInstaller
 
   class Dependency
@@ -104,7 +105,7 @@ class JarInstaller
 
   def vendor_jars
     return if @spec.requirements.empty?
-    really_vendor = java.lang.System.get_property( 'jruby.jars.vendor' ) || ENV[ 'JRUBY_JARS_VENDOR' ] || 'true'
+    really_vendor = Jars.to_prop( "JARS_VENDOR" ) || 'true'
     do_install( really_vendor == 'true', false )
   end
 
@@ -136,7 +137,7 @@ class JarInstaller
       require 'maven/ruby/maven'
 
     rescue LoadError
-      raise 'please install ruby-maven gem so the jar dependencies can be installed'
+      raise "please install ruby-maven gem which is needed to install the jar dependencies\n\n\tgem install ruby-maven\n\n"
     end
    
     # monkey patch to NOT include gem dependencies
@@ -149,12 +150,19 @@ class JarInstaller
 EOF
 
     maven = Maven::Ruby::Maven.new
-    args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DincludeScope=runtime', '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile, '--quiet' ]
+    args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DincludeScope=runtime', '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile ]
     
-    if dir = ENV[ 'JARS_HOME' ]
-      args << "-Dmaven.repo.local=#{java.io.File.new( dir ).absolute_path}"
+    verbose = Jars.to_prop( 'JARS_VERBOSE' ) == 'true'
+    debug = Jars.to_prop( 'JARS_DEBUG' ) == 'true'
+
+    if debug
+      args << '-X'
+    elsif ! verbose
+      args << '--quiet'
     end
 
+    args << "-Dmaven.repo.local=#{java.io.File.new( Jars.home ).absolute_path}"
+    
     maven.exec *args
 
     self.class.load_from_maven( deps )

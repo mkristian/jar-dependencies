@@ -15,12 +15,12 @@ during installation the dependent jars get vendored (not the jar extension which
 if you look into the gem itself it just contains the following files:
 
     .
-	├── example.gemspec
-	├── lib
-	│   ├── example.jar
-	│   ├── example_jars.rb
-	│   └── example.rb
-	└── Rakefile
+    ├── example.gemspec
+    ├── lib
+    │   ├── example.jar
+    │   ├── example_jars.rb
+    │   └── example.rb
+    └── Rakefile
 
 and the installed gem looks like this
 
@@ -44,13 +44,13 @@ in order to use the jar dependencies for development you need to run
 
     rake jar
 
-which builds the **lib/example.jar** as well the **lib/example_jars.rb**. the latter will add the jar dependencies to jruby's runtime.
+which builds the **lib/example.jar** as well the **lib/example_jars.rb**. the latter will add the jar dependencies to jruby's runtime when required.
 
-the **lib/example_jars.rb** for development looks different from the installed version. development uses the jar dependencies from the local maven repository (defaults to **$HOME/.m2/repository**). the installed gem vendors those jars and adjust the **lib/example_jars.rb** to use the vendored jars.
+during development the jars will be stored in **$HOME/.m2/repository** (the maven default location). and that is the place where the jars get loaded from. when you install the gem via bundler (use bundle-with-jars command) or rubygems then the jars will vendored inside the gem.
 
-in case you do not want to vendor your jars during installation, then you can set the environment **export JRUBY\_JARS\_VENDOR=false**. then the installed files look exactly like the development files.
+in case you do not want to vendor your jars during installation, then you can set the environment **export JRUBY\_JARS\_VENDOR=false**. then the installed gem looks exactly like during development.
 
-in any case the execution of the example.rb file produces the same outout. the local development
+in any case the execution of the example.rb file produces the same output. the local development
 
     $ ruby -I lib/ -r example -e 1
 
@@ -62,4 +62,4 @@ gives:
 
     BouncyCastle Security Provider v1.49
 
-with the environmen **JARS\_HOME** you can control the location of the local maven repository or use the **$HOME/.m2/settings.xml** to setup a custom local repository (the maven way). if you vendor the jars on install then the local maven repository is just cache for those jars, if you do not vendor the jars, **jar\_dependencies** will use the jars directly from the local repository.
+with the environmen **JARS\_HOME** you can control the location of the local maven repository or use the **$HOME/.m2/settings.xml** to setup a custom local repository (the maven way). if you vendor the jars on install then the local maven repository is just a cache for those jars, if you do not vendor the jars, **jar\_dependencies** will use the jars directly from the local repository.

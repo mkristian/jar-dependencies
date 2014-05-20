@@ -20,15 +20,41 @@
 #
 
 module Jars
+  HOME = 'JARS_HOME'
+  MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'
+
+  if defined? JRUBY_VERSION
+    def self.to_prop( key )
+      java.lang.System.getProperty( key.downcase.gsub( /_/, '.' ) ) ||
+        ENV[key.upcase.gsub( /[.]/, '_' ) ]
+    end
+  else
+    def self.to_prop( key )
+      ENV[ key.upcase.gsub( /[.]/, '_' ) ]
+    end
+  end
+
+  def self.absolute( file )
+    File.expand_path( file ) if file
+  end
+
+  def self.maven_settings
+    if @_jars_maven_settings_.nil?
+      unless @_jars_maven_settings_ = absolute( to_prop( MAVEN_SETTINGS ) )
+        # use maven default settings
+        @_jars_maven_settings_ = File.join( ENV[ 'HOME' ], 
+                                            '.m2', 'settings.xml' )
+      end
+    end
+    @_jars_maven_settings_
+  end
+
   def self.home
     if @_jars_home_.nil?
-      if ENV.key?( 'JARS_HOME' )
-        @_jars_home_ = File.expand_path( ENV['JARS_HOME'] )
-      else
+      unless @_jars_home_ = absolute( to_prop( HOME ) )
         begin
           require 'rexml/document'
-          settings = File.join( ENV[ 'HOME' ], '.m2', 'settings.xml' )
-          doc = REXML::Document.new( File.read( settings ) )
+          doc = REXML::Document.new( File.read( maven_settings ) )
           REXML::XPath.first( doc, "//settings/localRepository").tap do |e|  
             @_jars_home_ = e.text.sub( /\\/, '/') if e
           end
@@ -36,6 +62,7 @@ module Jars
           # ignore
         end
       end
+      # use maven default repository
       @_jars_home_ ||= File.join( ENV[ 'HOME' ], '.m2', 'repository' )
     end
     @_jars_home_
