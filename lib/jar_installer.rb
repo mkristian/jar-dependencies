@@ -12,12 +12,31 @@ module Jars
         end
       end
 
-      def initialize( line )
+      def setup_type( line )
         if line.match /:pom:/
           @type = :pom
         elsif line.match /:jar:/
           @type = :jar
         end
+      end
+      private :setup_type
+
+      def setup_scope( line )
+        @scope = 
+          case line
+          when /:provided:/
+            :provided
+          when /:test:/
+            :test
+          else
+            :runtime
+          end
+      end
+      private :setup_scope
+
+      def initialize( line )
+        setup_type( line )
+
         line.sub!( /^\s+/, '' )
         @coord = line.sub( /:[^:]+:[^:]+$/, '' )
         first, second = line.sub( /:[^:]+:[^:]+$/, '' ).split( /:#{type}:/ )
@@ -28,15 +47,8 @@ module Jars
         parts << File.basename( line.sub /.:/, '' ) 
         @path = File.join( parts ).strip
         
-        @scope = 
-          case line
-          when /:provided:/
-            :provided
-          when /:test:/
-            :test
-          else
-            :runtime
-          end
+        setup_scope( line )
+
         line.gsub!( /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:/, ':' )
         @file = line.sub( /^.*:/, '' ).strip
         @gav = line.sub( /:[^:]+$/, '' )
@@ -73,7 +85,6 @@ module Jars
       FileUtils.mkdir_p( File.dirname( vendored ) )
       FileUtils.cp( dep.file, vendored )
     end
-    private :vendor_file
 
     def self.install_deps( deps, dir, require_filename, vendor )
       f = write_require_file( require_filename ) if require_filename
