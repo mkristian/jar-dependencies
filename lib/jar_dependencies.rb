@@ -38,6 +38,13 @@ module Jars
     File.expand_path( file ) if file
   end
 
+  def self.reset
+    @_jars_maven_settings_ = nil
+    @_jars_home_ = nil
+    @@jars ||= {}
+    @@jars.clear
+  end
+
   def self.maven_settings
     if @_jars_maven_settings_.nil?
       unless @_jars_maven_settings_ = absolute( to_prop( MAVEN_SETTINGS ) )
@@ -83,8 +90,9 @@ module Jars
         @@jars[ coordinate ]
       end
     else
-      @@jars[ coordinate ] = version
       do_require( group_id, artifact_id, version, classifier )
+      @@jars[ coordinate ] = version
+      return true
     end
   end
 
@@ -113,7 +121,7 @@ end
 def require_jar( *args )
   result = Jars.require_jar( *args )
   if result.is_a? String
-    warn "jar coordinate #{args.join( ':' )} already loaded with version #{result}"
+    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}"
     return false
   end
   result

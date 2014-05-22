@@ -22,6 +22,6 @@
 if defined?( JRUBY_VERSION ) && Gem.post_install_hooks.empty?
   Gem.post_install do |gem_installer|
     require 'jar_installer'
-    ::JarInstaller.new( gem_installer.spec ).vendor_jars
+    Jars::JarInstaller.new( gem_installer.spec ).vendor_jars
   end
 end

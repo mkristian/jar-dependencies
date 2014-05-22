@@ -1,7 +1,7 @@
 require 'setup'
 require 'jar_installer'
 require 'fileutils'
-class JarInstaller
+class Jars::JarInstaller
   def do_install( vendor, write )
     @vendor = vendor
     @write = write
@@ -10,7 +10,7 @@ class JarInstaller
   attr_reader :vendor
   attr_reader :write
 end
-describe JarInstaller do
+describe Jars::JarInstaller do
 
   let( :file ) { File.join( pwd, 'deps.txt' ) }
 
@@ -28,14 +28,14 @@ describe JarInstaller do
   end
 
   it 'loads dependencies from maven' do
-    deps = JarInstaller.load_from_maven( file )
+    deps = Jars::JarInstaller.load_from_maven( file )
     deps.size.must_equal 45
-    deps.each { |d| d.must_be_kind_of JarInstaller::Dependency }
+    deps.each { |d| d.must_be_kind_of Jars::JarInstaller::Dependency }
   end
 
   it 'generates non-vendored require-file' do
-    deps = JarInstaller.load_from_maven( file )
-    JarInstaller.install_deps( deps, dir, jars, false )
+    deps = Jars::JarInstaller.load_from_maven( file )
+    Jars::JarInstaller.install_deps( deps, dir, jars, false )
     File.read( jars ).each_line do |line|
       if line.size > 30 && !line.match( /^#/ )
         line.match( /^require_jar\(/ ).wont_be_nil
@@ -45,8 +45,8 @@ describe JarInstaller do
   end
 
   it 'generates vendored require-file' do
-    deps = JarInstaller.load_from_maven( file )
-    JarInstaller.install_deps( deps, dir, jars, true )
+    deps = Jars::JarInstaller.load_from_maven( file )
+    Jars::JarInstaller.install_deps( deps, dir, jars, true )
     File.read( jars ).each_line do |line|
       if line.size > 30 && !line.match( /^#/ )
         line.match( /^require_jar\(/ ).wont_be_nil
@@ -56,7 +56,7 @@ describe JarInstaller do
   end
 
   it 'just skips install_jars and vendor_jars if there are no requirements' do
-    jar = JarInstaller.new
+    jar = Jars::JarInstaller.new
     jar.install_jars
     jar.vendor.must_be_nil
     jar.vendor_jars
@@ -64,25 +64,25 @@ describe JarInstaller do
   end
 
   it 'does install_jars and vendor_jars' do
-    ENV[ 'JRUBY_JARS_VENDOR' ] = nil
-    jar = JarInstaller.new( example_spec )
+    ENV[ 'JARS_VENDOR' ] = nil
+    jar = Jars::JarInstaller.new( example_spec )
     jar.install_jars
     jar.vendor.must_equal false
     jar.vendor_jars
     jar.vendor.must_equal true
-    ENV[ 'JRUBY_JARS_VENDOR' ] = 'false'
+    ENV[ 'JARS_VENDOR' ] = 'false'
     jar.vendor_jars
     jar.vendor.must_equal false
-    ENV[ 'JRUBY_JARS_VENDOR' ] = 'true'
+    ENV[ 'JARS_VENDOR' ] = 'true'
     jar.vendor_jars
     jar.vendor.must_equal true
-    java.lang.System.set_property( 'jruby.jars.vendor', 'false' )
+    java.lang.System.set_property( 'jars.vendor', 'false' )
     jar.vendor_jars
     jar.vendor.must_equal false
   end
 
   it 'installs dependencies ' do
-    jar = JarInstaller.new( example_spec )
+    jar = Jars::JarInstaller.new( example_spec )
     result = jar.send :install_dependencies
     result.size.must_equal 2
     result.each do |d| 
