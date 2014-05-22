@@ -1,5 +1,8 @@
 # jar-dependencies #
 
+* [![Build Status](https://secure.travis-ci.org/mkristian/jar-dependencies.png)](http://travis-ci.org/mkristian/jar-dependencies)
+* [![Code Climate](https://codeclimate.com/github/mkristian/jar-dependencies.png)](https://codeclimate.com/github/mkristian/jar-dependencies)
+
 add gem dependencies for jar files to ruby gems.
 
 ## features ##
