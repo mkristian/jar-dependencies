@@ -56,25 +56,31 @@ module Jars
       result
     end
 
-    def self.install_deps( deps, dir, require_filename, vendor )
-      if require_filename
-        FileUtils.mkdir_p( File.dirname( require_filename ) )
-        comment = '# this is a generated file, to avoid over-writing it just delete this comment'
-        if ! File.exists?( require_filename ) || File.read( require_filename ).match( comment )
-          f = File.open( require_filename, 'w' )
-          f.puts comment
-          f.puts "require 'jar_dependencies'"
-          f.puts
-        end
+    def self.write_require_file( require_filename )
+      FileUtils.mkdir_p( File.dirname( require_filename ) )
+      comment = '# this is a generated file, to avoid over-writing it just delete this comment'
+      if ! File.exists?( require_filename ) || File.read( require_filename ).match( comment )
+        f = File.open( require_filename, 'w' )
+        f.puts comment
+        f.puts "require 'jar_dependencies'"
+        f.puts
+        f
       end
+    end
+
+    def self.vendor_file( dir, dep )
+      vendored = File.join( dir, dep.path )
+      FileUtils.mkdir_p( File.dirname( vendored ) )
+      FileUtils.cp( dep.file, vendored )
+    end
+    private :vendor_file
+
+    def self.install_deps( deps, dir, require_filename, vendor )
+      f = write_require_file( require_filename ) if require_filename
       deps.each do |dep|
         next if dep.type != :jar || dep.scope != :runtime
         args = dep.gav.gsub( /:/, "', '" )
-        if vendor
-          vendored = File.join( dir, dep.path )
-          FileUtils.mkdir_p( File.dirname( vendored ) )
-          FileUtils.cp( dep.file, vendored )
-        end
+        vendor_file( dir, dep ) if vendor
         f.puts( "require_jar( '#{args}' )" ) if f
       end
     ensure
@@ -138,28 +144,7 @@ module Jars
                                jars_file, vendor )
     end
 
-    def install_dependencies
-      deps = File.join( @basedir, 'deps.lst' )
-
-      # lazy load ruby-maven
-      begin
-
-        require 'maven/ruby/maven'
-
-      rescue LoadError
-        raise "please install ruby-maven gem which is needed to install the jar dependencies\n\n\tgem install ruby-maven\n\n"
-      end
-      
-      # monkey patch to NOT include gem dependencies
-      require 'maven/tools/gemspec_dependencies'
-      eval <<EOF
-      class ::Maven::Tools::GemspecDependencies
-        def runtime; []; end
-        def development; []; end
-      end
-EOF
-
-      maven = Maven::Ruby::Maven.new
+    def setup_arguments( deps )
       args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DincludeScope=runtime', '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile ]
       
       verbose = Jars.to_prop( 'JARS_VERBOSE' ) == 'true'
@@ -172,8 +157,35 @@ EOF
       end
 
       args << "-Dmaven.repo.local=#{java.io.File.new( Jars.home ).absolute_path}"
+      args
+    end
+
+    def lazy_load_maven
+      require 'maven/ruby/maven'
+    rescue LoadError
+      raise "please install ruby-maven gem which is needed to install the jar dependencies\n\n\tgem install ruby-maven\n\n"
+    end
+
+    def monkey_path_gem_dependencies
+      # monkey patch to NOT include gem dependencies
+      require 'maven/tools/gemspec_dependencies'
+      eval <<EOF
+      class ::Maven::Tools::GemspecDependencies
+        def runtime; []; end
+        def development; []; end
+      end
+EOF
+    end
+
+    def install_dependencies
+      lazy_load_maven
       
-      maven.exec *args
+      monkey_path_gem_dependencies
+
+      deps = File.join( @basedir, 'deps.lst' )
+
+      maven = Maven::Ruby::Maven.new
+      maven.exec( *setup_arguments( deps ) )
 
       self.class.load_from_maven( deps )
     ensure
