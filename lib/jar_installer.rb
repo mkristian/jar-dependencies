@@ -81,19 +81,24 @@ module Jars
       f.close if f
     end
 
-    def initialize( spec = nil )
-      if spec.nil?
-        specs = Dir[ '*.gemspec' ]
-        case specs.size
-        when 0
-          raise 'no gemspec found'
-        when 1
-          spec = specs.first
-        else
-          raise 'more then one gemspec found. please specify a specfile' 
-        end
+    def find_spec
+      specs = Dir[ '*.gemspec' ]
+      case specs.size
+      when 0
+        raise 'no gemspec found'
+      when 1
+        specs.first
+      else
+        raise 'more then one gemspec found. please specify a specfile' 
       end
-      if spec.is_a? String
+    end
+    private :find_spec
+
+    def initialize( spec = nil )
+      spec ||= find_spec
+
+      case spec
+      when String
         @basedir = File.dirname( File.expand_path( spec ) )
         @specfile = spec
         spec =  eval( File.read( spec ) )
@@ -101,6 +106,7 @@ module Jars
         @basedir = spec.gem_dir
         @specfile = spec.spec_file
       end
+
       @spec = spec
     end
 
