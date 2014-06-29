@@ -7,7 +7,7 @@ task :default
 
 # overwrites empty tasks from ruby-maven
 task :maven do
-  JarInstaller.install_jars
+  Jars::JarInstaller.install_jars
 end
 
 # vim: syntax=Ruby

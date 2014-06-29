@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.files << Dir[ '*file' ]
   s.files << 'example.gemspec'
 
-  s.add_runtime_dependency 'jar-dependencies', '~>0.0.3'
+  s.add_runtime_dependency 'jar-dependencies', '~>0.0.4'
 
   s.requirements << "jar org.bouncycastle:bcpkix-jdk15on, 1.49"
   s.requirements << "jar org.bouncycastle:bcprov-jdk15on, 1.49"
