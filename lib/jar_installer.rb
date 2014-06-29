@@ -94,6 +94,7 @@ module Jars
         vendor_file( dir, dep ) if vendor
         f.puts( "require_jar( '#{args}' )" ) if f
       end
+      yield f if block_given?
     ensure
       f.close if f
     end
@@ -119,26 +120,41 @@ module Jars
         @basedir = File.dirname( File.expand_path( spec ) )
         @specfile = spec
         spec =  eval( File.read( spec ) )
-      else
-        @basedir = spec.gem_dir
-        @specfile = spec.spec_file
+      when
+        if File.exists?( spec.spec_file )
+          @basedir = spec.gem_dir
+          @specfile = spec.spec_file
+        else
+          initialize( nil )
+        end
       end
 
       @spec = spec
     end
 
+    def ruby_maven_install_options=( options )
+      @options = options
+    end
+
     def vendor_jars
-      return if @spec.requirements.empty?
-      really_vendor = Jars.to_prop( "JARS_VENDOR" ) || 'true'
-      do_install( really_vendor == 'true', false )
+      return unless has_jars?
+      # do not vendor only if set explicitly via ENV/system-properties
+      do_install( Jars.to_prop( Jars::VENDOR ) != 'false', false )
     end
 
     def install_jars
-      return if @spec.requirements.empty?
+      return unless has_jars?
       do_install( false, true )
     end
 
     private
+
+    def has_jars?
+      # first look if there are any requirements in the spec
+      # and then if gem depends on jar-dependencies
+      # only then install the jars declared in the requirements
+      ! @spec.requirements.empty? && @spec.dependencies.detect { |d| d.name == 'jar-dependencies' }
+    end
 
     def do_install( vendor, write_require_file )
       vendor_dir = File.join( @basedir, @spec.require_path )
@@ -158,23 +174,38 @@ module Jars
     def setup_arguments( deps )
       args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DincludeScope=runtime', '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile ]
       
-      verbose = Jars.to_prop( 'JARS_VERBOSE' ) == 'true'
-      debug = Jars.to_prop( 'JARS_DEBUG' ) == 'true'
-
-      if debug
+      if Jars.debug?
         args << '-X'
-      elsif ! verbose
+      elsif not Jars.verbose?
         args << '--quiet'
       end
 
-      args << "-Dmaven.repo.local=#{java.io.File.new( Jars.home ).absolute_path}"
+      if defined? JRUBY_VERSION
+        args << "-Dmaven.repo.local=#{java.io.File.new( Jars.home ).absolute_path}"
+      else
+        args << "-Dmaven.repo.local=#{File.expand_path( Jars.home )}"
+      end
+
       args
     end
 
     def lazy_load_maven
       require 'maven/ruby/maven'
     rescue LoadError
-      raise "please install ruby-maven gem which is needed to install the jar dependencies\n\n\tgem install ruby-maven\n\n"
+      install_ruby_maven
+      require 'maven/ruby/maven'
+    end
+
+    def install_ruby_maven
+      require 'rubygems/dependency_installer'
+      jars = Gem.loaded_specs[ 'jar-dependencies' ]
+      dep = jars.dependencies.detect { |d| d.name == 'ruby-maven' }
+      req = dep ? Gem::Requirement.create( '>0' ) : dep.requirement
+      inst = Gem::DependencyInstaller.new( @options || {} )
+      inst.install 'ruby-maven', req
+    rescue => e
+      warn e.backtrace.join( "\n" ) if Jars.verbose?
+      raise "there was an error installing 'ruby-maven'. please install it manually: " + e.message
     end
 
     def monkey_path_gem_dependencies

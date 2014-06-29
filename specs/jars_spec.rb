@@ -40,18 +40,11 @@ describe Jars do
     ENV['JARS_MAVEN_SETTINGS'] = nil
   end
 
-  it 'raises LoadError on requires of unknown jar' do
-    $stderr = StringIO.new
-
-    lambda { require_jar( 'org.something', 'slf4j-simple', '1.6.6' ) }.must_raise LoadError
-
-    $stderr.flush
-    $stderr.string.must_equal "you might need to reinstall the gem which depends on the missing jar.\n"
-
-    $stderr = STDERR    
+  it 'raises RuntimeError on requires of unknown jar' do
+    lambda { require_jar( 'org.something', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError 
   end
 
-  it 'raises LoadError on version conflict' do
+  it 'warn on version conflict' do
     Jars.reset
     ENV['JARS_HOME'] = File.join( 'specs', 'repository' )
 
@@ -71,10 +64,9 @@ describe Jars do
     ENV['JARS_HOME'] = 'something'
     $stderr = StringIO.new
     
-    lambda { require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ) }.must_raise LoadError
+    lambda { require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError
 
     $stderr.flush
-    $stderr.string.must_equal "you might need to reinstall the gem which depends on the missing jar.\n"
 
     $stderr = StringIO.new
     require_jar( 'org.slf4j', 'slf4j-simple', '1.6.4' ).must_equal true

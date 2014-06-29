@@ -22,6 +22,10 @@
 module Jars
   HOME = 'JARS_HOME'
   MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'
+  SKIP = 'JARS_SKIP'
+  VERBOSE = 'JARS_VERBOSE'
+  DEBUG = 'JARS_DEBUG'
+  VENDOR = 'JARS_VENDOR'
 
   if defined? JRUBY_VERSION
     def self.to_prop( key )
@@ -32,6 +36,30 @@ module Jars
     def self.to_prop( key )
       ENV[ key.upcase.gsub( /[.]/, '_' ) ]
     end
+  end
+
+  def self.to_boolean( key )
+    prop = to_prop( key )
+    # prop == nil => false
+    # prop == 'false' => false
+    # anything else => true
+    prop == '' or prop == 'true'
+  end
+
+  def self.skip?
+    to_boolean( SKIP )
+  end
+
+  def self.verbose?
+    to_boolean( VERBOSE )
+  end
+
+  def self.debug?
+    to_boolean( DEBUG )
+  end
+
+  def self.vendor?
+    to_boolean( VENDOR )
   end
 
   def self.absolute( file )
@@ -115,17 +143,21 @@ module Jars
       # otherwise try to find it on the load path
       require jar
     end
+  rescue LoadError => e
+    raise "\n\n\tyou might need to reinstall the gem which depends on the missing jar\n\n" + e.message + " (LoadError)"
+  end
+
+  def self.freeze_loading
+    ENV[ SKIP ] = 'true'
   end
 end
 
 def require_jar( *args )
+  return false if Jars.skip?
   result = Jars.require_jar( *args )
   if result.is_a? String
     warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}"
     return false
   end
   result
-rescue LoadError => e
-  warn 'you might need to reinstall the gem which depends on the missing jar.'
-  raise e
 end
