@@ -81,10 +81,9 @@ describe Jars::JarInstaller do
     jar.vendor.must_equal false
   end
 
-  unless java.lang.System.properties['jruby.home']
+  # do not run on travis due to random Errno::EBADF
+  unless File.exists?( '/home/travis' )
     it 'installs dependencies ' do
-      # do not run when maven is used - gives random Errno::EBADF
-      # jruby.home is set when using jruby launcher
       ENV[ 'JARS_HOME' ] = dir
       jar = Jars::JarInstaller.new( example_spec )
       result = jar.send :install_dependencies
