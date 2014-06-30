@@ -1,4 +1,4 @@
-require 'setup'
+require_relative 'setup'
 require 'jar_dependencies'
 require 'stringio'
 describe Jars do
@@ -46,7 +46,7 @@ describe Jars do
 
   it 'warn on version conflict' do
     Jars.reset
-    ENV['JARS_HOME'] = File.join( 'specs', 'repository' )
+    ENV['JARS_HOME'] = File.join( 'specs', 'repo' )
 
     require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ).must_equal true
     $stderr = StringIO.new
