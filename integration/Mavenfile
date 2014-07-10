@@ -1,0 +1,21 @@
+#-*- mode: ruby -*-
+
+id 'base:config:1'
+
+packaging 'pom'
+
+name 'aggregator'
+
+modules ['first', 'second']
+
+properties( 'gem.home' => '${project.basedir}/../target/rubygems',
+            'gem.path' => '${gem.home}',
+            'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+gem 'ruby-maven'
+
+jruby_plugin :gem, '1.0.4' do
+  execute_goal :initialize
+end
+# vim: syntax=Ruby

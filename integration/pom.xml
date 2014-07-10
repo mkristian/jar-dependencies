@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>base</groupId>
+  <artifactId>config</artifactId>
+  <version>1</version>
+  <packaging>pom</packaging>
+  <name>aggregator</name>
+  <modules>
+    <module>first</module>
+    <module>second</module>
+  </modules>
+  <properties>
+    <tesla.dump.readonly>true</tesla.dump.readonly>
+    <gem.path>${gem.home}</gem.path>
+    <gem.home>${project.basedir}/../target/rubygems</gem.home>
+    <tesla.dump.pom>pom.xml</tesla.dump.pom>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>ruby-maven</artifactId>
+      <version>[0,)</version>
+      <type>gem</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+        <version>1.0.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>initialize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

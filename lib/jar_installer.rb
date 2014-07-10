@@ -133,7 +133,7 @@ module Jars
     end
 
     def ruby_maven_install_options=( options )
-      @options = options
+      @options = options.dup
     end
 
     def vendor_jars
@@ -200,7 +200,7 @@ module Jars
       require 'rubygems/dependency_installer'
       jars = Gem.loaded_specs[ 'jar-dependencies' ]
       dep = jars.dependencies.detect { |d| d.name == 'ruby-maven' }
-      req = dep ? Gem::Requirement.create( '>0' ) : dep.requirement
+      req = dep.nil? ? Gem::Requirement.create( '>0' ) : dep.requirement
       inst = Gem::DependencyInstaller.new( @options || {} )
       inst.install 'ruby-maven', req
     rescue => e
@@ -227,6 +227,7 @@ EOF
       deps = File.join( @basedir, 'deps.lst' )
 
       maven = Maven::Ruby::Maven.new
+      maven.verbose = Jars.verbose?
       maven.exec( *setup_arguments( deps ) )
 
       self.class.load_from_maven( deps )

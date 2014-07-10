@@ -3,3 +3,5 @@ pkg
 *.lock
 .ruby-version
 *.gem
+target
+build.log

@@ -1,0 +1,10 @@
+#-*- mode: ruby -*-
+
+inherit 'base:config:1'#, 'relativePath' => '../Mavenfile'
+
+gemspec
+
+properties( 'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+# vim: syntax=Ruby

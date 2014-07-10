@@ -1,0 +1,15 @@
+import java.io.*;
+import org.codehaus.plexus.util.FileUtils;
+
+
+File expected = new File( basedir, "target/rubygems/gems/first-1/lib/org/bouncycastle/bcprov-jdk15on/1.49/bcprov-jdk15on-1.49.jar" );
+if ( !expected.exists() )
+{
+    throw new RuntimeException( "log file does exists '" + expected + "'" );
+}
+expected = new File( basedir, "target/rubygems/gems/first-1/lib/org/bouncycastle/bcpkix-jdk15on/1.49/bcpkix-jdk15on-1.49.jar" );
+if ( !expected.exists() )
+{
+    throw new RuntimeException( "log file does exists '" + expected + "'" );
+}
+
