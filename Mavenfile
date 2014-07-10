@@ -2,6 +2,9 @@
 
 gemfile
 
+# TODO should be setup whenever a plugin uses gems
+plugin_repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
+
 jruby_plugin( :minitest, :minispecDirectory => "specs/*_spec.rb" ) do
   execute_goals(:spec)
   gem 'ruby-maven', '3.1.1.0.8'

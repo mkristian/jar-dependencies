@@ -49,6 +49,12 @@
       <url>http://ci.jruby.org/snapshots/maven</url>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>rubygems-releases</id>
+      <url>http://rubygems-proxy.torquebox.org/releases</url>
+    </pluginRepository>
+  </pluginRepositories>
   <build>
     <extensions>
       <extension>
