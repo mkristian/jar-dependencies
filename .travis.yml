@@ -6,14 +6,14 @@ matrix:
   include:
     - rvm: jruby
       jdk: openjdk6
-      script: mvn test
+      script: mvn verify
     - rvm: jruby
       jdk: openjdk7
-      script: mvn test
+      script: mvn verify
     - rvm: jruby
       jdk: oraclejdk7
-      script: mvn test
+      script: mvn verify
     - rvm: jruby
       jdk: oraclejdk8
-      script: mvn test
+      script: mvn verify
   allow_failures:
