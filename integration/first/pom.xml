@@ -3,15 +3,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>base</groupId>
-    <artifactId>config</artifactId>
-    <version>1</version>
+    <groupId>rubygems</groupId>
+    <artifactId>jar-dependencies-integrations-test</artifactId>
+    <version>0</version>
   </parent>
-  <groupId>rubygems</groupId>
   <artifactId>first</artifactId>
+  <version>1</version>
   <packaging>gem</packaging>
-  <name>first gem with jars</name>
-  <description>gem with empty jar and jar dependencies</description>
+  <name>first gem with jars vendored during installation</name>
   <developers>
     <developer>
       <name>example person</name>

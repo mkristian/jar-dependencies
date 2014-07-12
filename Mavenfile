@@ -25,8 +25,7 @@ plugin :invoker, '1.8' do
                  :id => 'integration-tests',
                  :projectsDirectory => 'integration',
                  :pomIncludes => [ 'pom.xml' ],
-                 :streamLogs => true,   
-                 :postBuildHookScript => 'verify' )
+                 :streamLogs => true )
 end
 
 # vim: syntax=Ruby

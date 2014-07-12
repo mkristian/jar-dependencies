@@ -7,10 +7,10 @@
     <artifactId>jar-dependencies-integrations-test</artifactId>
     <version>0</version>
   </parent>
-  <artifactId>second</artifactId>
-  <version>2</version>
+  <artifactId>third</artifactId>
+  <version>3</version>
   <packaging>gem</packaging>
-  <name>second gem with jars dependency declaration only</name>
+  <name>third gem with embedded jars</name>
   <developers>
     <developer>
       <name>example person</name>
@@ -29,17 +29,16 @@
       <artifactId>jar-dependencies</artifactId>
       <version>[0.0.5,0.0.99999]</version>
       <type>gem</type>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcpkix-jdk15on</artifactId>
-      <version>1.48</version>
+      <version>1.50</version>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcprov-jdk15on</artifactId>
-      <version>1.48</version>
+      <version>1.50</version>
     </dependency>
   </dependencies>
   <repositories>
@@ -63,7 +62,9 @@
         <artifactId>gem-maven-plugin</artifactId>
         <version>${jruby.plugins.version}</version>
         <configuration>
-          <gemspec>second.gemspec</gemspec>
+          <gemspec>third.gemspec</gemspec>
+          <includeDependencies>true</includeDependencies>
+          <useRepositoryLayout>true</useRepositoryLayout>
         </configuration>
       </plugin>
     </plugins>

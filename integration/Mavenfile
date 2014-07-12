@@ -1,23 +1,24 @@
 #-*- mode: ruby -*-
 
-id 'base:config:1'
+id 'rubygems:jar-dependencies-integrations-test:0'
 
 packaging 'pom'
 
 name 'aggregator'
 
-modules ['first', 'second']
+modules ['first', 'second', 'third', 'forth', 'verify']
 
 properties( 'gem.home' => '${project.basedir}/../target/rubygems',
             'gem.path' => '${gem.home}',
             'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
 
+# this is ahack to avoid downloading ruby-maven on the side
+# TODO tell gem-maven-plugin to set JARS_SKIP=true to avoid such hack
 repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
-
 gem 'ruby-maven', '3.1.1.0.8'
-
 jruby_plugin :gem, '1.0.4' do
   execute_goal :initialize
 end
+
 # vim: syntax=Ruby

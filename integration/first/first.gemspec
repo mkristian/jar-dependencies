@@ -5,8 +5,7 @@ Gem::Specification.new do |s|
   s.version = '1'
   s.author = 'example person'
   s.email = [ 'mail@example.com' ]
-  s.summary = 'first gem with jars'
-  s.description = 'gem with empty jar and jar dependencies'
+  s.summary = 'first gem with jars vendored during installation'
 
   s.files << Dir[ 'lib/**/*.rb' ]
   s.files << Dir[ '*file' ]

@@ -1,0 +1,44 @@
+#-*- mode: ruby -*-
+
+inherit 'rubygems:jar-dependencies-integrations-test:0'#, 'relativePath' => '../Mavenfile'
+
+packaging 'pom'
+
+execute :use_the_gems, :phase => :package do |ctx|
+  Gem.clear_paths
+  path = File.join( ctx.project.parent.build.directory.to_pathname, 'rubygems' )
+  ENV['GEM_PATH'] = path
+  require 'stringio'
+  out = StringIO.new
+  $stderr = out
+  require 'first'
+  require 'third'
+  $stderr = STDERR
+
+  [ 'bcpkix', 'bcprov' ].each do |name|
+    s = "jar coordinate org.bouncycastle:#{name}-jdk15on already loaded with version 1.49"
+    raise "mssing warning: #{s}" unless out.string.match( s ) 
+  end
+
+  ['bcprov-jdk15on/1.49/bcprov-jdk15on-1.49', 'bcpkix-jdk15on/1.49/bcpkix-jdk15on-1.49' ].each do |name|
+    f = File.join( path, "gems/first-1/lib/org/bouncycastle/#{name}.jar" )
+    raise "file '#{f}' does not exist" unless File.exists?( f )
+  end
+
+  ['bcprov-jdk15on/1.50/bcprov-jdk15on-1.50', 'bcpkix-jdk15on/1.50/bcpkix-jdk15on-1.50' ].each do |name|
+    f = File.join( path, "gems/third-3/lib/org/bouncycastle/#{name}.jar" )
+    raise "file '#{f}' does not exist" unless File.exists?( f )
+  end
+
+  ['bcprov-jdk15on/1.48/bcprov-jdk15on-1.48', 'bcpkix-jdk15on/1.48/bcpkix-jdk15on-1.48' ].each do |name|
+    f = File.join( path, "gems/second-2/lib/org/bouncycastle/#{name}.jar" )
+    raise "file '#{f}' does exist" if File.exists?( f )
+  end
+
+  
+end
+
+properties( 'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+# vim: syntax=Ruby

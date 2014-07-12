@@ -112,7 +112,6 @@
                 <pomInclude>pom.xml</pomInclude>
               </pomIncludes>
               <streamLogs>true</streamLogs>
-              <postBuildHookScript>verify</postBuildHookScript>
             </configuration>
           </execution>
         </executions>
