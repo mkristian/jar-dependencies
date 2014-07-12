@@ -153,7 +153,7 @@ module Jars
       # first look if there are any requirements in the spec
       # and then if gem depends on jar-dependencies
       # only then install the jars declared in the requirements
-      ! @spec.requirements.empty? && @spec.dependencies.detect { |d| d.name == 'jar-dependencies' }
+      ! @spec.requirements.empty? && @spec.dependencies.detect { |d| d.name == 'jar-dependencies' && d.type == :runtime }
     end
 
     def do_install( vendor, write_require_file )
