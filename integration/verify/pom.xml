@@ -15,7 +15,7 @@
   <properties>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
-    <tesla.version>0.1.1-SNAPSHOT</tesla.version>
+    <tesla.version>0.1.1</tesla.version>
   </properties>
   <build>
     <plugins>

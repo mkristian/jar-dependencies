@@ -39,6 +39,7 @@ execute :use_the_gems, :phase => :package do |ctx|
 end
 
 properties( 'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+            'tesla.dump.readonly' => true,
+            'tesla.version' => '0.1.1' )
 
 # vim: syntax=Ruby
