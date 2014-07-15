@@ -5,22 +5,48 @@
 
 add gem dependencies for jar files to ruby gems.
 
-## features ##
+## getting control back over your jar ##
 
-    * vendors jar dependencies during installion of the gem
-	* jar dependencies are declared in the gemspec of the gem
-	* jar declaration uses the same notation as jbundler
-	* transitive jar dependencies will be resolved as well using (ruby-)maven
-	* when there are two gems with different versions of the same jar dependency an warning will be given and the first version wins, i.e. **only one** version of the a library inside the jruby-classloader
-	* it hooks into gem, i.e. once the jar-dependency gem is installed the feature can be used by any gem
-	* offer 'bundle-with-jars' command which hooks the jar_installer into rubytems before delegating all arguments to bundler
-	* it integrates with an existing maven local repository and obeys the maven setup in ~/.m2/settings.xml, like mirrors, proxieds, etc
+jar dependencies are declared in the gemspec of the gem using the same notation as <https://github.com/mkristian/jbundler>.
+
+when using ```require_jar``` to load the jar into JRuby's classloader then an version conflict will be detected and only **ONE** jar gets loaded. jbundler allows to select the version suitable for you application.
+
+most maven-artifact do **NOT** use versions ranges but depends pick a version. then jbundler can always **overwrite** any such version.
+
+## vendoring your jars before packing the jar ##
+
+add to your Rakefile following:
+
+    require 'jar_installer'
+    task :install_jars do
+      jars = Jars::JarInstaller.new
+	  jars.install_jars
+	  jars.vendor_jars
+    end
+
+which will install download the dependent jars into **JARS_HOME** and creats a file **lib/my_gem_jars.rb** which is just an enumeration of ```require_jars``` statements to load all the jars. the **vendor_jars** will copy them into the **lib** directory of the gem.
+
+the location where jars are cached is per default **$HOME/.m2/repository** the same default as maven has to cache the jar-artifacts. it respects **$HOME/.m2/settings.xml** from maven with all its mirror and other settings or the environment variable **JARS_HOME**.
+
+## reduce the download and reuse the jars from maven local repository ##
+
+if you do not vendor the jars into gem then the **jar-dependency** gem can vendor them when you install the gem. just skip the **jars.vendor_jars** from the above rake tasks.
+
+until JRuby itself comes with this gem, for this feature to work you need to install the **jar-dependencies** gem first and for bundler you need to use the **bundle-with-jars** command :(
+
+## for development you do not need to vendor the jars at all ##
+
+just set an environment variable
+
+    export JARS_VENDOR=false
+
+this tells the jar_installer not vendor any jars but only create the file with the ```require_jar``` statements. this ```require_jars``` method will find the jar inside the maven local repository and loads it from there.
 
 ## some drawbacks ##
 
     * first you need to install the jar-dependency gem with its development dependencies installed (then ruby-maven gets installed as well)
-	* bundler does not install the jar-dependencies
-	* gems need an extra dependency on jar-dependencies during runtime and for development and installation you need ruby-maven installed as well (which you get via the development dependencies)
+	* bundler does not install the jar-dependencies (unless JRuby adds the gem as default gem)
+	* you need ruby-maven doing the job of dependency resolution and downloading them. gems not part of <http://rubygems.org> will not work currently
 
 ## just look at the example ##
 
