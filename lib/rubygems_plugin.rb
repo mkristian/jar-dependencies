@@ -23,7 +23,7 @@ if defined?( JRUBY_VERSION ) && Gem.post_install_hooks.empty?
   Gem.post_install do |gem_installer|
     require 'jar_installer'
     jars = Jars::JarInstaller.new( gem_installer.spec )
-    jars.ruby_maven_install_options = gem_installer.options 
+    jars.ruby_maven_install_options = gem_installer.options || {}
     jars.vendor_jars
   end
 end
