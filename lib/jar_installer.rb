@@ -113,20 +113,31 @@ module Jars
     private :find_spec
 
     def initialize( spec = nil )
+      setup( spec )
+    end
+
+    def setup( spec = nil )
       spec ||= find_spec
 
       case spec
       when String
-        @basedir = File.dirname( File.expand_path( spec ) )
-        @specfile = spec
+        @specfile = File.expand_path( spec )
+        @basedir = File.dirname( @specfile )
         spec =  eval( File.read( spec ) )
-      when
+      when Gem::Specification
         if File.exists?( spec.spec_file )
           @basedir = spec.gem_dir
           @specfile = spec.spec_file
         else
-          initialize( nil )
+          # this happens with bundle and local gems
+          # there the spec_file is "not installed" but inside
+          # the gem_dir directory
+          Dir.chdir( spec.gem_dir ) do
+            setup( nil )
+          end
         end
+      else
+        raise 'spec must be either String or Gem::Specification'
       end
 
       @spec = spec

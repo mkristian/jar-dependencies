@@ -81,6 +81,23 @@ describe Jars::JarInstaller do
     jar.vendor.must_equal false
   end
 
+  it 'finds the gemspec file when the Gem::Specifiacation.spec_file is wrong' do
+    spec = eval( File.read( example_spec ) )
+    # mimic bundler case
+    FileUtils.rm_f( spec.spec_file )
+    def spec.gem_dir= d
+      @d = d
+    end
+    def spec.gem_dir
+      @d
+    end
+    spec.gem_dir = File.dirname( example_spec )
+    # now test finding the gemspec file
+    jar = Jars::JarInstaller.new( spec )
+    jar.instance_variable_get( :@basedir ).must_equal File.expand_path( spec.gem_dir )
+    jar.instance_variable_get( :@specfile ).must_equal File.expand_path( example_spec )
+  end
+
   # do not run on travis due to random Errno::EBADF
   unless File.exists?( '/home/travis' )
     it 'installs dependencies ' do
