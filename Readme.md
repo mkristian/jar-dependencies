@@ -19,20 +19,22 @@ add to your Rakefile following:
 
     require 'jar_installer'
     task :install_jars do
-      jars = Jars::JarInstaller.new
-	  jars.install_jars
-	  jars.vendor_jars
+      Jars::JarInstaller.vendor_jars
     end
 
 which will install download the dependent jars into **JARS_HOME** and creats a file **lib/my_gem_jars.rb** which is just an enumeration of ```require_jars``` statements to load all the jars. the **vendor_jars** will copy them into the **lib** directory of the gem.
 
 the location where jars are cached is per default **$HOME/.m2/repository** the same default as maven has to cache the jar-artifacts. it respects **$HOME/.m2/settings.xml** from maven with all its mirror and other settings or the environment variable **JARS_HOME**.
 
+IMPORTANT: make sure that jar-dependencies is only a **development dependency** of your gem. if it is a runtime dependencies the require_jars file will be overwritten during installation.
+
 ## reduce the download and reuse the jars from maven local repository ##
 
-if you do not vendor the jars into gem then the **jar-dependency** gem can vendor them when you install the gem. just skip the **jars.vendor_jars** from the above rake tasks.
+if you do not vendor the jars into gem then the **jar-dependency** gem can vendor them when you install the gem. just skip use **Jars::JarInstaller.install_jars** from the above rake tasks.
 
-until JRuby itself comes with this gem, for this feature to work you need to install the **jar-dependencies** gem first and for bundler you need to use the **bundle-with-jars** command :(
+until JRuby itself comes with this jar-dependencies as default gem, for this feature to work you need to install the **jar-dependencies** gem first and for bundler you need to use the **bundle-with-jars** command :(
+
+IMPORTANT: make sure that jar-dependencies is a **runtime dependency** of your gem so the require_jars file will be overwritten during installation with the "correct" versions of the jars.
 
 ## for development you do not need to vendor the jars at all ##
 

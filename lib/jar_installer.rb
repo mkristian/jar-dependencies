@@ -55,8 +55,12 @@ module Jars
       end
     end
 
-    def self.install_jars
-      new.install_jars
+    def self.install_jars( write_require_file = false )
+      new.install_jars( write_require_file )
+    end
+
+    def self.vendor_jars( write_require_file = false )
+      new.vendor_jars( write_require_file )
     end
 
     def self.load_from_maven( file )
@@ -147,15 +151,15 @@ module Jars
       @options = options.dup
     end
 
-    def vendor_jars
+    def vendor_jars( write_require_file = true )
       return unless has_jars?
       # do not vendor only if set explicitly via ENV/system-properties
-      do_install( Jars.to_prop( Jars::VENDOR ) != 'false', false )
+      do_install( Jars.to_prop( Jars::VENDOR ) != 'false', write_require_file )
     end
 
-    def install_jars
+    def install_jars( write_require_file = true )
       return unless has_jars?
-      do_install( false, true )
+      do_install( false, write_require_file )
     end
 
     private
@@ -169,14 +173,16 @@ module Jars
 
     def do_install( vendor, write_require_file )
       vendor_dir = File.join( @basedir, @spec.require_path )
-      if write_require_file
-        jars_file = File.join( vendor_dir, "#{@spec.name}_jars.rb" )
+      jars_file = File.join( vendor_dir, "#{@spec.name}_jars.rb" )
 
-        # do not generate file if specfile is older then the generated file
-        if File.exists?( jars_file ) && 
-            File.mtime( @specfile ) < File.mtime( jars_file )
-          jars_file = nil
-        end
+      # write out new jars_file it write_require_file is true or 
+      # check timestamps: 
+      # do not generate file if specfile is older then the generated file
+      if ! write_require_file &&
+          File.exists?( jars_file ) && 
+          File.mtime( @specfile ) < File.mtime( jars_file )
+        # leave jars_file as is
+        jars_file = nil
       end
       self.class.install_deps( install_dependencies, vendor_dir,
                                jars_file, vendor )
