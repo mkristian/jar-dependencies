@@ -75,6 +75,9 @@ the [readme.md](example/Readme.md) walks you through an example and shows how de
 <tr>
 <td>`JARS_VENDOR`</td><td>jars.vendor</td><td>true</td><td>set to true means that the jars will be stored in JARS_HOME only</td>
 </tr>
+<tr>
+<td>`JARS_SKIP`</td><td>jars.skip</td><td>true</td><td>do **NOT** install jar dependencies at all</td>
+</tr>
 </table>
 
 # motivation #
