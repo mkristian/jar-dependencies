@@ -50,6 +50,12 @@ this tells the jar_installer not vendor any jars but only create the file with t
 	* bundler does not install the jar-dependencies (unless JRuby adds the gem as default gem)
 	* you need ruby-maven doing the job of dependency resolution and downloading them. gems not part of <http://rubygems.org> will not work currently
 
+## jar others then from maven-central ##
+
+per default all jars need to come from maven-central (<search.maven.org>), in order to use jars from any other repo you need to add it into your settings.xml and configure it in a way that you use it without interactive prompt (username + passwords needs to be part of settings.xml).
+
+**NOTE:** gems depending on jars other then maven-central will **NOT** work when they get published on rubygems.org since the user of those gems will not have the right settings.xml to allow them to access the jar dependencies.
+
 ## just look at the example ##
 
 the [readme.md](example/Readme.md) walks you through an example and shows how development works and shows what happens during installation.

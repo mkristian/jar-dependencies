@@ -2,15 +2,25 @@
 
 (assume all commands will be executed via jruby !)
 
-    rake build
+    rake setup jar
+	gem build example.gemspec
 	
 this will install the jar dependencies, compile the java files and build the jar of the gem, generates *_jars.rb file which requires all the dependent jars and build the gem.
 
 now install the gem
 
-	gem install -l pkg/example-2.gem
+	gem install -l example-2.gem
 
 during installation the dependent jars get vendored (not the jar extension which is part of the gem itself).
+
+to run the spec do (after ```bundle install```)
+
+    bundle exec rake spec
+
+or
+
+    bundle exec rspec spec/*spec.rb
+
 
 if you look into the gem itself it just contains the following files:
 
