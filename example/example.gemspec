@@ -13,10 +13,15 @@ Gem::Specification.new do |s|
   s.files << Dir[ '*file' ]
   s.files << 'example.gemspec'
 
-  s.add_runtime_dependency 'jar-dependencies', '~>0.0.4'
+  s.add_runtime_dependency 'jar-dependencies', '~>0.0.6'
 
   s.requirements << "jar org.bouncycastle:bcpkix-jdk15on, 1.49"
   s.requirements << "jar org.bouncycastle:bcprov-jdk15on, 1.49"
+
+  s.add_development_dependency 'rspec', '~> 2.14.0'
+  s.add_development_dependency 'rake', '~> 10.3.2'
+  # needed to compile src/main/java/** into lib/example.jar
+  s.add_development_dependency 'ruby-maven', '~> 3.1.1.0'
 end
 
 # vim: syntax=Ruby

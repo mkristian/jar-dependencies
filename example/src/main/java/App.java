@@ -2,10 +2,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 class App
 {
-
-    public App()
-    {
-	System.out.println( new BouncyCastleProvider().getInfo() );
+    public static String bcInfo() {
+	return new BouncyCastleProvider().getInfo();
     }
-
 }
