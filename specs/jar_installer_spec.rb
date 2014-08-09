@@ -101,6 +101,7 @@ describe Jars::JarInstaller do
   # do not run on travis due to random Errno::EBADF
   unless File.exists?( '/home/travis' )
     it 'installs dependencies ' do
+      skip( "too many random Errno::EBADF" )
       ENV[ 'JARS_HOME' ] = dir
       jar = Jars::JarInstaller.new( example_spec )
       result = jar.send :install_dependencies
