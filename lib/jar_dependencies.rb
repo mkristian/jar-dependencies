@@ -23,6 +23,8 @@ module Jars
   HOME = 'JARS_HOME'
   MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'
   SKIP = 'JARS_SKIP'
+  NO_REQUIRE = 'JARS_NO_REQUIRE'
+  QUIET = 'JARS_QUIET'
   VERBOSE = 'JARS_VERBOSE'
   DEBUG = 'JARS_DEBUG'
   VENDOR = 'JARS_VENDOR'
@@ -48,6 +50,14 @@ module Jars
 
   def self.skip?
     to_boolean( SKIP )
+  end
+
+  def self.no_require?
+    to_boolean( NO_REQUIRE )
+  end
+
+  def self.quiet?
+    to_boolean( QUIET )
   end
 
   def self.verbose?
@@ -148,15 +158,15 @@ module Jars
   end
 
   def self.freeze_loading
-    ENV[ SKIP ] = 'true'
+    ENV[ NO_REQUIRE ] = 'true'
   end
 end
 
 def require_jar( *args )
-  return false if Jars.skip?
+  return false if Jars.no_require?
   result = Jars.require_jar( *args )
   if result.is_a? String
-    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}"
+    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}" unless Jars.quiet?
     return false
   end
   result
