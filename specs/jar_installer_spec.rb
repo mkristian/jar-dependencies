@@ -1,4 +1,4 @@
-require_relative 'setup'
+require File.expand_path('setup', File.dirname(__FILE__))
 require 'jar_installer'
 require 'fileutils'
 class Jars::JarInstaller
@@ -15,14 +15,14 @@ describe Jars::JarInstaller do
   let( :file ) { File.join( pwd, 'deps.txt' ) }
 
   let( :pwd ) { File.dirname( File.expand_path( __FILE__ ) ) }
-  
+
   let( :dir ) { File.join( pwd, '..', 'pkg', 'tmp' ) }
 
   let( :jars ) { File.join( dir, 'test_jars.rb' ) }
 
   let( :example_spec ) { File.join( pwd, '..', 'example', 'example.gemspec' ) }
- 
-  before do 
+
+  before do
     FileUtils.rm_rf( dir )
     FileUtils.mkdir_p( dir )
   end
@@ -106,7 +106,7 @@ describe Jars::JarInstaller do
       jar = Jars::JarInstaller.new( example_spec )
       result = jar.send :install_dependencies
       result.size.must_equal 2
-      result.each do |d| 
+      result.each do |d|
         d.type.must_equal :jar
         d.scope.must_equal :runtime
       end
