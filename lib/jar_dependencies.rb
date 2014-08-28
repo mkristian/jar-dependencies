@@ -79,33 +79,52 @@ module Jars
     end
 
     def reset
-      @_jars_maven_settings_ = nil
-      @_jars_home_ = nil
-      @@jars ||= {}
-      @@jars.clear
+      instance_variables.each { |var| instance_variable_set(var, nil) }
+      ( @@jars ||= {} ).clear
     end
 
-    def maven_settings
-      if @_jars_maven_settings_.nil?
-        unless @_jars_maven_settings_ = absolute( to_prop( MAVEN_SETTINGS ) )
-          # use maven default settings
-          @_jars_maven_settings_ = File.join( user_home, '.m2', 'settings.xml' )
+    def maven_user_settings
+      if @_jars_maven_user_settings_.nil?
+        if settings = absolute( to_prop( MAVEN_SETTINGS ) )
+          settings = File.expand_path(settings)
+          unless File.exists?(settings)
+            warn "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found" unless quiet?
+            settings = false
+          end
+        else # use maven default (user) settings
+          settings = File.join( user_home, '.m2', 'settings.xml' )
+          settings = false unless File.exists?(settings)
         end
+        @_jars_maven_user_settings_ = settings
       end
-      @_jars_maven_settings_
+      @_jars_maven_user_settings_ || nil
+    end
+    alias maven_settings maven_user_settings
+
+    def maven_global_settings
+      if @_jars_maven_global_settings_.nil?
+          if mvn_home = ENV[ 'M2_HOME' ] || ENV[ 'MAVEN_HOME' ]
+            settings = File.join( mvn_home, 'conf/settings.xml' )
+            settings = false unless File.exists?(settings)
+          else
+            settings = false
+          end
+          @_jars_maven_global_settings_ = settings
+      end
+      @_jars_maven_global_settings_ || nil
     end
 
     def home
       if @_jars_home_.nil?
         unless @_jars_home_ = absolute( to_prop( HOME ) )
           begin
-            require 'rexml/document'
-            doc = REXML::Document.new( File.read( maven_settings ) )
-            REXML::XPath.first( doc, "//settings/localRepository").tap do |e|
-              @_jars_home_ = e.text.sub( /\\/, '/') if e
+            if user_settings = maven_user_settings
+              @_jars_home_ = detect_local_repository(user_settings)
             end
-          rescue
-            # ignore
+            if ! @_jars_home_ && global_settings = maven_global_settings
+              @_jars_home_ = detect_local_repository(global_settings)
+            end
+          rescue # ignore
           end
         end
         # use maven default repository
@@ -137,7 +156,6 @@ module Jars
 
     private
 
-
     def absolute( file )
       File.expand_path( file ) if file
     end
@@ -150,6 +168,17 @@ module Jars
         end
         user_home
       end
+    end
+
+    def detect_local_repository(settings); require 'rexml/document'
+      doc = REXML::Document.new( File.read( settings ) )
+      if local_repo = doc.root.elements['localRepository']
+        if ( local_repo = local_repo.first )
+          local_repo = local_repo.value
+          local_repo = nil if local_repo.empty?
+        end
+      end
+      local_repo
     end
 
     def to_jar( group_id, artifact_id, version, classifier )
