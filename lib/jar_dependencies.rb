@@ -20,19 +20,19 @@
 #
 
 module Jars
-  HOME = 'JARS_HOME'
-  MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'
-  SKIP = 'JARS_SKIP'
-  NO_REQUIRE = 'JARS_NO_REQUIRE'
-  QUIET = 'JARS_QUIET'
-  VERBOSE = 'JARS_VERBOSE'
-  DEBUG = 'JARS_DEBUG'
-  VENDOR = 'JARS_VENDOR'
+  HOME = 'JARS_HOME'.freeze
+  MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
+  SKIP = 'JARS_SKIP'.freeze
+  NO_REQUIRE = 'JARS_NO_REQUIRE'.freeze
+  QUIET = 'JARS_QUIET'.freeze
+  VERBOSE = 'JARS_VERBOSE'.freeze
+  DEBUG = 'JARS_DEBUG'.freeze
+  VENDOR = 'JARS_VENDOR'.freeze
 
   if defined? JRUBY_VERSION
     def self.to_prop( key )
       java.lang.System.getProperty( key.downcase.gsub( /_/, '.' ) ) ||
-        ENV[key.upcase.gsub( /[.]/, '_' ) ]
+        ENV[ key.upcase.gsub( /[.]/, '_' ) ]
     end
   else
     def self.to_prop( key )
@@ -87,7 +87,7 @@ module Jars
     if @_jars_maven_settings_.nil?
       unless @_jars_maven_settings_ = absolute( to_prop( MAVEN_SETTINGS ) )
         # use maven default settings
-        @_jars_maven_settings_ = File.join( ENV[ 'HOME' ], 
+        @_jars_maven_settings_ = File.join( ENV[ 'HOME' ],
                                             '.m2', 'settings.xml' )
       end
     end
@@ -100,7 +100,7 @@ module Jars
         begin
           require 'rexml/document'
           doc = REXML::Document.new( File.read( maven_settings ) )
-          REXML::XPath.first( doc, "//settings/localRepository").tap do |e|  
+          REXML::XPath.first( doc, "//settings/localRepository").tap do |e|
             @_jars_home_ = e.text.sub( /\\/, '/') if e
           end
         rescue
