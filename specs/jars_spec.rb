@@ -2,9 +2,15 @@ require_relative 'setup'
 require 'jar_dependencies'
 require 'stringio'
 describe Jars do
- 
+
+  @@_env_ = ENV.dup
+
   before do
     Jars.reset
+  end
+
+  after do
+    ENV.replace @@_env_ # restore ENV
   end
 
   it 'extract property' do
@@ -40,8 +46,16 @@ describe Jars do
     ENV['JARS_MAVEN_SETTINGS'] = nil
   end
 
+  it "determines JARS_HOME (when no ENV['HOME'] present)" do
+    env_home = ENV[ 'HOME' ]
+    ENV.delete('HOME')
+    ENV['JARS_MAVEN_SETTINGS'] = 'settings.xml'
+    home = Jars.home
+    home.must_equal( File.join( env_home, '.m2', 'repository' ) )
+  end
+
   it 'raises RuntimeError on requires of unknown jar' do
-    lambda { require_jar( 'org.something', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError 
+    lambda { require_jar( 'org.something', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError
   end
 
   it 'warn on version conflict' do
@@ -63,7 +77,7 @@ describe Jars do
     $LOAD_PATH << File.join( 'specs', 'load_path' )
     ENV['JARS_HOME'] = 'something'
     $stderr = StringIO.new
-    
+
     lambda { require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError
 
     $stderr.flush

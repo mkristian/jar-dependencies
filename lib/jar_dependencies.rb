@@ -87,8 +87,7 @@ module Jars
     if @_jars_maven_settings_.nil?
       unless @_jars_maven_settings_ = absolute( to_prop( MAVEN_SETTINGS ) )
         # use maven default settings
-        @_jars_maven_settings_ = File.join( ENV[ 'HOME' ],
-                                            '.m2', 'settings.xml' )
+        @_jars_maven_settings_ = File.join( user_home, '.m2', 'settings.xml' )
       end
     end
     @_jars_maven_settings_
@@ -108,7 +107,7 @@ module Jars
         end
       end
       # use maven default repository
-      @_jars_home_ ||= File.join( ENV[ 'HOME' ], '.m2', 'repository' )
+      @_jars_home_ ||= File.join( user_home, '.m2', 'repository' )
     end
     @_jars_home_
   end
@@ -135,6 +134,16 @@ module Jars
   end
 
   private
+
+  def self.user_home
+    ENV[ 'HOME' ] || begin
+      user_home = Dir.home if Dir.respond_to?(:home)
+      unless user_home
+        user_home = ENV_JAVA[ 'user.home' ] if Object.const_defined?(:ENV_JAVA)
+      end
+      user_home
+    end
+  end
 
   def self.to_jar( group_id, artifact_id, version, classifier )
     file = "#{group_id.gsub( /\./, '/' )}/#{artifact_id}/#{version}/#{artifact_id}-#{version}"
