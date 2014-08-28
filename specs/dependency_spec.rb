@@ -1,4 +1,4 @@
-require 'setup'
+require File.expand_path('setup', File.dirname(__FILE__))
 require 'jar_installer'
 describe Jars::JarInstaller::Dependency do
 

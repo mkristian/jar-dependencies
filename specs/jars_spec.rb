@@ -1,10 +1,16 @@
-require_relative 'setup'
+require File.expand_path('setup', File.dirname(__FILE__))
 require 'jar_dependencies'
 require 'stringio'
 describe Jars do
- 
+
+  @@_env_ = ENV.dup
+
   before do
     Jars.reset
+  end
+
+  after do
+    ENV.clear; ENV.replace @@_env_ # restore ENV
   end
 
   it 'extract property' do
@@ -20,15 +26,18 @@ describe Jars do
     settings = Jars.maven_settings
     settings.sub( /.*\.m2./, '' ).must_equal 'settings.xml'
 
-    ENV['JARS_MAVEN_SETTINGS'] = 'settings.xml'
+    ENV['JARS_MAVEN_SETTINGS'] = 'specs/settings.xml'
     Jars.reset
     settings.wont_equal Jars.maven_settings
-    Jars.maven_settings.must_equal File.expand_path( 'settings.xml' )
+    Jars.maven_settings.must_equal File.expand_path( 'specs/settings.xml' )
+
     ENV['JARS_MAVEN_SETTINGS'] = nil
   end
 
   it 'determines JARS_HOME' do
-    ENV['JARS_MAVEN_SETTINGS'] = 'settings.xml'
+    ENV['M2_HOME'] = ENV['MAVEN_HOME'] = '' # so that it won't interfere
+    ENV['JARS_QUIET'] = 'true'
+    ENV['JARS_MAVEN_SETTINGS'] = 'does-not-exist/settings.xml'
     home = Jars.home
     home.must_equal( File.join( ENV[ 'HOME' ], '.m2', 'repository' ) )
 
@@ -40,8 +49,22 @@ describe Jars do
     ENV['JARS_MAVEN_SETTINGS'] = nil
   end
 
+  it "determines JARS_HOME (when no ENV['HOME'] present)" do
+    ENV['M2_HOME'] = ENV['MAVEN_HOME'] = '' # so that it won't interfere
+    env_home = ENV[ 'HOME' ]; ENV.delete('HOME')
+    ENV['JARS_QUIET'] = true.to_s
+    ENV['JARS_MAVEN_SETTINGS'] = 'does-not-exist/settings.xml'
+    Jars.home.must_equal( File.join( env_home, '.m2', 'repository' ) )
+  end
+
+  it "determines JARS_HOME (from global settings.xml)" do
+    ENV[ 'HOME' ] = "/tmp/oul'bollocks!"
+    ENV[ 'M2_HOME' ] = File.expand_path(File.dirname(__FILE__))
+    Jars.home.must_equal( '/usr/global/repository' )
+  end
+
   it 'raises RuntimeError on requires of unknown jar' do
-    lambda { require_jar( 'org.something', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError 
+    lambda { require_jar( 'org.something', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError
   end
 
   it 'warn on version conflict' do
@@ -63,7 +86,7 @@ describe Jars do
     $LOAD_PATH << File.join( 'specs', 'load_path' )
     ENV['JARS_HOME'] = 'something'
     $stderr = StringIO.new
-    
+
     lambda { require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError
 
     $stderr.flush

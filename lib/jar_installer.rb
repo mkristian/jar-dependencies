@@ -3,7 +3,7 @@ module Jars
   class JarInstaller
 
     class Dependency
-      
+
       attr_reader :path, :file, :gav, :scope, :type, :coord
 
       def self.new( line )
@@ -22,7 +22,7 @@ module Jars
       private :setup_type
 
       def setup_scope( line )
-        @scope = 
+        @scope =
           case line
           when /:provided:/
             :provided
@@ -40,13 +40,13 @@ module Jars
         line.sub!( /^\s+/, '' )
         @coord = line.sub( /:[^:]+:[^:]+$/, '' )
         first, second = line.sub( /:[^:]+:[^:]+$/, '' ).split( /:#{type}:/ )
-        group_id, artifact_id = first.split( /:/ ) 
-        parts = group_id.split( '.' ) 
+        group_id, artifact_id = first.split( /:/ )
+        parts = group_id.split( '.' )
         parts << artifact_id
         parts << second.split( /:/ )[ -1 ]
-        parts << File.basename( line.sub /.:/, '' ) 
+        parts << File.basename( line.sub /.:/, '' )
         @path = File.join( parts ).strip
-        
+
         setup_scope( line )
 
         line.gsub!( /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:/, ':' )
@@ -111,7 +111,7 @@ module Jars
       when 1
         specs.first
       else
-        raise 'more then one gemspec found. please specify a specfile' 
+        raise 'more then one gemspec found. please specify a specfile'
       end
     end
     private :find_spec
@@ -175,11 +175,11 @@ module Jars
       vendor_dir = File.join( @basedir, @spec.require_path )
       jars_file = File.join( vendor_dir, "#{@spec.name}_jars.rb" )
 
-      # write out new jars_file it write_require_file is true or 
-      # check timestamps: 
+      # write out new jars_file it write_require_file is true or
+      # check timestamps:
       # do not generate file if specfile is older then the generated file
       if ! write_require_file &&
-          File.exists?( jars_file ) && 
+          File.exists?( jars_file ) &&
           File.mtime( @specfile ) < File.mtime( jars_file )
         # leave jars_file as is
         jars_file = nil
@@ -190,7 +190,7 @@ module Jars
 
     def setup_arguments( deps )
       args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DincludeScope=runtime', '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile ]
-      
+
       if Jars.debug?
         args << '-X'
       elsif not Jars.verbose?
@@ -222,7 +222,7 @@ module Jars
       inst.install 'ruby-maven', req
     rescue => e
       warn e.backtrace.join( "\n" ) if Jars.verbose?
-      raise "there was an error installing 'ruby-maven'. please install it manually: " + e.message
+      raise "there was an error installing 'ruby-maven'. please install it manually: #{e.inspect}"
     end
 
     def monkey_path_gem_dependencies
@@ -238,7 +238,7 @@ EOF
 
     def install_dependencies
       lazy_load_maven
-      
+
       monkey_path_gem_dependencies
 
       deps = File.join( @basedir, 'deps.lst' )
