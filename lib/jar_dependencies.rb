@@ -138,8 +138,8 @@ module Jars
 
   def self.to_jar( group_id, artifact_id, version, classifier )
     file = "#{group_id.gsub( /\./, '/' )}/#{artifact_id}/#{version}/#{artifact_id}-#{version}"
-    file += "-#{classifier}" if classifier
-    file += '.jar'
+    file << "-#{classifier}" if classifier
+    file << '.jar'
     file
   end
 
