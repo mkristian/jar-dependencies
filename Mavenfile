@@ -10,10 +10,11 @@ jruby_plugin( :minitest, :minispecDirectory => "specs/*_spec.rb" ) do
   gem 'ruby-maven', '3.1.1.0.8'
 end
 
-snapshot_repository :jruby, 'http://ci.jruby.org/snapshots/maven'
+#snapshot_repository :jruby, 'http://ci.jruby.org/snapshots/maven'
 
 # (jruby-1.6.8 mode 1.8 produces a lot of yaml errors parsing gemspecs)
-properties( 'jruby.versions' => ['1.6.8', '1.7.13','9000.dev-SNAPSHOT'].join(','),
+properties( 'jruby.versions' => ['1.6.8', '1.7.13'#,'9000.dev-SNAPSHOT'
+                                ].join(','),
             'jruby.modes' => ['1.9', '2.0','2.1'].join(','),
             # just lock the version
             'jruby.version' => '1.7.13',
@@ -23,8 +24,9 @@ properties( 'jruby.versions' => ['1.6.8', '1.7.13','9000.dev-SNAPSHOT'].join(','
 plugin :invoker, '1.8' do
   execute_goals( :install, :run,
                  :id => 'integration-tests',
-                 :projectsDirectory => 'integration',
-                 :pomIncludes => [ 'pom.xml' ],
+                 :projectsDirectory => 'it',
+                 :properties => { 'jar-dependencies.version' => '${project.version}' },
+                 :pomIncludes => [ '*/pom.xml' ],
                  :streamLogs => true )
 end
 

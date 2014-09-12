@@ -8,7 +8,7 @@ name 'aggregator'
 
 modules ['first', 'second', 'third', 'forth', 'verify']
 
-properties( 'gem.home' => '${project.basedir}/../target/rubygems',
+properties( 'gem.home' => '${project.basedir}/../../pkg/rubygems',
             'gem.path' => '${gem.home}',
             'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )

@@ -103,15 +103,15 @@ module Jars
       f.close if f
     end
 
-    def find_spec
+    def find_spec( allow_no_file )
       specs = Dir[ '*.gemspec' ]
       case specs.size
       when 0
-        raise 'no gemspec found'
+        raise 'no gemspec found' unless allow_no_file
       when 1
         specs.first
       else
-        raise 'more then one gemspec found. please specify a specfile'
+        raise 'more then one gemspec found. please specify a specfile' unless allow_no_file
       end
     end
     private :find_spec
@@ -120,8 +120,8 @@ module Jars
       setup( spec )
     end
 
-    def setup( spec = nil )
-      spec ||= find_spec
+    def setup( spec = nil, allow_no_file = false )
+      spec ||= find_spec( allow_no_file )
 
       case spec
       when String
@@ -137,9 +137,10 @@ module Jars
           # there the spec_file is "not installed" but inside
           # the gem_dir directory
           Dir.chdir( spec.gem_dir ) do
-            setup( nil )
+            setup( nil, true )
           end
         end
+      when NilClass
       else
         raise 'spec must be either String or Gem::Specification'
       end
