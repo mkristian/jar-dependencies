@@ -24,7 +24,7 @@ properties( 'jruby.versions' => ['1.6.8', '1.7.13'#,'9000.dev-SNAPSHOT'
 plugin :invoker, '1.8' do
   execute_goals( :install, :run,
                  :id => 'integration-tests',
-                 :projectsDirectory => 'it',
+                 :projectsDirectory => 'integration',
                  :properties => { 'jar-dependencies.version' => '${project.version}' },
                  :pomIncludes => [ '*/pom.xml' ],
                  :streamLogs => true )

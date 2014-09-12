@@ -113,7 +113,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <projectsDirectory>it</projectsDirectory>
+              <projectsDirectory>integration</projectsDirectory>
               <properties>
                 <jar-dependencies.version>${project.version}</jar-dependencies.version>
               </properties>
