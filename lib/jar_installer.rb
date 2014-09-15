@@ -146,6 +146,8 @@ module Jars
       end
 
       @spec = spec
+    rescue
+      # for all those strange gemspec we skip looking for jar-dependencies
     end
 
     def ruby_maven_install_options=( options )
