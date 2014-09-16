@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'jar-dependencies'
-  s.version = "0.1.1"
+  s.version = "0.1.2.dev"
   s.author = 'christian meier'
   s.email = [ 'mkristian@web.de' ]
   s.summary = 'manage jar dependencies for gems'
