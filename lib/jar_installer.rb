@@ -1,4 +1,5 @@
 require 'jar_dependencies'
+require 'uri'
 module Jars
   class JarInstaller
 
@@ -198,6 +199,13 @@ module Jars
         args << '-X'
       elsif not Jars.verbose?
         args << '--quiet'
+      end
+
+      if Jars.maven_user_settings.nil? && (proxy = Gem.configuration[ :proxy ]).is_a?( String )
+        uri = URI.parse( proxy )
+        args << "-DproxySet=true"
+        args << "-DproxyHost=#{uri.host}"
+        args << "-DproxyPort=#{uri.port}"
       end
 
       if defined? JRUBY_VERSION
