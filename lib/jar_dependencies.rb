@@ -175,6 +175,10 @@ module Jars
       if local_repo = doc.root.elements['localRepository']
         if ( local_repo = local_repo.first )
           local_repo = local_repo.value
+          # replace maven like system properties embedded into the string
+          local_repo.gsub!( /\$\{[a-zA-Z.]+\}/ ) do |a|
+            ENV_JAVA[ a[2..-2] ] || a
+          end
           local_repo = nil if local_repo.empty?
         end
       end

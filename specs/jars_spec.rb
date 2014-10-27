@@ -60,6 +60,7 @@ describe Jars do
   it "determines JARS_HOME (from global settings.xml)" do
     ENV[ 'HOME' ] = "/tmp/oul'bollocks!"
     ENV[ 'M2_HOME' ] = File.expand_path(File.dirname(__FILE__))
+    ENV_JAVA[ 'repo.path' ] = '/usr/global'
     Jars.home.must_equal( '/usr/global/repository' )
   end
 
