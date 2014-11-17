@@ -39,8 +39,8 @@ module Jars
         setup_type( line )
 
         line.sub!( /^\s+/, '' )
-        @coord = line.sub( /:[^:]+:[^:]+$/, '' )
-        first, second = line.sub( /:[^:]+:[^:]+$/, '' ).split( /:#{type}:/ )
+        @coord = line.sub( /:[^:]+:([A-Z]:\\)?[^:]+$/, '' )
+        first, second = @coord.split( /:#{type}:/ )
         group_id, artifact_id = first.split( /:/ )
         parts = group_id.split( '.' )
         parts << artifact_id
@@ -50,9 +50,9 @@ module Jars
 
         setup_scope( line )
 
-        line.gsub!( /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:/, ':' )
-        @file = line.sub( /^.*:/, '' ).strip
-        @gav = line.sub( /:[^:]+$/, '' )
+        reg = /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:/
+        @file = line.slice(@coord.length, line.length).sub(reg, '').strip
+        @gav = @coord.sub(reg, ':')
       end
     end
 
