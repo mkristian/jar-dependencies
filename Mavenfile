@@ -26,7 +26,6 @@ plugin :invoker, '1.8' do
                  :id => 'integration-tests',
                  :projectsDirectory => 'integration',
                  :properties => { 'jar-dependencies.version' => '${project.version}' },
-                 :pomIncludes => [ '*/pom.xml' ],
                  :streamLogs => true )
 end
 
