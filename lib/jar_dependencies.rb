@@ -55,7 +55,7 @@ module Jars
     end
 
     def no_require?
-      to_boolean( NO_REQUIRE )
+      @frozen || to_boolean( NO_REQUIRE )
     end
 
     def quiet?
@@ -75,7 +75,7 @@ module Jars
     end
 
     def freeze_loading
-      ENV[ NO_REQUIRE ] = 'true'
+      @frozen = true
     end
 
     def reset
