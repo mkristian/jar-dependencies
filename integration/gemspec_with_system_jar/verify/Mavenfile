@@ -1,0 +1,25 @@
+#-*- mode: ruby -*-
+
+inherit 'rubygems:jar-dependencies-integrations-test:0'#, 'relativePath' => '../Mavenfile'
+
+packaging 'pom'
+
+jar 'org.jruby:jruby', '1.7.16.1'
+
+plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
+        :executable => :java,
+        :environmentVariables => { 'GEM_HOME' => '${project.basedir}/../pkg/rubygems', 'GEM_PATH' => '${project.basedir}/../pkg/rubygems' } ) do
+  execute_goal( :exec, :phase => :test,
+                :arguments => ['-classpath',
+                               xml('<classpath/>'),
+                               'org.jruby.Main',
+                               'test.rb' ] )
+end
+
+properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
+            'gem.path' => '${gem.home}',
+            'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true,
+            'tesla.version' => '0.1.1' )
+
+# vim: syntax=Ruby
