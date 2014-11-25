@@ -54,6 +54,10 @@ module Jars
         @file = line.sub( /^.*:/, '' ).strip
         @gav = line.sub( /:[^:]+$/, '' )
       end
+
+      def system?
+        @gav =~ /:system$/
+      end
     end
 
     def self.install_jars( write_require_file = false )
@@ -97,7 +101,13 @@ module Jars
         next if dep.type != :jar || dep.scope != :runtime
         args = dep.gav.gsub( /:/, "', '" )
         vendor_file( dir, dep ) if vendor
-        f.puts( "require_jar( '#{args}' )" ) if f
+        if f
+          if dep.system?
+            f.puts( "require( '#{dep.file}' )" )
+          elsif dep.scope == :runtime
+            f.puts( "require_jar( '#{args}' )" )
+          end
+        end
       end
       yield f if block_given?
     ensure
@@ -193,7 +203,7 @@ module Jars
     end
 
     def setup_arguments( deps )
-      args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DincludeScope=runtime', '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile ]
+      args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile ]
 
       if Jars.debug?
         args << '-X'
@@ -236,7 +246,7 @@ module Jars
       raise "there was an error installing 'ruby-maven'. please install it manually: #{e.inspect}"
     end
 
-    def monkey_path_gem_dependencies
+    def monkey_patch_gem_dependencies
       # monkey patch to NOT include gem dependencies
       require 'maven/tools/gemspec_dependencies'
       eval <<EOF
@@ -250,7 +260,7 @@ EOF
     def install_dependencies
       lazy_load_maven
 
-      monkey_path_gem_dependencies
+      monkey_patch_gem_dependencies
 
       deps = File.join( @basedir, 'deps.lst' )
 
