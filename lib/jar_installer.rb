@@ -163,6 +163,7 @@ module Jars
 
     def ruby_maven_install_options=( options )
       @options = options.dup
+      @options.delete( :ignore_dependencies )
     end
 
     def vendor_jars( write_require_file = true )
