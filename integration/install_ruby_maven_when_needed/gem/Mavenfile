@@ -1,0 +1,10 @@
+#-*- mode: ruby -*-
+
+inherit 'jar-dependencies:install-ruby-maven:0'
+
+gemspec
+
+properties( 'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+# vim: syntax=Ruby

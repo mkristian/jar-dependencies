@@ -1,0 +1,34 @@
+#-*- mode: ruby -*-
+
+inherit 'jar-dependencies:install-ruby-maven:0'
+
+packaging 'pom'
+
+jar 'org.jruby:jruby-complete', '1.7.16.1'
+
+plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
+        :executable => :java,
+        :environmentVariables => { 'GEM_HOME' => '${gem.home}',
+          'GEM_PATH' => '${gem.home}',
+          'JARS_VERBOSE' => true } ) do
+  execute_goal( :exec, :phase => :test,
+                :arguments => ['-classpath',
+                               xml('<classpath/>'),
+                               'org.jruby.Main',
+                               '-S', 'gem', 'install', '-l',
+                               '--ignore-dependencies',
+                               '${project.basedir}/../gem/pkg/my-1.1.1.gem' ] )
+end
+
+properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
+            'gem.path' => '${gem.home}',
+            'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+gem 'jar-dependencies', '${jar-dependencies.version}'
+
+jruby_plugin :gem, '1.0.6' do
+  execute_goal :initialize
+end
+
+# vim: syntax=Ruby
