@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jar-dependencies</artifactId>
-  <version>0.1.5.dev</version>
+  <version>0.1.5</version>
   <packaging>gem</packaging>
   <name>manage jar dependencies for gems</name>
   <description>manage jar dependencies for gems and keep track which jar was already loaded using maven artifact coordinates. it warns on version conflicts and loads only ONE jar assuming the first one is compatible to the second one otherwise your project needs to lock down the right version.</description>
@@ -12,6 +12,8 @@
   <licenses>
     <license>
       <name>MIT</name>
+      <url>http://opensource.org/licenses/MIT</url>
+      <comments>MIT license</comments>
     </license>
   </licenses>
   <developers>
@@ -31,7 +33,6 @@
     <jruby.plugins.version>1.0.4</jruby.plugins.version>
     <jruby.versions>1.6.8,1.7.13</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
-    <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
     <dependency>
@@ -45,6 +46,13 @@
       <groupId>rubygems</groupId>
       <artifactId>rake</artifactId>
       <version>[10.2,10.99999]</version>
+      <type>gem</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>ruby-maven</artifactId>
+      <version>[3.1.1.0.8,3.1.1.0.99999]</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
@@ -114,13 +122,11 @@
             </goals>
             <configuration>
               <projectsDirectory>integration</projectsDirectory>
+              <streamLogs>true</streamLogs>
+              <cloneProjectsTo>${project.build.directory}</cloneProjectsTo>
               <properties>
                 <jar-dependencies.version>${project.version}</jar-dependencies.version>
               </properties>
-              <pomIncludes>
-                <pomInclude>*/pom.xml</pomInclude>
-              </pomIncludes>
-              <streamLogs>true</streamLogs>
             </configuration>
           </execution>
         </executions>

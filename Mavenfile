@@ -25,8 +25,9 @@ plugin :invoker, '1.8' do
   execute_goals( :install, :run,
                  :id => 'integration-tests',
                  :projectsDirectory => 'integration',
-                 :properties => { 'jar-dependencies.version' => '${project.version}' },
-                 :streamLogs => true )
+                 :streamLogs => true ,
+                 :cloneProjectsTo => '${project.build.directory}',
+                 :properties => { 'jar-dependencies.version' => '${project.version}' })
 end
 
 # vim: syntax=Ruby
