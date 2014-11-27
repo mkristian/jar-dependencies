@@ -10,7 +10,8 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
         :executable => :java,
         :environmentVariables => { 'GEM_HOME' => '${gem.home}',
           'GEM_PATH' => '${gem.home}',
-          'JARS_VERBOSE' => true } ) do
+          'JARS_VERBOSE' => true,
+          'PATH' => 'something' } ) do
   execute_goal( :exec, :phase => :test,
                 :arguments => ['-classpath',
                                xml('<classpath/>'),

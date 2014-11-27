@@ -64,6 +64,7 @@
             <GEM_HOME>${gem.home}</GEM_HOME>
             <GEM_PATH>${gem.home}</GEM_PATH>
             <JARS_VERBOSE>true</JARS_VERBOSE>
+            <PATH>something</PATH>
           </environmentVariables>
         </configuration>
       </plugin>
