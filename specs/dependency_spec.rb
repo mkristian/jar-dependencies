@@ -75,4 +75,14 @@ describe Jars::JarInstaller::Dependency do
     dep.path.must_equal 'org/sonatype/sisu/sisu-guice/3.1.0/sisu-guice-3.1.0-no_aop.jar'
     dep.file.must_equal '/usr/local/repository/org/sonatype/sisu/sisu-guice/3.1.0/sisu-guice-3.1.0-no_aop.jar'
   end
+
+  it 'should parse dependency on windows' do
+    dep = Jars::JarInstaller::Dependency.new( '   org.sonatype.sisu:sisu-guice:jar:no_aop:3.1.0:compile:C:\\Users\\Local\\repository\\org\\sonatype\\sisu\\sisu-guice\\3.1.0\\sisu-guice-3.1.0-no_aop.jar' )
+    dep.type.must_equal :jar
+    dep.scope.must_equal :runtime
+    dep.gav.must_equal 'org.sonatype.sisu:sisu-guice:no_aop:3.1.0'
+    dep.coord.must_equal 'org.sonatype.sisu:sisu-guice:jar:no_aop:3.1.0'
+    dep.path.must_equal 'org/sonatype/sisu/sisu-guice/3.1.0/sisu-guice-3.1.0-no_aop.jar'
+    dep.file.must_equal 'C:\\Users\\Local\\repository\\org\\sonatype\\sisu\\sisu-guice\\3.1.0\\sisu-guice-3.1.0-no_aop.jar'
+  end
 end
