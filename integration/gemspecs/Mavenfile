@@ -8,10 +8,14 @@ name 'aggregator'
 
 modules ['first', 'second', 'third', 'forth', 'verify']
 
-properties( 'gem.home' => '${project.basedir}/../../pkg/rubygems',
+properties( 'gem.home' => '${project.basedir}/pkg',
             'gem.path' => '${gem.home}',
             'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
+
+build do
+  directory 'pkg'
+end
 
 # this is ahack to avoid downloading ruby-maven on the side
 # TODO tell gem-maven-plugin to set JARS_SKIP=true to avoid such hack

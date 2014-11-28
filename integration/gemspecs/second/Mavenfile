@@ -4,7 +4,9 @@ inherit 'jar-dependencies:gemspecs:0'
 
 gemspec
 
-properties( 'tesla.dump.pom' => 'pom.xml',
+properties( 'gem.home' => '${basedir}/../pkg',
+            'gem.path' => '${gem.home}',
+            'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
 
 # vim: syntax=Ruby
