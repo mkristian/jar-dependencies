@@ -50,13 +50,14 @@ module Jars
 
         setup_scope( line )
 
-        reg = /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:/
+        reg = /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:|:system:/
         @file = line.slice(@coord.length, line.length).sub(reg, '').strip
+        @system = nil != (line =~ /:system:/)
         @gav = @coord.sub(reg, ':')
       end
 
       def system?
-        @gav =~ /:system$/
+        @system
       end
     end
 
@@ -92,24 +93,25 @@ module Jars
     def self.vendor_file( dir, dep )
       vendored = File.join( dir, dep.path )
       FileUtils.mkdir_p( File.dirname( vendored ) )
-      FileUtils.cp( dep.file, vendored )
+      FileUtils.cp( dep.file, vendored ) unless dep.system?
+    end
+
+    def self.write_dep( file, dir, dep, vendor )
+      return if dep.type != :jar || dep.scope != :runtime
+      if dep.system?
+        file.puts( "require( '#{dep.file}' )" ) if file
+      elsif dep.scope == :runtime
+        vendor_file( dir, dep ) if vendor
+        file.puts( "require_jar( '#{dep.gav.gsub( /:/, "', '" )}' )" ) if file
+      end
     end
 
     def self.install_deps( deps, dir, require_filename, vendor )
       f = write_require_file( require_filename ) if require_filename
       deps.each do |dep|
-        next if dep.type != :jar || dep.scope != :runtime
-        args = dep.gav.gsub( /:/, "', '" )
-        vendor_file( dir, dep ) if vendor
-        if f
-          if dep.system?
-            f.puts( "require( '#{dep.file}' )" )
-          elsif dep.scope == :runtime
-            f.puts( "require_jar( '#{args}' )" )
-          end
-        end
+        write_dep( f, dir, dep, vendor )
       end
-      yield f if block_given?
+      yield f if block_given? and f
     ensure
       f.close if f
     end
