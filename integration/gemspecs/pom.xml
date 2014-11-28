@@ -2,8 +2,8 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>rubygems</groupId>
-  <artifactId>jar-dependencies-integrations-test</artifactId>
+  <groupId>jar-dependencies</groupId>
+  <artifactId>gemspecs</artifactId>
   <version>0</version>
   <packaging>pom</packaging>
   <name>aggregator</name>
@@ -17,7 +17,7 @@
   <properties>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
-    <gem.home>${project.basedir}/../target/rubygems</gem.home>
+    <gem.home>${project.basedir}/../../pkg/rubygems</gem.home>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
   <dependencies>
@@ -39,7 +39,7 @@
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.7</version>
         <executions>
           <execution>
             <goals>

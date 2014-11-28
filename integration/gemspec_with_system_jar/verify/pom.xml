@@ -3,8 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>rubygems</groupId>
-    <artifactId>jar-dependencies-integrations-test</artifactId>
+    <groupId>jar-dependencies</groupId>
+    <artifactId>gemspec_with_system_jar</artifactId>
     <version>0</version>
   </parent>
   <groupId>no_group_id_given</groupId>
@@ -17,7 +17,6 @@
     <gem.path>${gem.home}</gem.path>
     <gem.home>${project.basedir}/../pkg/rubygems</gem.home>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
-    <tesla.version>0.1.1</tesla.version>
   </properties>
   <dependencies>
     <dependency>
@@ -51,8 +50,8 @@
         <configuration>
           <executable>java</executable>
           <environmentVariables>
-            <GEM_HOME>${project.basedir}/../pkg/rubygems</GEM_HOME>
-            <GEM_PATH>${project.basedir}/../pkg/rubygems</GEM_PATH>
+            <GEM_HOME>${gem.home}</GEM_HOME>
+            <GEM_PATH>${gem.home}</GEM_PATH>
           </environmentVariables>
         </configuration>
       </plugin>

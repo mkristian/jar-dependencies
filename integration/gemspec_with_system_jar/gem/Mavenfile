@@ -1,6 +1,6 @@
 #-*- mode: ruby -*-
 
-inherit 'rubygems:jar-dependencies-integrations-test:0'#, 'relativePath' => '../Mavenfile'
+inherit 'jar-dependencies:gemspec_with_system_jar:0'
 
 gemspec
 

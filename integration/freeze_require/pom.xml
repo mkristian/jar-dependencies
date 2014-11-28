@@ -12,13 +12,12 @@
     <gem.path>${gem.home}</gem.path>
     <gem.home>${project.basedir}/pkg/rubygems</gem.home>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
-    <tesla.version>0.1.1</tesla.version>
   </properties>
   <dependencies>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>jar-dependencies</artifactId>
-      <version>0.1.5.dev</version>
+      <version>0.1.7</version>
       <type>gem</type>
     </dependency>
     <dependency>
@@ -32,7 +31,7 @@
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
         <executions>
           <execution>
             <goals>
@@ -64,8 +63,8 @@
         <configuration>
           <executable>java</executable>
           <environmentVariables>
-            <GEM_HOME>${project.basedir}/pkg/rubygems</GEM_HOME>
-            <GEM_PATH>${project.basedir}/pkg/rubygems</GEM_PATH>
+            <GEM_HOME>${gem.home}</GEM_HOME>
+            <GEM_PATH>${gem.home}</GEM_PATH>
           </environmentVariables>
         </configuration>
       </plugin>

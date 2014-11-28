@@ -1,6 +1,6 @@
 #-*- mode: ruby -*-
 
-inherit 'rubygems:jar-dependencies-integrations-test:0'#, 'relativePath' => '../Mavenfile'
+inherit 'jar-dependencies:gemspecs:0'
 
 packaging 'pom'
 
@@ -39,7 +39,6 @@ execute :use_the_gems, :phase => :package do |ctx|
 end
 
 properties( 'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true,
-            'tesla.version' => '0.1.1' )
+            'tesla.dump.readonly' => true )
 
 # vim: syntax=Ruby

@@ -1,5 +1,7 @@
 #-*- mode: ruby -*-
 
+spec = eval( File.read( File.expand_path('../../../../jar-dependencies.gemspec', __FILE__ ) ) )
+
 Gem::Specification.new do |s|
   s.name = 'first'
   s.version = '1.1.1'
@@ -11,7 +13,7 @@ Gem::Specification.new do |s|
   s.files << Dir[ '*file' ]
   s.files << 'first.gemspec'
 
-  s.add_runtime_dependency 'jar-dependencies', '0.1.5.dev'
+  s.add_runtime_dependency 'jar-dependencies', spec.version
 
   s.requirements << "jar 'org.apache.hbase:hbase-annotations', '=0.98.7-hadoop2'"
 end

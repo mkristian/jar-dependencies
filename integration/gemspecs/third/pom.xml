@@ -3,10 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>rubygems</groupId>
-    <artifactId>jar-dependencies-integrations-test</artifactId>
+    <groupId>jar-dependencies</groupId>
+    <artifactId>gemspecs</artifactId>
     <version>0</version>
   </parent>
+  <groupId>rubygems</groupId>
   <artifactId>third</artifactId>
   <version>3</version>
   <packaging>gem</packaging>
@@ -19,9 +20,8 @@
   </developers>
   <properties>
     <tesla.dump.readonly>true</tesla.dump.readonly>
-    <jruby.plugins.version>1.0.3</jruby.plugins.version>
+    <jruby.plugins.version>1.0.4</jruby.plugins.version>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
-    <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
     <dependency>
@@ -63,8 +63,6 @@
         <version>${jruby.plugins.version}</version>
         <configuration>
           <gemspec>third.gemspec</gemspec>
-          <includeDependencies>true</includeDependencies>
-          <useRepositoryLayout>true</useRepositoryLayout>
         </configuration>
       </plugin>
     </plugins>
