@@ -60,7 +60,7 @@ module Jars
 
     def to_boolean( key )
       prop = to_prop( key )
-      prop == '' or prop == 'true'
+      ! prop.nil? && ( prop.empty? || prop.eql?('true') )
     end
 
     def skip?

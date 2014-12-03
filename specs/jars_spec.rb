@@ -24,6 +24,35 @@ describe Jars do
     end
   end
 
+  it 'extract boolean property' do
+    Jars.to_boolean( 'JARS_SOMETHING' ).must_equal false
+
+    ENV[ jars_verbose = 'JARS_VERBOSE' ] = 'true'
+    Jars.to_boolean( jars_verbose ).must_equal true
+    Jars.verbose?.must_equal true
+    ( jars_verbose ).must_equal 'JARS_VERBOSE' # no mod
+
+    if defined? JRUBY_VERSION
+      jars_skip = 'JARS_SKIP'
+      begin
+        java.lang.System.set_property( 'jars.skip', 'true' )
+        java.lang.System.set_property( 'jars.quiet', 'false' )
+        java.lang.System.set_property( 'jars.debug', '' )
+
+        Jars.to_boolean( jars_skip ).must_equal true
+        Jars.skip?.must_equal true
+        ( jars_skip ).must_equal 'JARS_SKIP' # no mod
+
+        Jars.to_boolean( 'JARS_DEBUG' ).must_equal true
+        Jars.to_boolean( 'jars.quiet' ).must_equal false
+      ensure
+        java.lang.System.clear_property( 'jars.skip' )
+        java.lang.System.clear_property( 'jars.quiet' )
+        java.lang.System.clear_property( 'jars.debug' )
+      end
+    end
+  end
+
   it 'extract maven settings' do
     settings = Jars.maven_settings
     settings.sub( /.*\.m2./, '' ).must_equal 'settings.xml'
