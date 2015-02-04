@@ -129,5 +129,15 @@ describe Jars do
     rescue NameError
       skip 'assume we have an old jruby'
     end
+  end 
+
+  it 'no warnings on reload' do
+    $stderr = StringIO.new
+
+    load File.expand_path( 'lib/jar_dependencies.rb' )
+
+    $stderr.string.must_equal ''
+
+    $stderr = STDERR
   end
 end

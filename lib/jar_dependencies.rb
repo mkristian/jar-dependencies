@@ -20,16 +20,18 @@
 #
 
 module Jars
-  HOME = 'JARS_HOME'.freeze
-  MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
-  # skip the gem post install hook
-  SKIP = 'JARS_SKIP'.freeze
-  # just do not require any jars
-  NO_REQUIRE = 'JARS_NO_REQUIRE'.freeze
-  QUIET = 'JARS_QUIET'.freeze
-  VERBOSE = 'JARS_VERBOSE'.freeze
-  DEBUG = 'JARS_DEBUG'.freeze
-  VENDOR = 'JARS_VENDOR'.freeze
+  unless defined? Jars::MAVEN_SETTINGS
+    HOME = 'JARS_HOME'.freeze
+    MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
+    # skip the gem post install hook
+    SKIP = 'JARS_SKIP'.freeze
+    # just do not require any jars
+    NO_REQUIRE = 'JARS_NO_REQUIRE'.freeze
+    QUIET = 'JARS_QUIET'.freeze
+    VERBOSE = 'JARS_VERBOSE'.freeze
+    DEBUG = 'JARS_DEBUG'.freeze
+    VENDOR = 'JARS_VENDOR'.freeze
+  end
 
   class << self
 
