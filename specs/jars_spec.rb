@@ -105,13 +105,14 @@ describe Jars do
 
   it 'freezes jar loading unless jar is not loaded yet' do
     begin
-      require 'jopenssl/version'
-
       Jars.reset
 
       $CLASSPATH.detect { |c| c =~ /bouncycastle/ }.must_be_nil
 
       Jars.freeze_loading
+
+      require 'jopenssl/version'
+
       require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
 
       $CLASSPATH.detect { |c| c =~ /bouncycastle/ }.wont_be_nil
@@ -123,7 +124,9 @@ describe Jars do
 
       $stderr = STDERR
 
-    rescue
+    rescue LoadError
+      skip 'assume we have an old jruby'
+    rescue NameError
       skip 'assume we have an old jruby'
     end
   end
