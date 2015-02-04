@@ -126,7 +126,6 @@ describe Jars::JarInstaller do
     jar.install_jars
     jar.vendor.must_equal false
     jar.vendor_jars
-    jar.vendor.must_equal true
     ENV[ 'JARS_VENDOR' ] = 'false'
     jar.vendor_jars
     jar.vendor.must_equal false

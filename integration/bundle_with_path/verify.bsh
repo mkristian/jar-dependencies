@@ -1,0 +1,29 @@
+import java.io.*;
+import org.codehaus.plexus.util.FileUtils;
+
+
+String log = FileUtils.fileRead( new File( basedir, "build.log" ) );
+String expected = "jar dependencies for foo-0.0.1.gemspec";
+if ( !log.contains( expected ) )
+{
+    throw new RuntimeException( "log file does not contain '" + expected + "'" );
+}
+
+expected = "lib/foo_jars.rb";
+if ( ! new File( expected ).exists() )
+{
+    throw new RuntimeException( "log file does not exists '" + expected + "'" );
+}
+
+expected = "lib/io";
+if ( ! new File( expected ).exists() )
+{
+    throw new RuntimeException( "log file does exists '" + expected + "'" );
+}
+
+expected = "lib/org";
+if ( ! new File( expected ).exists() )
+{
+    throw new RuntimeException( "log file does exists '" + expected + "'" );
+}
+

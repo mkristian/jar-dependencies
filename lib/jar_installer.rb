@@ -170,8 +170,17 @@ module Jars
 
     def vendor_jars( write_require_file = true )
       return unless has_jars?
-      # do not vendor only if set explicitly via ENV/system-properties
-      do_install( Jars.to_prop( Jars::VENDOR ) != 'false', write_require_file )
+      case Jars.to_prop( Jars::VENDOR )
+      when 'true'
+        do_vendor = true
+      when 'false'
+        do_vendor = false
+      else
+        # if the spec_file does not exists this means it is a local gem
+        # coming via bundle :path or :git
+        do_vendor = File.exists?( @spec.spec_file )
+      end
+      do_install( do_vendor, write_require_file )
     end
 
     def install_jars( write_require_file = true )
@@ -269,6 +278,7 @@ EOF
 
       maven = Maven::Ruby::Maven.new
       maven.verbose = Jars.verbose?
+      puts "  jar dependencies for #{@spec.spec_name} . . ." unless Jars.quiet?
       maven.exec( *setup_arguments( deps ) )
 
       self.class.load_from_maven( deps )
