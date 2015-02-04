@@ -4,6 +4,13 @@ inherit 'jar-dependencies:gemspec_with_system_jar:0'
 
 gemspec
 
+# use the current jar dependencies gem
+model.dependencies.each do |d|
+  if d.artifact_id == 'jar-dependencies'
+    d.version = '${jar-dependencies.version}'
+  end
+end
+
 properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
             'gem.path' => '${gem.home}',
             'tesla.dump.pom' => 'pom.xml',
