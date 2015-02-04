@@ -22,7 +22,9 @@
 module Jars
   HOME = 'JARS_HOME'.freeze
   MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
+  # skip the gem post install hook
   SKIP = 'JARS_SKIP'.freeze
+  # just do not require any jars
   NO_REQUIRE = 'JARS_NO_REQUIRE'.freeze
   QUIET = 'JARS_QUIET'.freeze
   VERBOSE = 'JARS_VERBOSE'.freeze
@@ -55,7 +57,7 @@ module Jars
     end
 
     def no_require?
-      @frozen || to_boolean( NO_REQUIRE )
+      to_boolean( NO_REQUIRE )
     end
 
     def quiet?
@@ -76,6 +78,10 @@ module Jars
 
     def freeze_loading
       @frozen = true
+    end
+
+    def frozen?
+      !!@frozen
     end
 
     def reset
@@ -170,17 +176,14 @@ module Jars
       end
     end
 
-    def detect_local_repository(settings); require 'rexml/document'
-      doc = REXML::Document.new( File.read( settings ) )
-      if local_repo = doc.root.elements['localRepository']
-        if ( local_repo = local_repo.first )
-          local_repo = local_repo.value
-          # replace maven like system properties embedded into the string
-          local_repo.gsub!( /\$\{[a-zA-Z.]+\}/ ) do |a|
-            ENV_JAVA[ a[2..-2] ] || a
-          end
-          local_repo = nil if local_repo.empty?
+    def detect_local_repository(settings)
+      doc = File.read( settings )
+      if local_repo = doc.sub( /<\/localRepository>.*/m, '' ).sub( /.*<localRepository>/m, '' )
+        # replace maven like system properties embedded into the string
+        local_repo.gsub!( /\$\{[a-zA-Z.]+\}/ ) do |a|
+          ENV_JAVA[ a[2..-2] ] || a
         end
+        local_repo = nil if local_repo.empty?
       end
       local_repo
     end
@@ -214,7 +217,7 @@ def require_jar( *args )
   return false if Jars.no_require?
   result = Jars.require_jar( *args )
   if result.is_a? String
-    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}" unless Jars.quiet?
+    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}" if not Jars.quiet? and not Jars.frozen?
     return false
   end
   result

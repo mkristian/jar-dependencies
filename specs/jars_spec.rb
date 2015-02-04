@@ -102,4 +102,29 @@ describe Jars do
     $stderr = STDERR
     ENV['JARS_HOME'] = nil
   end
+
+  it 'freezes jar loading unless jar is not loaded yet' do
+    begin
+      require 'jopenssl/version'
+
+      Jars.reset
+
+      $CLASSPATH.detect { |c| c =~ /bouncycastle/ }.must_be_nil
+
+      Jars.freeze_loading
+      require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
+
+      $CLASSPATH.detect { |c| c =~ /bouncycastle/ }.wont_be_nil
+      $stderr = StringIO.new
+
+      require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
+
+      $stderr.string.must_equal ''
+
+      $stderr = STDERR
+
+    rescue
+      skip 'assume we have an old jruby'
+    end
+  end
 end
