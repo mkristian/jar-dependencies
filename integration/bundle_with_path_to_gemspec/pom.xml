@@ -8,7 +8,7 @@
   <name>bundle_with_path_to_gemspec</name>
   <properties>
     <jar-dependencies.version>0.1.0</jar-dependencies.version>
-    <jruby.version>1.7.15</jruby.version>
+    <jruby.version>1.7.19</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
     <jruby.plugins.version>1.0.4</jruby.plugins.version>
@@ -38,7 +38,7 @@
           <dependency>
             <groupId>rubygems</groupId>
             <artifactId>bundler</artifactId>
-            <version>1.7.2</version>
+            <version>1.7.12</version>
             <type>gem</type>
           </dependency>
           <dependency>
