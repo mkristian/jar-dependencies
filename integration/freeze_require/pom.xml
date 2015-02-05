@@ -24,6 +24,7 @@
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
       <version>1.7.19</version>
+      <type>pom</type>
     </dependency>
   </dependencies>
   <build>
@@ -31,7 +32,7 @@
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
         <executions>
           <execution>
             <goals>
