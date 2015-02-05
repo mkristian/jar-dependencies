@@ -1,5 +1,4 @@
 language: ruby
-bundler_args: --without copyright
 rvm:
   - jruby
 matrix:
@@ -7,13 +6,13 @@ matrix:
     - rvm: jruby
       jdk: openjdk6
       script: mvn verify
-    - rvm: jruby
-      jdk: openjdk7
-      script: mvn verify
-    - rvm: jruby
-      jdk: oraclejdk7
-      script: mvn verify
-    - rvm: jruby
-      jdk: oraclejdk8
-      script: mvn verify
+#    - rvm: jruby
+#      jdk: openjdk7
+#      script: mvn verify
+#    - rvm: jruby
+#      jdk: oraclejdk7
+#      script: mvn verify
+#    - rvm: jruby
+#      jdk: oraclejdk8
+#      script: mvn verify
   allow_failures:
