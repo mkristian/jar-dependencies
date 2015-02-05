@@ -9,6 +9,8 @@ gem 'second'
 gem 'third'
 gem 'forth'
 
+gem 'jar-dependencies', '${jar-dependencies.version}'
+
 properties( 'gem.home' => '${basedir}/../pkg',
             'gem.path' => '${gem.home}',
             'tesla.dump.pom' => 'pom.xml',
