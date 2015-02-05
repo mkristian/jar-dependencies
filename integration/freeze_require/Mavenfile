@@ -2,15 +2,13 @@
 
 packaging 'pom'
 
-s = eval File.read( '../../jar-dependencies.gemspec' )
-
-gem 'jar-dependencies', s.version.to_s
+gem 'jar-dependencies', '${jar-dependencies.version}'
 
 jruby_plugin :gem, '1.0.7' do
   execute_goal :initialize
 end
 
-jar 'org.jruby:jruby', '1.7.16.1'
+jar 'org.jruby:jruby', '1.7.19'
 
 plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
         :executable => :java,

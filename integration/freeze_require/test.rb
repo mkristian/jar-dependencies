@@ -4,15 +4,27 @@ require 'jar-dependencies'
 
 Jars.freeze_loading
 
-raise 'no env variable for freeze' if ENV[Jars::NO_REQUIRE]
+raise 'expected no env variable for freeze' if ENV[Jars::NO_REQUIRE]
 
-begin
-
-  require 'openssl'
-
-  raise 'load error expected'
-
-rescue LoadError
+if $CLASSPATH.detect { |c| c =~ /bouncycastle/ }
+  raise 'expected no bouncycastle jars in classpath'
 end
+
+require 'openssl'
+
+unless $CLASSPATH.detect { |c| c =~ /bouncycastle/ }
+  raise 'did not find bouncycastle jars'
+end
+
+$stderr = StringIO.new
+
+require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
+
+unless $stderr.string.empty?
+  raise 'no warning on jar conflics after freeze'
+end
+
+$stderr = STDERR
+
 
 # vim: syntax=Ruby
