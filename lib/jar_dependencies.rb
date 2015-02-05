@@ -180,7 +180,11 @@ module Jars
 
     def detect_local_repository(settings)
       doc = File.read( settings )
-      if local_repo = doc.sub( /<\/localRepository>.*/m, '' ).sub( /.*<localRepository>/m, '' )
+      local_repo = doc.sub( /<\/localRepository>.*/m, '' ).sub( /.*<localRepository>/m, '' )
+      if local_repo =~ /</
+        # it contains xml so we did not find the localRepository tag
+        local_repo = nil
+      else
         # replace maven like system properties embedded into the string
         local_repo.gsub!( /\$\{[a-zA-Z.]+\}/ ) do |a|
           ENV_JAVA[ a[2..-2] ] || a
