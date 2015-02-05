@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version = '1.1.1'
   s.author = 'example person'
   s.email = [ 'mail@example.com' ]
-  s.summary = 'first gem with jars vendored during installation'
+  s.summary = 'test gem'
 
   s.files << Dir[ 'lib/**/*.rb' ]
   s.files << Dir[ '*file' ]

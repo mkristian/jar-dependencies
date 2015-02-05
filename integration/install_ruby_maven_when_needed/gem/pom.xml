@@ -11,7 +11,7 @@
   <artifactId>my</artifactId>
   <version>1.1.1</version>
   <packaging>gem</packaging>
-  <name>first gem with jars vendored during installation</name>
+  <name>test gem</name>
   <developers>
     <developer>
       <name>example person</name>
@@ -27,7 +27,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>jar-dependencies</artifactId>
-      <version>0.1.8.dev</version>
+      <version>${jar-dependencies.version}</version>
       <type>gem</type>
     </dependency>
     <dependency>
