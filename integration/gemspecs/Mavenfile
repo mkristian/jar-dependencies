@@ -6,8 +6,7 @@ packaging 'pom'
 
 name 'aggregator'
 
-modules ['first', 'second', 'third', #'forth', 
-         'verify']
+modules ['first', 'second', 'third', 'forth', 'verify']
 
 properties( 'gem.home' => '${project.basedir}/pkg',
             'gem.path' => '${gem.home}',

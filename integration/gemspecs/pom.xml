@@ -11,6 +11,7 @@
     <module>first</module>
     <module>second</module>
     <module>third</module>
+    <module>forth</module>
     <module>verify</module>
   </modules>
   <properties>
