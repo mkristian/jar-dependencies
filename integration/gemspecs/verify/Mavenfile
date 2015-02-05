@@ -4,6 +4,20 @@ inherit 'jar-dependencies:gemspecs:0'
 
 packaging 'pom'
 
+gem 'first'
+gem 'second'
+gem 'third'
+gem 'forth'
+
+properties( 'gem.home' => '${basedir}/../pkg',
+            'gem.path' => '${gem.home}',
+            'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+jruby_plugin :gem do
+  execute_goal :initialize
+end
+
 execute :use_the_gems, :phase => :package do |ctx|
   Gem.clear_paths
   path = File.join( ctx.project.parent.build.directory.to_pathname )
@@ -36,8 +50,5 @@ execute :use_the_gems, :phase => :package do |ctx|
   end
 
 end
-
-properties( 'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
 
 # vim: syntax=Ruby
