@@ -22,7 +22,7 @@
     <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby-complete</artifactId>
-      <version>1.7.16.1</version>
+      <version>1.7.19</version>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
@@ -71,7 +71,7 @@
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.8</version>
         <executions>
           <execution>
             <goals>

@@ -22,7 +22,7 @@
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
     <gem.home>${basedir}/../pkg</gem.home>
-    <jruby.plugins.version>1.0.4</jruby.plugins.version>
+    <jruby.plugins.version>1.0.7</jruby.plugins.version>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
   <dependencies>

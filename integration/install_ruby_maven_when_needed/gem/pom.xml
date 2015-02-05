@@ -20,14 +20,14 @@
   </developers>
   <properties>
     <tesla.dump.readonly>true</tesla.dump.readonly>
-    <jruby.plugins.version>1.0.4</jruby.plugins.version>
+    <jruby.plugins.version>1.0.8</jruby.plugins.version>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
   <dependencies>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>jar-dependencies</artifactId>
-      <version>[0.1.7,0.1.7.0.0.0.0.1)</version>
+      <version>0.1.8.dev</version>
       <type>gem</type>
     </dependency>
     <dependency>

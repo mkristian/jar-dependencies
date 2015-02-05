@@ -35,7 +35,6 @@ execute :use_the_gems, :phase => :package do |ctx|
     raise "file '#{f}' does exist" if File.exists?( f )
   end
 
-  
 end
 
 properties( 'tesla.dump.pom' => 'pom.xml',
