@@ -5,7 +5,7 @@ matrix:
   include:
     - rvm: jruby
       jdk: openjdk6
-      script: mvn verify
+      script: mvn verify -Dmaven.test.skip
 #    - rvm: jruby
 #      jdk: openjdk7
 #      script: mvn verify
