@@ -123,6 +123,9 @@
             <configuration>
               <projectsDirectory>integration</projectsDirectory>
               <streamLogs>true</streamLogs>
+              <goals>
+                <goal>install</goal>
+              </goals>
               <cloneProjectsTo>${project.build.directory}</cloneProjectsTo>
               <properties>
                 <jar-dependencies.version>${project.version}</jar-dependencies.version>

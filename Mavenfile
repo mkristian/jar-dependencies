@@ -26,7 +26,7 @@ plugin :invoker, '1.8' do
                  :id => 'integration-tests',
                  :projectsDirectory => 'integration',
                  :streamLogs => true,
-                 :goals => 'install',
+                 :goals => ['install'],
                  :cloneProjectsTo => '${project.build.directory}',
                  :properties => { 'jar-dependencies.version' => '${project.version}' })
 end
