@@ -202,6 +202,8 @@ module Jars
     def do_require( *args )
       jar = to_jar( *args )
       file = File.join( home, jar )
+p jar
+p file
       # use jar from local repository if exists
       if File.exists?( file )
         require file
