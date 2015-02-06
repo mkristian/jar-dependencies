@@ -124,9 +124,11 @@ describe Jars do
 
       $stderr = STDERR
 
-    rescue LoadError
+    rescue LoadError => e
+      p e
       skip 'assume we have an old jruby'
-    rescue NameError
+    rescue NameError => e
+      p e
       skip 'assume we have an old jruby'
     end
   end 
