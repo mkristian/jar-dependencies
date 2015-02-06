@@ -1,11 +1,20 @@
-language: ruby
-rvm:
-  - jruby
-matrix:
-  include:
-    - rvm: jruby
-      jdk: openjdk6
-      script: mvn verify -Dmaven.test.skip
+language: java
+env:
+  - GOAL=test
+  - GOAL=verify -Dmaven.test.skip
+jdk:
+#  - openjdk6
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8
+script: mvn $GOAL
+#rvm:
+#  - jruby
+#matrix:
+#  include:
+#    - rvm: jruby
+#      jdk: openjdk6
+#      script: mvn verify -Dmaven.test.skip
 #    - rvm: jruby
 #      jdk: openjdk7
 #      script: mvn verify
@@ -15,4 +24,4 @@ matrix:
 #    - rvm: jruby
 #      jdk: oraclejdk8
 #      script: mvn verify
-  allow_failures:
+#  allow_failures:
