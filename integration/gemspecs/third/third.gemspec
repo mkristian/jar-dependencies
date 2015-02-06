@@ -1,5 +1,7 @@
 #-*- mode: ruby -*-
 
+spec = eval( File.read( File.expand_path('../../../../jar-dependencies.gemspec', __FILE__ ) ) )
+
 Gem::Specification.new do |s|
   s.name = 'third'
   s.version = '3'
@@ -12,7 +14,7 @@ Gem::Specification.new do |s|
   s.files << Dir[ '*file' ]
   s.files << 'third.gemspec'
 
-  s.add_runtime_dependency 'jar-dependencies', '~> 0.0.5'
+  s.add_runtime_dependency 'jar-dependencies', spec.version
 
   s.requirements << "jar org.bouncycastle:bcpkix-jdk15on, 1.50"
   s.requirements << "jar org.bouncycastle:bcprov-jdk15on, 1.50"

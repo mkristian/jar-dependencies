@@ -29,7 +29,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>jar-dependencies</artifactId>
-      <version>[0.0.5,0.0.99999]</version>
+      <version>0.1.8.dev</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>
@@ -42,6 +42,12 @@
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcprov-jdk15on</artifactId>
       <version>1.48</version>
+    </dependency>
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>jar-dependencies</artifactId>
+      <version>${jar-dependencies.version}</version>
+      <type>gem</type>
     </dependency>
   </dependencies>
   <repositories>

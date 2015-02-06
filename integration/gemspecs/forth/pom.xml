@@ -44,6 +44,12 @@
       <version>[3,3.0.0.0.0.1)</version>
       <type>gem</type>
     </dependency>
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>jar-dependencies</artifactId>
+      <version>${jar-dependencies.version}</version>
+      <type>gem</type>
+    </dependency>
   </dependencies>
   <repositories>
     <repository>

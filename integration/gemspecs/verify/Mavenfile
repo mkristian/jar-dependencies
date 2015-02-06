@@ -9,6 +9,7 @@ gem 'second'
 gem 'third'
 gem 'forth'
 
+# use the SNAPSHOT version in case we are not released
 gem 'jar-dependencies', '${jar-dependencies.version}'
 
 properties( 'gem.home' => '${basedir}/../pkg',
@@ -36,18 +37,15 @@ execute :use_the_gems, :phase => :package do |ctx|
     raise "mssing warning: #{s}" unless out.string.match( s ) 
   end
 
-  #['bcprov-jdk15on/1.49/bcprov-jdk15on-1.49', 'bcpkix-jdk15on/1.49/bcpkix-jdk15on-1.49' ].each do |name|
-  #  f = File.join( path, "gems/first-1/lib/org/bouncycastle/#{name}.jar" )
-  #  raise "file '#{f}' does not exist" unless File.exists?( f )
-  #end
+  # first has no vendored jars
+  jars = Dir[ File.join( path, "gems/first-1/lib/org/bouncycastle/**/*" ) ]
+  raise "unexpected found jars: #{jars.inspect}" unless jars.empty?
 
-  p Dir[ File.join( path, "gems/first-1/**/*" ) ]
+  # third has no vendored jars
+  jars = Dir[ File.join( path, "gems/thrid-3/lib/org/bouncycastle/**/*" ) ]
+  raise "unexpected found jars: #{jars.inspect}" unless jars.empty?
 
-  ['bcprov-jdk15on/1.50/bcprov-jdk15on-1.50', 'bcpkix-jdk15on/1.50/bcpkix-jdk15on-1.50' ].each do |name|
-    f = File.join( path, "gems/third-3/lib/org/bouncycastle/#{name}.jar" )
-    raise "file '#{f}' does not exist" unless File.exists?( f )
-  end
-
+  # second has vendored jars
   ['bcprov-jdk15on/1.48/bcprov-jdk15on-1.48', 'bcpkix-jdk15on/1.48/bcpkix-jdk15on-1.48' ].each do |name|
     f = File.join( path, "gems/second-2/lib/org/bouncycastle/#{name}.jar" )
     raise "file '#{f}' does exist" if File.exists?( f )
