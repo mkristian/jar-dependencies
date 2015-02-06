@@ -28,6 +28,12 @@
   <dependencies>
     <dependency>
       <groupId>rubygems</groupId>
+      <artifactId>jar-dependencies</artifactId>
+      <version>${jar-dependencies.version}</version>
+      <type>gem</type>
+    </dependency>
+    <dependency>
+      <groupId>rubygems</groupId>
       <artifactId>first</artifactId>
       <version>[1,1.0.0.0.0.1)</version>
       <type>gem</type>
@@ -42,12 +48,6 @@
       <groupId>rubygems</groupId>
       <artifactId>third</artifactId>
       <version>[3,3.0.0.0.0.1)</version>
-      <type>gem</type>
-    </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>jar-dependencies</artifactId>
-      <version>${jar-dependencies.version}</version>
       <type>gem</type>
     </dependency>
   </dependencies>

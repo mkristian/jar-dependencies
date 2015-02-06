@@ -4,13 +4,13 @@ inherit 'jar-dependencies:gemspecs:0'
 
 packaging 'pom'
 
+# use the SNAPSHOT version in case we are not released
+gem 'jar-dependencies', '${jar-dependencies.version}'
+
 gem 'first'
 gem 'second'
 gem 'third'
 gem 'forth'
-
-# use the SNAPSHOT version in case we are not released
-gem 'jar-dependencies', '${jar-dependencies.version}'
 
 properties( 'gem.home' => '${basedir}/../pkg',
             'gem.path' => '${gem.home}',

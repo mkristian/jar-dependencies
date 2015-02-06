@@ -42,12 +42,6 @@
       <artifactId>bcprov-jdk15on</artifactId>
       <version>1.49</version>
     </dependency>
-    <dependency>
-      <groupId>rubygems</groupId>
-      <artifactId>jar-dependencies</artifactId>
-      <version>${jar-dependencies.version}</version>
-      <type>gem</type>
-    </dependency>
   </dependencies>
   <repositories>
     <repository>

@@ -4,9 +4,6 @@ inherit 'jar-dependencies:gemspecs:0'
 
 gemspec
 
-# use the SNAPSHOT version in case we are not released
-gem 'jar-dependencies', '${jar-dependencies.version}'
-
 properties( 'gem.home' => '${basedir}/../pkg',
             'gem.path' => '${gem.home}',
             'tesla.dump.pom' => 'pom.xml',
