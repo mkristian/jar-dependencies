@@ -29,7 +29,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>jar-dependencies</artifactId>
-      <version>0.1.8.dev</version>
+      <version>[0,)</version>
       <type>gem</type>
     </dependency>
     <dependency>
