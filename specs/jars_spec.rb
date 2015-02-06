@@ -107,7 +107,10 @@ describe Jars do
     begin
       Jars.reset
 
+      # this might not even be true depending on how the classloader
+      # names the loaded jars
       $CLASSPATH.detect { |c| c =~ /bouncycastle/ }.must_be_nil
+      size = $CLASSPATH.length
 
       Jars.freeze_loading
 
@@ -115,7 +118,8 @@ describe Jars do
 
       require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
 
-      $CLASSPATH.detect { |c| c =~ /bouncycastle/ }.wont_be_nil
+      $CLASSPATH.length.must_equal (size + 1)
+
       $stderr = StringIO.new
 
       require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
