@@ -118,6 +118,40 @@ describe Jars do
 
       require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
 
+      $CLASSPATH.length.must_equal size
+
+      $stderr = StringIO.new
+
+      require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
+
+      $stderr.string.must_equal ''
+
+      $stderr = STDERR
+
+    rescue LoadError => e
+      p e
+      skip 'assume we have an old jruby'
+    rescue NameError => e
+      p e
+      skip 'assume we have an old jruby'
+    end
+  end 
+
+  it 'does not warn on conflicts after turning into silent mode' do
+    begin
+      Jars.reset
+
+      # this might not even be true depending on how the classloader
+      # names the loaded jars
+      $CLASSPATH.detect { |c| c =~ /bouncycastle/ }.must_be_nil
+      size = $CLASSPATH.length
+
+      Jars.no_more_warnings
+
+      require 'jopenssl/version'
+
+      require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
+
       $CLASSPATH.length.must_equal (size + 1)
 
       $stderr = StringIO.new

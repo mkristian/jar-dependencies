@@ -59,11 +59,11 @@ module Jars
     end
 
     def no_require?
-      to_boolean( NO_REQUIRE )
+      @frozen || to_boolean( NO_REQUIRE )
     end
 
     def quiet?
-      to_boolean( QUIET )
+      @silent || to_boolean( QUIET )
     end
 
     def verbose?
@@ -78,12 +78,12 @@ module Jars
       to_boolean( VENDOR )
     end
 
-    def freeze_loading
-      @frozen = true
+    def no_more_warnings
+      @silent = true
     end
 
-    def frozen?
-      !!@frozen
+    def freeze_loading
+      @frozen = true
     end
 
     def reset
@@ -221,7 +221,7 @@ def require_jar( *args )
   return false if Jars.no_require?
   result = Jars.require_jar( *args )
   if result.is_a? String
-    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}" if not Jars.quiet? and not Jars.frozen?
+    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}" unless Jars.quiet?
     return false
   end
   result

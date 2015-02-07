@@ -2,7 +2,7 @@
 
 require 'jar-dependencies'
 
-Jars.freeze_loading
+Jars.no_more_warnings
 
 raise 'expected no env variable for freeze' if ENV[Jars::NO_REQUIRE]
 

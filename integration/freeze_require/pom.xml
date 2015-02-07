@@ -47,6 +47,7 @@
         <version>1.2</version>
         <executions>
           <execution>
+            <id>no more warnings</id>
             <phase>test</phase>
             <goals>
               <goal>exec</goal>
@@ -56,7 +57,22 @@
                 <argument>-classpath</argument>
                 <classpath />
                 <argument>org.jruby.Main</argument>
-                <argument>test.rb</argument>
+                <argument>test_no_more_warnings.rb</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>freeze loading</id>
+            <phase>test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath />
+                <argument>org.jruby.Main</argument>
+                <argument>test_freeze_loading.rb</argument>
               </arguments>
             </configuration>
           </execution>

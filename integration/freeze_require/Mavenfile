@@ -14,11 +14,16 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
         :executable => :java,
         :environmentVariables => { 'GEM_HOME' => '${gem.home}',
           'GEM_PATH' => '${gem.home}' } ) do
-  execute_goal( :exec, :phase => :test,
+  execute_goal( :exec, :id => 'no more warnings', :phase => :test,
                 :arguments => ['-classpath',
                                xml('<classpath/>'),
                                'org.jruby.Main',
-                               'test.rb' ] )
+                               'test_no_more_warnings.rb' ] )
+  execute_goal( :exec, :id => 'freeze loading', :phase => :test,
+                :arguments => ['-classpath',
+                               xml('<classpath/>'),
+                               'org.jruby.Main',
+                               'test_freeze_loading.rb' ] )
 end
 
 properties( 'gem.home' => '${project.basedir}/pkg/rubygems',

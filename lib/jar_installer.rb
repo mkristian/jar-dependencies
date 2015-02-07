@@ -215,7 +215,13 @@ module Jars
     end
 
     def setup_arguments( deps )
-      args = [ 'dependency:list', "-DoutputFile=#{deps}", '-DoutputAbsoluteArtifactFilename=true', '-DincludeTypes=jar', '-DoutputScope=true', '-f', @specfile ]
+      args = [ 'dependency:list',
+               "-DoutputFile=#{deps}", 
+               '-DoutputAbsoluteArtifactFilename=true', 
+               '-DincludeTypes=jar', 
+               '-DoutputScope=true',
+               '-f', File.dirname( __FILE__ ) + '/jar_pom.rb',
+               "-Djars.specfile=#{@specfile}" ]
 
       if Jars.debug?
         args << '-X'
