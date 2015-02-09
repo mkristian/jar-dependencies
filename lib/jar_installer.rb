@@ -220,7 +220,7 @@ module Jars
                '-DoutputAbsoluteArtifactFilename=true', 
                '-DincludeTypes=jar', 
                '-DoutputScope=true',
-               '-f', File.dirname( __FILE__ ) + '/jar_pom.rb',
+               '-f', File.dirname( __FILE__ ) + '/jars/jar_pom.rb',
                "-Djars.specfile=#{@specfile}" ]
 
       if Jars.debug?

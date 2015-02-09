@@ -9,8 +9,11 @@ basedir( File.dirname( specfile ) )
 gemspec File.basename( specfile )
 
 # we do not want those gem dependencies
-model.dependencies.each do |d|
-  model.dependencies.remove( d ) if d.group_id == 'rubygems'
+gems = model.dependencies.select do |d|
+  d.group_id == 'rubygems'
+end
+gems.each do |d|
+  model.dependencies.remove( d )
 end
 
 # some output
