@@ -29,25 +29,25 @@
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>first</artifactId>
+      <artifactId>first_gem</artifactId>
       <version>[0,)</version>
       <type>gem</type>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>second</artifactId>
+      <artifactId>second_gem</artifactId>
       <version>[0,)</version>
       <type>gem</type>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>third</artifactId>
+      <artifactId>third_gem</artifactId>
       <version>[0,)</version>
       <type>gem</type>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>forth</artifactId>
+      <artifactId>forth_gem</artifactId>
       <version>[0,)</version>
       <type>gem</type>
     </dependency>

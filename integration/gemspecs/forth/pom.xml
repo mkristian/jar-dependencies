@@ -8,7 +8,7 @@
     <version>0</version>
   </parent>
   <groupId>rubygems</groupId>
-  <artifactId>forth</artifactId>
+  <artifactId>forth_gem</artifactId>
   <version>4</version>
   <packaging>gem</packaging>
   <name>forth gem depending on the other gems</name>
@@ -34,19 +34,19 @@
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>first</artifactId>
+      <artifactId>first_gem</artifactId>
       <version>[1,1.0.0.0.0.1)</version>
       <type>gem</type>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>second</artifactId>
+      <artifactId>second_gem</artifactId>
       <version>[2,2.0.0.0.0.1)</version>
       <type>gem</type>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>third</artifactId>
+      <artifactId>third_gem</artifactId>
       <version>[3,3.0.0.0.0.1)</version>
       <type>gem</type>
     </dependency>
@@ -72,7 +72,7 @@
         <artifactId>gem-maven-plugin</artifactId>
         <version>${jruby.plugins.version}</version>
         <configuration>
-          <gemspec>forth.gemspec</gemspec>
+          <gemspec>forth_gem.gemspec</gemspec>
         </configuration>
       </plugin>
     </plugins>

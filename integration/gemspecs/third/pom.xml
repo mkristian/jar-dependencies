@@ -8,7 +8,7 @@
     <version>0</version>
   </parent>
   <groupId>rubygems</groupId>
-  <artifactId>third</artifactId>
+  <artifactId>third_gem</artifactId>
   <version>3</version>
   <packaging>gem</packaging>
   <name>third gem with embedded jars</name>
@@ -64,7 +64,7 @@
         <artifactId>gem-maven-plugin</artifactId>
         <version>${jruby.plugins.version}</version>
         <configuration>
-          <gemspec>third.gemspec</gemspec>
+          <gemspec>third_gem.gemspec</gemspec>
         </configuration>
       </plugin>
     </plugins>

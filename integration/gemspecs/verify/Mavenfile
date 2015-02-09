@@ -7,10 +7,10 @@ packaging 'pom'
 # use the SNAPSHOT version in case we are not released
 gem 'jar-dependencies', '${jar-dependencies.version}'
 
-gem 'first'
-gem 'second'
-gem 'third'
-gem 'forth'
+gem 'first_gem'
+gem 'second_gem'
+gem 'third_gem'
+gem 'forth_gem'
 
 properties( 'gem.home' => '${basedir}/../pkg',
             'gem.path' => '${gem.home}',

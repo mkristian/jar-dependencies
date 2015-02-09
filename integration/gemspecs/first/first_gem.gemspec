@@ -1,7 +1,7 @@
 #-*- mode: ruby -*-
 
 Gem::Specification.new do |s|
-  s.name = 'first'
+  s.name = 'first_gem'
   s.version = '1'
   s.author = 'example person'
   s.email = [ 'mail@example.com' ]
@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.files << Dir[ 'lib/**/*.rb' ]
   s.files << Dir[ '*file' ]
-  s.files << 'first.gemspec'
+  s.files << 'first_gem.gemspec'
 
   s.add_runtime_dependency 'jar-dependencies'
 
