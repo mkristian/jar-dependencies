@@ -12,8 +12,6 @@
   <licenses>
     <license>
       <name>MIT</name>
-      <url>http://opensource.org/licenses/MIT</url>
-      <comments>MIT license</comments>
     </license>
   </licenses>
   <developers>
@@ -30,9 +28,10 @@
     <jruby.version>1.7.13</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.modes>1.9,2.0,2.1</jruby.modes>
-    <jruby.plugins.version>1.0.7</jruby.plugins.version>
+    <jruby.plugins.version>1.0.3</jruby.plugins.version>
     <jruby.versions>1.6.8,1.7.12,1.7.19,9.0.0.0.pre1</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
+    <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
     <dependency>
@@ -52,7 +51,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>ruby-maven</artifactId>
-      <version>[3.1.1.0.8,3.1.1.0.99999]</version>
+      <version>[3.1.1.0.9,3.1.1.0.99999]</version>
       <type>gem</type>
       <scope>test</scope>
     </dependency>

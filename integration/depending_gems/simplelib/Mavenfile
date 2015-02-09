@@ -1,0 +1,7 @@
+#-*- mode: ruby -*-
+
+properties( 'gem.home' => '${basedir}/../pkg',
+            'gem.path' => '${gem.home}' )
+gemspec
+
+# vim: syntax=Ruby

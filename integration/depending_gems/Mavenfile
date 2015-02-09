@@ -1,0 +1,21 @@
+group_id 'jar-dependencies'
+
+packaging 'pom'
+
+modules ['simplelib', 'biglib']
+
+properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
+	    'gem.path' => '${project.basedir}/pkg/rubygems' )
+
+phase :test do
+  execute 'verify' do |ctx|
+    log = File.read( ctx.basedir.to_pathname + '/build.log' )
+    [ 'io.dropwizard.metrics:metrics-json:3.1.0',
+      'io.dropwizard.metrics:metrics-jvm:3.1.0',
+      'io.dropwizard.metrics:metrics-core:3.1.0' ].each do |expected|
+      raise "log does not contain '#{expected}'" unless log =~ /#{expected}/
+
+      puts "log contains '#{expected}'"
+    end
+  end
+end

@@ -1,0 +1,9 @@
+#-*- mode: ruby -*-
+
+source 'https://rubygems.org'
+
+gem 'simplelib', :path => '../simplelib'
+
+gemspec
+
+# vim: syntax=Ruby

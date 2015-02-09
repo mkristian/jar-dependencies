@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
 
   s.executable = 'bundle-with-jars'
 
-  s.files = Dir[ 'lib/*rb' ]
+  s.files = Dir[ 'lib/**/*rb' ]
   s.files += Dir[ '*file' ]
   s.files += [ 'Readme.md', 'jar-dependencies.gemspec', 'MIT-LICENSE' ]
 
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '~> 5.3'
   s.add_development_dependency 'rake', '~> 10.2'
-  s.add_development_dependency "ruby-maven", "~> 3.1.1.0.8"
+  s.add_development_dependency "ruby-maven", "~> 3.1.1.0.9"
 end
 
 # vim: syntax=Ruby
