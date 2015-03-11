@@ -141,7 +141,24 @@ module Jars
       @_jars_home_
     end
 
+    def require_jars_lock
+      @@jars_lock ||= false
+      unless @@jars_lock
+        # be lazy and only load if there are jar dependencies
+        require 'jars/classpath'
+        classpath = Jars::Classpath.new
+        if @@jars_lock = classpath.jars_lock
+          classpath.require
+          self.no_more_warnings
+        else
+          @@jars_lock = true
+        end
+      end
+    end
+
     def require_jar( group_id, artifact_id, *classifier_version )
+      require_jars_lock
+
       version = classifier_version[ -1 ]
       classifier = classifier_version[ -2 ]
 
