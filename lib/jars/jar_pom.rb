@@ -5,10 +5,14 @@ specfile = java.lang.System.getProperty('jars.specfile')
 # needed since the gemspec does not allow absolute files
 basedir( File.dirname( specfile ) )
 
+# add jruby for compilation
+jar 'org.jruby:jruby-core', JRUBY_VERSION, :scope => :provided
+
 # get ALL depenedencies from the specfile
 gemspec File.basename( specfile )
 
-# we do not want those gem dependencies
+# we do not want those gem dependencies, each gem takes care of its
+# own jar dependencies
 gems = model.dependencies.select do |d|
   d.group_id == 'rubygems'
 end
@@ -18,5 +22,5 @@ end
 
 # some output
 model.dependencies.each do |d|
-  puts "      " + d.group_id + ':' + d.artifact_id + (d.classifier ? ":" + d.classifier : "" ) + ":" + d.version
+  puts "      " + d.group_id + ':' + d.artifact_id + (d.classifier ? ":" + d.classifier : "" ) + ":" + d.version unless d.artifact_id == 'jruby-core'
 end

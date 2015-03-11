@@ -22,8 +22,8 @@
 if defined?( JRUBY_VERSION ) && Gem.post_install_hooks.empty?
   Gem.post_install do |gem_installer|
     unless (ENV['JARS_SKIP'] || ENV_JAVA['jars.skip']) == 'true'
-      require 'jar_installer'
-      jars = Jars::JarInstaller.new( gem_installer.spec )
+      require 'jars/jar_installer'
+      jars = Jars::Installer.new( gem_installer.spec )
       jars.ruby_maven_install_options = gem_installer.options || {}
       jars.vendor_jars
     end

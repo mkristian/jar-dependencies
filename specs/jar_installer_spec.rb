@@ -1,7 +1,8 @@
 require File.expand_path('setup', File.dirname(__FILE__))
 require 'jar_installer'
 require 'fileutils'
-class Jars::JarInstaller
+class Jars::Installer
+
   def do_install( vendor, write )
     @vendor = vendor
     @write = write
@@ -10,7 +11,7 @@ class Jars::JarInstaller
   attr_reader :vendor
   attr_reader :write
 end
-describe Jars::JarInstaller do
+describe Jars::Installer do
 
   let( :file ) { File.join( pwd, 'deps.txt' ) }
 
@@ -27,72 +28,15 @@ describe Jars::JarInstaller do
     FileUtils.mkdir_p( dir )
   end
 
-  it 'uses logging config' do
-    jar = Jars::JarInstaller.new( example_spec )
-    
-    ENV[ 'JARS_VERBOSE' ] = nil
-    ENV[ 'JARS_DEBUG' ] = nil
-    args = jar.send :setup_arguments, "deps.file"
-    args.member?( '--quiet' ).must_equal true
-    args.member?( '-X' ).must_equal false
-
-    ENV[ 'JARS_VERBOSE' ] = 'true'
-    ENV[ 'JARS_DEBUG' ] = nil
-    args = jar.send :setup_arguments, "deps.file"
-    args.member?( '--quiet' ).must_equal false
-    args.member?( '-X' ).must_equal false
-
-    ENV[ 'JARS_VERBOSE' ] = nil
-    ENV[ 'JARS_DEBUG' ] = 'true'
-    args = jar.send :setup_arguments, "deps.file"
-    args.member?( '--quiet' ).must_equal false
-    args.member?( '-X' ).must_equal true
-
-    ENV[ 'JARS_VERBOSE' ] = 'true'
-    ENV[ 'JARS_DEBUG' ] = 'true'
-    args = jar.send :setup_arguments, "deps.file"
-    args.member?( '--quiet' ).must_equal false
-    args.member?( '-X' ).must_equal true
-  end
-
-  it 'uses proxy settings from Gem.configuration' do
-    ENV['JARS_MAVEN_SETTINGS'] = 'specs/does/no/exists/settings.xml'
-    Jars.reset
-    jar = Jars::JarInstaller.new( example_spec )
-    
-    Gem.configuration[ :proxy ] = 'https://localhost:3128'
-    args = jar.send :setup_arguments, "deps.file"
-    args.member?( '-DproxySet=true' ).must_equal true
-    args.member?( '-DproxyHost=localhost' ).must_equal true
-    args.member?( '-DproxyPort=3128' ).must_equal true
-
-    Gem.configuration[ :proxy ] = :noproxy
-    args = jar.send :setup_arguments, "deps.file"
-    args.member?( '-DproxySet=true' ).must_equal false
-    args.member?( '-DproxyHost=localhost' ).must_equal false
-    args.member?( '-DproxyPort=3128' ).must_equal false
-
-    ENV['JARS_MAVEN_SETTINGS'] = 'specs/settings.xml'
-    Jars.reset
-    Gem.configuration[ :proxy ] = 'https://localhost:3128'
-    args = jar.send :setup_arguments, "deps.file"
-    args.member?( '-DproxySet=true' ).must_equal false
-    args.member?( '-DproxyHost=localhost' ).must_equal false
-    args.member?( '-DproxyPort=3128' ).must_equal false
-    
-    ENV['JARS_MAVEN_SETTINGS'] = nil
-    Jars.reset
-  end
-
   it 'loads dependencies from maven' do
-    deps = Jars::JarInstaller.load_from_maven( file )
+    deps = Jars::Installer.load_from_maven( file )
     deps.size.must_equal 45
-    deps.each { |d| d.must_be_kind_of Jars::JarInstaller::Dependency }
+    deps.each { |d| d.must_be_kind_of Jars::Installer::Dependency }
   end
 
   it 'generates non-vendored require-file' do
-    deps = Jars::JarInstaller.load_from_maven( file )
-    Jars::JarInstaller.install_deps( deps, dir, jars, false )
+    deps = Jars::Installer.load_from_maven( file )
+    Jars::Installer.install_deps( deps, dir, jars, false )
     File.read( jars ).each_line do |line|
       if line.size > 30 && !line.match( /^#/ )
         line.match( /^require_jar\(/ ).wont_be_nil
@@ -102,8 +46,8 @@ describe Jars::JarInstaller do
   end
 
   it 'generates vendored require-file' do
-    deps = Jars::JarInstaller.load_from_maven( file )
-    Jars::JarInstaller.install_deps( deps, dir, jars, true )
+    deps = Jars::Installer.load_from_maven( file )
+    Jars::Installer.install_deps( deps, dir, jars, true )
     File.read( jars ).each_line do |line|
       if line.size > 30 && !line.match( /^#/ )
         line.match( /^require_jar\(/ ).wont_be_nil
@@ -113,60 +57,45 @@ describe Jars::JarInstaller do
   end
 
   it 'just skips install_jars and vendor_jars if there are no requirements' do
-    jar = Jars::JarInstaller.new
+    jar = Jars::Installer.new
     jar.install_jars
+    # vendor method is a mocked method
     jar.vendor.must_be_nil
     jar.vendor_jars
+    # vendor method is a mocked method
     jar.vendor.must_be_nil
   end
 
   it 'does install_jars and vendor_jars' do
     ENV[ 'JARS_VENDOR' ] = nil
-    jar = Jars::JarInstaller.new( example_spec )
+    jar = Jars::Installer.new( example_spec )
     jar.install_jars
+    # vendor method is a mocked method
     jar.vendor.must_equal false
-    jar.vendor_jars
     ENV[ 'JARS_VENDOR' ] = 'false'
     jar.vendor_jars
+    # vendor method is a mocked method
     jar.vendor.must_equal false
     ENV[ 'JARS_VENDOR' ] = 'true'
     jar.vendor_jars
+    # vendor method is a mocked method
     jar.vendor.must_equal true
     java.lang.System.set_property( 'jars.vendor', 'false' )
     jar.vendor_jars
+    # vendor method is a mocked method
     jar.vendor.must_equal false
   end
 
-  it 'finds the gemspec file when the Gem::Specifiacation.spec_file is wrong' do
-    spec = eval( File.read( example_spec ) )
-    # mimic bundler case
-    FileUtils.rm_f( spec.spec_file )
-    def spec.gem_dir= d
-      @d = d
+  it 'installs dependencies ' do
+    ENV[ 'JARS_HOME' ] = dir
+    Jars.reset
+    jar = Jars::Installer.new( example_spec )
+    result = jar.send :install_dependencies
+    result.size.must_equal 2
+    result.each do |d|
+      d.type.must_equal :jar
+      d.scope.must_equal :runtime
     end
-    def spec.gem_dir
-      @d
-    end
-    spec.gem_dir = File.dirname( example_spec )
-    # now test finding the gemspec file
-    jar = Jars::JarInstaller.new( spec )
-    jar.instance_variable_get( :@basedir ).must_equal File.expand_path( spec.gem_dir )
-    jar.instance_variable_get( :@specfile ).must_equal File.expand_path( example_spec )
-  end
-
-  # do not run on travis due to random Errno::EBADF
-  unless File.exists?( '/home/travis' )
-    it 'installs dependencies ' do
-      skip( "too many random Errno::EBADF" )
-      ENV[ 'JARS_HOME' ] = dir
-      jar = Jars::JarInstaller.new( example_spec )
-      result = jar.send :install_dependencies
-      result.size.must_equal 2
-      result.each do |d|
-        d.type.must_equal :jar
-        d.scope.must_equal :runtime
-      end
-      ENV[ 'JARS_HOME' ] = nil
-    end
+    ENV[ 'JARS_HOME' ] = nil
   end
 end
