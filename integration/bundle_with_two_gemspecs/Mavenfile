@@ -13,7 +13,7 @@ properties( 'gem.home' => '${project.basedir}/../../pkg/rubygems',
 
 jruby_plugin :gem, :filename => 'bundle', :args => 'install' do
   execute_goal :exec
-  gem 'bundler', '1.7.12'
+  gem 'bundler', '1.8.5'
   gem 'jar-dependencies', '${jar-dependencies.version}'
 end
 

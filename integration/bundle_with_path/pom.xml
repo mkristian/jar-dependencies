@@ -29,7 +29,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>bundler</artifactId>
-      <version>1.7.12</version>
+      <version>1.8.5</version>
       <type>gem</type>
     </dependency>
     <dependency>
