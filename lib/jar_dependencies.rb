@@ -21,16 +21,25 @@
 
 module Jars
   unless defined? Jars::MAVEN_SETTINGS
-    HOME = 'JARS_HOME'.freeze
     MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
+    # where the locally stored jars are search for or stored
+    HOME = 'JARS_HOME'.freeze
     # skip the gem post install hook
     SKIP = 'JARS_SKIP'.freeze
     # just do not require any jars
     NO_REQUIRE = 'JARS_NO_REQUIRE'.freeze
+    # no more warnings on conflict. this still requires jars but will
+    # not warn. it is needed to load jars from (default) gems which
+    # do contribute to any dependency manager (maven, gradle, jbundler)
     QUIET = 'JARS_QUIET'.freeze
+    # show maven output
     VERBOSE = 'JARS_VERBOSE'.freeze
+    # maven debug
     DEBUG = 'JARS_DEBUG'.freeze
+    # vendor jars inside gem when installing gem
     VENDOR = 'JARS_VENDOR'.freeze
+    # resolve jars from Jars.lock
+    RESOLVE = 'JARS_RESOLVE'.freeze
   end
 
   class << self
@@ -48,9 +57,6 @@ module Jars
 
     def to_boolean( key )
       prop = to_prop( key )
-      # prop == nil => false
-      # prop == 'false' => false
-      # anything else => true
       prop == '' or prop == 'true'
     end
 
@@ -76,6 +82,10 @@ module Jars
 
     def vendor?
       to_boolean( VENDOR )
+    end
+
+    def resolve?
+      to_boolean( RESOLVE )
     end
 
     def no_more_warnings
@@ -227,7 +237,7 @@ module Jars
         require jar
       end
     rescue LoadError => e
-      raise "\n\n\tyou might need to reinstall the gem which depends on the missing jar\n\n" + e.message + " (LoadError)"
+      raise "\n\n\tyou might need to reinstall the gem which depends on the missing jar or in case there is Jars.lock then JARS_RESOLVE=true will install the missing jars\n\n" + e.message + " (LoadError)"
     end
 
   end # class << self

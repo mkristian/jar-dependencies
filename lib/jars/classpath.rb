@@ -23,7 +23,7 @@ module Jars
     def dependencies_list
       deps = jars_lock
       if deps and File.exists?( deps )
-        # TODO @mvn.resolve_dependencies( deps )
+        @mvn.resolve_dependencies( deps ) if Jars.resolve?
         deps
       else
         resolve_dependencies
