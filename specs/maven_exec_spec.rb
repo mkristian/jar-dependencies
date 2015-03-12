@@ -1,4 +1,4 @@
-require File.expand_path('setup', File.dirname(__FILE__))
+require_relative 'setup'
 require 'jars/maven_exec'
 require 'fileutils'
 
@@ -7,6 +7,13 @@ describe Jars::MavenExec do
   let( :pwd ) { File.dirname( File.expand_path( __FILE__ ) ) }
 
   let( :example_spec ) { File.join( pwd, '..', 'example', 'example.gemspec' ) }
+
+  after do
+    ENV[ 'JARS_VERBOSE' ] = nil
+    ENV[ 'JARS_DEBUG' ] = nil
+    ENV[ 'JARS_MAVEN_SETTINGS' ] = nil
+    Jars.reset
+  end
 
   it 'uses logging config' do
     jar = Jars::MavenExec.new( example_spec )
@@ -60,9 +67,6 @@ describe Jars::MavenExec do
     args.member?( '-DproxySet=true' ).must_equal false
     args.member?( '-DproxyHost=localhost' ).must_equal false
     args.member?( '-DproxyPort=3128' ).must_equal false
-    
-    ENV['JARS_MAVEN_SETTINGS'] = nil
-    Jars.reset
   end
 
   it 'finds the gemspec file when the Gem::Specifiacation.spec_file is wrong' do

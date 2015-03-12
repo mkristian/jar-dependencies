@@ -1,4 +1,4 @@
-require File.expand_path('setup', File.dirname(__FILE__))
+require_relative 'setup'
 require 'jar_installer'
 require 'fileutils'
 class Jars::Installer

@@ -68,12 +68,21 @@ module Jars
     private
 
     def setup_arguments( deps )
-      args = [ 'dependency:list',
+      if File.basename( deps ) == 'Jars.lock'
+        pom = 'jars_lock_pom.rb'
+        goals = [ 'dependency:copy-dependencies' ]
+      else
+        pom = 'jar_pom.rb'
+        goals = [ 'dependency:copy-dependencies', 'dependency:list' ]
+      end
+      args = [ *goals,
                "-DoutputFile=#{deps}", 
                '-DoutputAbsoluteArtifactFilename=true', 
                '-DincludeTypes=jar', 
                '-DoutputScope=true',
-               '-f', File.dirname( __FILE__ ) + '/jar_pom.rb',
+               '-DuseRepositoryLayout=true',
+               "-DoutputDirectory=#{Jars.home}",
+               '-f', File.dirname( __FILE__ ) + '/' + pom,
                "-Djars.specfile=#{@specfile}" ]
 
       if Jars.debug?

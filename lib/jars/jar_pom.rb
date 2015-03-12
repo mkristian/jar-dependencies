@@ -1,4 +1,4 @@
-# this file is maven DSL and used by maven via jar_installer.rb
+# this file is maven DSL and used by maven via jars/maven_exec.rb
 
 specfile = java.lang.System.getProperty('jars.specfile')
 

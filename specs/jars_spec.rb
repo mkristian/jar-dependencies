@@ -1,4 +1,4 @@
-require File.expand_path('setup', File.dirname(__FILE__))
+require_relative 'setup'
 require 'jar_dependencies'
 require 'stringio'
 describe Jars do
@@ -6,10 +6,12 @@ describe Jars do
   @@_env_ = ENV.dup
 
   before do
+    # helpful when debugging
     Jars.reset
   end
 
   after do
+    Jars.reset
     ENV.clear; ENV.replace @@_env_ # restore ENV
   end
 
@@ -69,7 +71,6 @@ describe Jars do
   end
 
   it 'warn on version conflict' do
-    Jars.reset
     ENV['JARS_HOME'] = File.join( 'specs', 'repo' )
 
     require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ).must_equal true
@@ -83,7 +84,6 @@ describe Jars do
   end
 
   it 'finds jars on the load_path' do
-    Jars.reset
     $LOAD_PATH << File.join( 'specs', 'load_path' )
     ENV['JARS_HOME'] = 'something'
     $stderr = StringIO.new
@@ -105,8 +105,6 @@ describe Jars do
 
   it 'freezes jar loading unless jar is not loaded yet' do
     begin
-      Jars.reset
-
       size = $CLASSPATH.length
 
       Jars.freeze_loading
@@ -136,20 +134,16 @@ describe Jars do
 
   it 'does not warn on conflicts after turning into silent mode' do
     begin
-      Jars.reset
-
-      # this might not even be true depending on how the classloader
-      # names the loaded jars
-      $CLASSPATH.detect { |c| c =~ /bouncycastle/ }.must_be_nil
       size = $CLASSPATH.length
 
       Jars.no_more_warnings
 
       require 'jopenssl/version'
 
-      require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
+      if require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
 
-      $CLASSPATH.length.must_equal (size + 1)
+        $CLASSPATH.length.must_equal (size + 1)
+      end
 
       $stderr = StringIO.new
 

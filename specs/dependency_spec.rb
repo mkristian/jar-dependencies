@@ -1,5 +1,6 @@
-require File.expand_path('setup', File.dirname(__FILE__))
+require_relative 'setup'
 require 'jar_installer'
+
 describe Jars::JarInstaller::Dependency do
 
   it 'should parse dependency line only if it is jar or pom' do
