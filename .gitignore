@@ -6,3 +6,4 @@ pkg
 target
 build.log
 *gemspec.xml
+specs/repository/*
