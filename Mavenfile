@@ -10,8 +10,6 @@ jruby_plugin( :minitest, :minispecDirectory => "specs/*_spec.rb" ) do
   gem 'ruby-maven', '3.1.1.0.8'
 end
 
-#snapshot_repository :jruby, 'http://ci.jruby.org/snapshots/maven'
-
 # (jruby-1.6.8 mode 1.8 produces a lot of yaml errors parsing gemspecs)
 properties( 'jruby.versions' => ['1.6.8', '1.7.12', '${jruby.version}', '9.0.0.0.pre1'
                                 ].join(','),
