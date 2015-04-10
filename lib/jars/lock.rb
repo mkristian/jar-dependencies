@@ -65,10 +65,13 @@ module Jars
         when :all
           yield jar
         when :compile
+          # jar.scope is maven scope
           yield jar if jar.scope != :test
         when :runtime
+          # jar.scope is maven scope
           yield jar if jar.scope != :test and jar.scope != :provided
         when :test
+          # jar.scope is maven scope
           yield jar if jar.scope != :runtime
         end
       end

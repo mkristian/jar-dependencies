@@ -5,10 +5,10 @@ specfile = java.lang.System.getProperty('jars.specfile')
 # needed since the gemspec does not allow absolute files
 basedir( File.dirname( specfile ) )
 
-# add jruby for compilation
+# add jruby as provided for compilation when used vi Jars::Classpath#classpath
 jar 'org.jruby:jruby-core', JRUBY_VERSION, :scope => :provided
 
-# get ALL depenedencies from the specfile
+# get ALL dependencies from the specfile
 gemspec File.basename( specfile )
 
 # we do not want those gem dependencies, each gem takes care of its
