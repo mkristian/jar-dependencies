@@ -22,6 +22,7 @@
 module Jars
   unless defined? Jars::MAVEN_SETTINGS
     MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
+    LOCAL_MAVEN_REPO = 'JARS_LOCAL_MAVEN_REPO'.freeze
     # lock file to use
     LOCK = 'JARS_LOCK'.freeze
     # where the locally stored jars are search for or stored
@@ -100,6 +101,10 @@ module Jars
 
     def lock
       to_prop( LOCK ) || 'Jars.lock'
+    end
+
+    def local_maven_repo
+      to_prop( LOCAL_MAVEN_REPO ) || home
     end
 
     def reset

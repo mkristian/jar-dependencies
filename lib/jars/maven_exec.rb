@@ -98,11 +98,7 @@ module Jars
         args << "-DproxyPort=#{uri.port}"
       end
 
-      if defined? JRUBY_VERSION
-        args << "-Dmaven.repo.local=#{java.io.File.new( Jars.home ).absolute_path}"
-      else
-        args << "-Dmaven.repo.local=#{File.expand_path( Jars.home )}"
-      end
+      args << "-Dmaven.repo.local=#{java.io.File.new( Jars.local_maven_repo ).absolute_path}"
 
       args
     end
