@@ -22,6 +22,8 @@
 module Jars
   unless defined? Jars::MAVEN_SETTINGS
     MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
+    # lock file to use
+    LOCK = 'JARS_LOCK'.freeze
     # where the locally stored jars are search for or stored
     HOME = 'JARS_HOME'.freeze
     # skip the gem post install hook
@@ -96,6 +98,10 @@ module Jars
       @frozen = true
     end
 
+    def lock
+      to_prop( LOCK ) || 'Jars.lock'
+    end
+
     def reset
       instance_variables.each { |var| instance_variable_set(var, nil) }
       ( @@jars ||= {} ).clear
@@ -151,18 +157,20 @@ module Jars
       @_jars_home_
     end
 
+    def require_jars_lock!( scope = :compile )
+      require 'jars/classpath'
+      classpath = Jars::Classpath.new
+      if jars_lock = classpath.jars_lock
+        classpath.require( scope )
+        self.no_more_warnings
+      end
+      jars_lock
+    end
+
     def require_jars_lock
       @@jars_lock ||= false
       unless @@jars_lock
-        # be lazy and only load if there are jar dependencies
-        require 'jars/classpath'
-        classpath = Jars::Classpath.new
-        if @@jars_lock = classpath.jars_lock
-          classpath.require
-          self.no_more_warnings
-        else
-          @@jars_lock = true
-        end
+        @@jars_lock = require_jars_lock! || true
       end
     end
 
