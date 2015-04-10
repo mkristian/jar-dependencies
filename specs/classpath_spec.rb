@@ -86,7 +86,11 @@ describe Jars::Classpath do
     # sometimes the $CLASSPATH can already have BC jars
     # and it is not possible to unload entries from $CLASSPATH
     if old.detect {|c| c =~ /bcprov-jdk15on/ }
-      expected = bc_pkix
+      if old.detect {|c| c =~ /bcpkix-jdk15on/ }
+        expected = []
+      else
+        expected = bc_pkix
+      end
     elsif old.detect {|c| c =~ /bcpkix-jdk15on/ }
       expected = bc_prov
     else
