@@ -1,5 +1,5 @@
 require_relative 'setup'
-require 'jar_dependencies'
+
 require 'stringio'
 describe Jars do
 
@@ -135,13 +135,16 @@ describe Jars do
   it 'does not warn on conflicts after turning into silent mode' do
     begin
       size = $CLASSPATH.length
+      # TODO use jline instead to avoid this skip
+      if $CLASSPATH.detect{ |a| a =~ /bcpkix-jdk15on/ } != nil
+        skip( '$CLASSPATH is not clean - need to skip spec' )
+      end
 
       Jars.no_more_warnings
 
       require 'jopenssl/version'
 
-      if require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
-
+      if require_jar('org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION)
         $CLASSPATH.length.must_equal (size + 1)
       end
 

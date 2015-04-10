@@ -29,7 +29,9 @@ module Jars
       when String
         @specfile = File.expand_path( spec )
         @basedir = File.dirname( @specfile )
-        spec =  eval( File.read( spec ) )
+        spec =  Dir.chdir( File.dirname(@specfile) ) do
+          eval( File.read( @specfile ) )
+        end
       when Gem::Specification
         if File.exists?( spec.spec_file )
           @basedir = spec.gem_dir

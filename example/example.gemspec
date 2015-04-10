@@ -1,6 +1,6 @@
 #-*- mode: ruby -*-
 
-require '../lib/jars/version'
+require "#{File.dirname File.expand_path(__FILE__)}/../lib/jars/version"
 
 Gem::Specification.new do |s|
   s.name = 'example'

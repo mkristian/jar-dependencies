@@ -70,7 +70,10 @@ describe Jars::MavenExec do
   end
 
   it 'finds the gemspec file when the Gem::Specifiacation.spec_file is wrong' do
-    spec = eval( File.read( example_spec ) )
+    spec = Dir.chdir( File.dirname( example_spec ) ) do
+      eval( File.read( example_spec ) )
+    end
+
     # mimic bundler case
     FileUtils.rm_f( spec.spec_file )
     def spec.gem_dir= d

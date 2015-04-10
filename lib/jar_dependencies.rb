@@ -18,7 +18,6 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-
 module Jars
   unless defined? Jars::MAVEN_SETTINGS
     MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
@@ -163,7 +162,9 @@ module Jars
     end
 
     def require_jars_lock!( scope = :compile )
-      require 'jars/classpath'
+      # funny error during spec where it tries to load it again
+      # and finds it as gem instead of the LOAD_PATH
+      require 'jars/classpath' unless defined? Jars::Classpath
       classpath = Jars::Classpath.new
       if jars_lock = classpath.jars_lock
         classpath.require( scope )
