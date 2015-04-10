@@ -16,6 +16,7 @@ properties( 'jruby.versions' => ['1.6.8', '1.7.12', '${jruby.version}', '9.0.0.0
             'jruby.modes' => ['1.9', '2.0', '2.1'].join(','),
             # just lock the version
             'jruby.version' => '1.7.19',
+            'jruby.plugins.version' => '1.0.9',
             'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )
 

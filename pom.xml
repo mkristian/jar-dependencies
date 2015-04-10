@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>jar-dependencies</artifactId>
-  <version>0.1.10</version>
+  <version>0.1.11</version>
   <packaging>gem</packaging>
   <name>manage jar dependencies for gems</name>
-  <description>manage jar dependencies for gems and keep track which jar was already loaded using maven artifact coordinates. it warns on version conflicts and loads only ONE jar assuming the first one is compatible to the second one otherwise your project needs to lock down the right version.</description>
+  <description>manage jar dependencies for gems and keep track which jar was already loaded using maven artifact coordinates. it warns on version conflicts and loads only ONE jar assuming the first one is compatible to the second one otherwise your project needs to lock down the right version by providing a Jars.lock file.</description>
   <url>https://github.com/mkristian/jar-dependencies</url>
   <licenses>
     <license>
@@ -30,7 +30,7 @@
     <jruby.version>1.7.19</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.modes>1.9,2.0,2.1</jruby.modes>
-    <jruby.plugins.version>1.0.8</jruby.plugins.version>
+    <jruby.plugins.version>1.0.9</jruby.plugins.version>
     <jruby.versions>1.6.8,1.7.12,${jruby.version},9.0.0.0.pre1</jruby.versions>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
