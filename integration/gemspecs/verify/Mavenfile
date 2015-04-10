@@ -24,7 +24,7 @@ end
 execute :use_the_gems, :phase => :package do |ctx|
   Gem.clear_paths
   path = File.join( ctx.project.parent.build.directory.to_pathname )
-  ENV['GEM_PATH'] = path
+  p ENV['GEM_PATH'] = path
   require 'stringio'
   out = StringIO.new
   $stderr = out

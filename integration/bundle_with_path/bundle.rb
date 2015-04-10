@@ -1,5 +1,8 @@
 
-spec = eval( File.read( File.expand_path('../../../jar-dependencies.gemspec', __FILE__ ) ) )
+file = File.expand_path('../../../jar-dependencies.gemspec', __FILE__ )
+spec = Dir.chdir( File.dirname( file ) ) do 
+  eval( File.read( file  ) )
+end
 
 # force to use prereleased gem
 gem 'jar-dependencies', spec.version

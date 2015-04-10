@@ -26,5 +26,4 @@ end
 
 $stderr = STDERR
 
-
 # vim: syntax=Ruby

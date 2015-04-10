@@ -7,11 +7,11 @@
   <version>0.0.0</version>
   <name>bundle_with_path_to_gemspec</name>
   <properties>
-    <jar-dependencies.version>0.1.0</jar-dependencies.version>
+    <jar-dependencies.version>0.1.11</jar-dependencies.version>
     <jruby.version>1.7.19</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
-    <jruby.plugins.version>1.0.4</jruby.plugins.version>
+    <jruby.plugins.version>1.0.8</jruby.plugins.version>
     <gem.home>${project.basedir}/../../pkg/rubygems</gem.home>
     <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>

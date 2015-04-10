@@ -17,8 +17,8 @@ module Jars
 
     def jars_lock
       deps = Jars.lock
-      deps if File.exists?( deps )
-      deps = File.join( @mvn.basedir, Jars.lock )
+      return deps if File.exists?( deps )
+      deps = File.join( @mvn.basedir || '.', Jars.lock )
       deps if File.exists?( deps )
     end
 

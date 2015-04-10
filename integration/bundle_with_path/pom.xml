@@ -7,7 +7,7 @@
   <version>0.0.0</version>
   <name>bundle_with_path</name>
   <properties>
-    <jar-dependencies.version>0.1.8.dev</jar-dependencies.version>
+    <jar-dependencies.version>0.1.11</jar-dependencies.version>
     <jruby.version>1.7.19</jruby.version>
     <tesla.dump.readonly>true</tesla.dump.readonly>
     <gem.path>${gem.home}</gem.path>
