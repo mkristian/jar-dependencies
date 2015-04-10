@@ -7,3 +7,4 @@ target
 build.log
 *gemspec.xml
 specs/repository/*
+example/dependencies.list
