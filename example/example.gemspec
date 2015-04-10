@@ -1,5 +1,7 @@
 #-*- mode: ruby -*-
 
+require '../lib/jars/version'
+
 Gem::Specification.new do |s|
   s.name = 'example'
   s.version = "2"
@@ -15,7 +17,7 @@ Gem::Specification.new do |s|
   s.files << Dir[ '*file' ]
   s.files << 'example.gemspec'
 
-  s.add_runtime_dependency 'jar-dependencies', '~>0.0.6'
+  s.add_runtime_dependency 'jar-dependencies', "~> #{Jars::VERSION}"
 
   s.requirements << "jar org.bouncycastle:bcpkix-jdk15on, 1.49"
   s.requirements << "jar org.bouncycastle:bcprov-jdk15on, 1.49"
