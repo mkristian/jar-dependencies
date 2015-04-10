@@ -59,24 +59,25 @@ module Jars
       @options.delete( :ignore_dependencies )
     end
 
-    def resolve_dependencies( file )
-      lazy_load_maven
+    def resolve_dependencies_list( file )
+      do_resolve_dependencies( *setup_arguments( file, 'jar_pom.rb', 'dependency:copy-dependencies', 'dependency:list' ) )
+    end
 
-      maven = Maven::Ruby::Maven.new
-      maven.verbose = Jars.verbose?
-      maven.exec( *setup_arguments( file ) )
+    def resolve_dependencies( file )
+      do_resolve_dependencies( *setup_arguments( file, 'jars_lock_pom.rb', 'dependency:copy-dependencies' ) )
     end
 
     private
 
-    def setup_arguments( deps )
-      if File.basename( deps ) == 'Jars.lock'
-        pom = 'jars_lock_pom.rb'
-        goals = [ 'dependency:copy-dependencies' ]
-      else
-        pom = 'jar_pom.rb'
-        goals = [ 'dependency:copy-dependencies', 'dependency:list' ]
-      end
+    def do_resolve_dependencies( *args )
+      lazy_load_maven
+
+      maven = Maven::Ruby::Maven.new
+      maven.verbose = Jars.verbose?
+      maven.exec( *args )
+    end
+
+    def setup_arguments( deps, pom, *goals )
       args = [ *goals,
                "-DoutputFile=#{deps}", 
                '-DoutputAbsoluteArtifactFilename=true', 

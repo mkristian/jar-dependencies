@@ -20,25 +20,25 @@ describe Jars::MavenExec do
     
     ENV[ 'JARS_VERBOSE' ] = nil
     ENV[ 'JARS_DEBUG' ] = nil
-    args = jar.send :setup_arguments, "deps.file"
+    args = jar.send :setup_arguments, "deps.file", 'pom'
     args.member?( '--quiet' ).must_equal true
     args.member?( '-X' ).must_equal false
 
     ENV[ 'JARS_VERBOSE' ] = 'true'
     ENV[ 'JARS_DEBUG' ] = nil
-    args = jar.send :setup_arguments, "deps.file"
+    args = jar.send :setup_arguments, "deps.file", 'pom'
     args.member?( '--quiet' ).must_equal false
     args.member?( '-X' ).must_equal false
 
     ENV[ 'JARS_VERBOSE' ] = nil
     ENV[ 'JARS_DEBUG' ] = 'true'
-    args = jar.send :setup_arguments, "deps.file"
+    args = jar.send :setup_arguments, "deps.file", 'pom'
     args.member?( '--quiet' ).must_equal false
     args.member?( '-X' ).must_equal true
 
     ENV[ 'JARS_VERBOSE' ] = 'true'
     ENV[ 'JARS_DEBUG' ] = 'true'
-    args = jar.send :setup_arguments, "deps.file"
+    args = jar.send :setup_arguments, "deps.file", 'pom'
     args.member?( '--quiet' ).must_equal false
     args.member?( '-X' ).must_equal true
   end
@@ -49,13 +49,13 @@ describe Jars::MavenExec do
     jar = Jars::MavenExec.new( example_spec )
     
     Gem.configuration[ :proxy ] = 'https://localhost:3128'
-    args = jar.send :setup_arguments, "deps.file"
+    args = jar.send :setup_arguments, "deps.file", 'pom'
     args.member?( '-DproxySet=true' ).must_equal true
     args.member?( '-DproxyHost=localhost' ).must_equal true
     args.member?( '-DproxyPort=3128' ).must_equal true
 
     Gem.configuration[ :proxy ] = :noproxy
-    args = jar.send :setup_arguments, "deps.file"
+    args = jar.send :setup_arguments, "deps.file", 'pom'
     args.member?( '-DproxySet=true' ).must_equal false
     args.member?( '-DproxyHost=localhost' ).must_equal false
     args.member?( '-DproxyPort=3128' ).must_equal false
@@ -63,7 +63,7 @@ describe Jars::MavenExec do
     ENV['JARS_MAVEN_SETTINGS'] = 'specs/settings.xml'
     Jars.reset
     Gem.configuration[ :proxy ] = 'https://localhost:3128'
-    args = jar.send :setup_arguments, "deps.file"
+    args = jar.send :setup_arguments, "deps.file", 'pom'
     args.member?( '-DproxySet=true' ).must_equal false
     args.member?( '-DproxyHost=localhost' ).must_equal false
     args.member?( '-DproxyPort=3128' ).must_equal false

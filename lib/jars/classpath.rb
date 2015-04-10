@@ -16,7 +16,9 @@ module Jars
     end
 
     def jars_lock
-      deps = File.join( @mvn.basedir || '.', 'Jars.lock' )
+      deps = Jars.lock
+      deps if File.exists?( deps )
+      deps = File.join( @mvn.basedir, Jars.lock )
       deps if File.exists?( deps )
     end
 
@@ -35,7 +37,7 @@ module Jars
     def resolve_dependencies
       basedir = workdir( 'pkg' ) || workdir( 'target' ) || workdir( '' )
       deps = File.join( basedir, DEPENDENCY_LIST )      
-      @mvn.resolve_dependencies( deps )
+      @mvn.resolve_dependencies_list( deps )
       deps
     end
     private :resolve_dependencies

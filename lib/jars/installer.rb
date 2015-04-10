@@ -175,7 +175,7 @@ module Jars
       deps = File.join( @mvn.basedir, 'deps.lst' )
 
       puts "  jar dependencies for #{@mvn.spec.spec_name} . . ." unless Jars.quiet?
-      @mvn.resolve_dependencies( deps )
+      @mvn.resolve_dependencies_list( deps )
 
       self.class.load_from_maven( deps )
     ensure
