@@ -6,10 +6,10 @@ require 'jars/classpath'
 module Jars
   def self.prepare!( array )
     result = array.collect do |a|
-      a.sub( /^.*META-INF/, 'file:')
-        .sub( /-native.jar$/, '.jar')
+      a.sub( /-native.jar$/, '.jar')
         .sub( /-[^-]+$/, '.jar')
         .sub( /[^\/]+\/([^\/]+)$/, '\1')
+        .sub( /^.*META-INF.jruby.home.lib.ruby.s....../, '')
         .sub( /.*#{Jars.home}./, '' )
         .sub( /.*#{Jars.local_maven_repo}./, '' )
         .sub( /.*repository./, '' ) # make sure we trim this
