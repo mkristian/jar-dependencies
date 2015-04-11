@@ -17,6 +17,10 @@ module Jars
     result.delete_if { |c| c =~ /ruby-maven/ }
     result.uniq.sort
   end
+  
+  def self.reduce( big, small )
+    (prepare!(big) - prepare!(small)).uniq.sort.to_yaml
+  end
 
   def self.prepare( array )
     prepare!( array ).to_yaml
@@ -98,15 +102,15 @@ describe Jars::Classpath do
     end
 
     subject.require( :runtime )
-    Jars.prepare( $CLASSPATH.to_a - old ).must_equal Jars.prepare( expected )
+    Jars.reduce( $CLASSPATH.to_a, old ).must_equal Jars.prepare( expected )
 
     expected = expected + example_expected
     subject.require( :compile )
-    Jars.prepare( $CLASSPATH.to_a - old ).must_equal Jars.prepare( expected )
+    Jars.reduce( $CLASSPATH.to_a, old ).must_equal Jars.prepare( expected )
 
     expected << "junit/junit/4.1/junit-4.1.jar"
     subject.require( :test )
-    Jars.prepare( $CLASSPATH.to_a - old ).must_equal Jars.prepare( expected )
+    Jars.reduce( $CLASSPATH.to_a, old ).must_equal Jars.prepare( expected )
   end
 
   it 'processes Jars.load if exists' do
