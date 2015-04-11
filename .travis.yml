@@ -6,5 +6,5 @@ jdk:
   - openjdk7
   - oraclejdk7
   - oraclejdk8
-install: ./mvnw initialize
+install: ./mvnw verify -Dmaven.test.skip -Dinvoker.skip
 script: ./mvnw $GOAL
