@@ -3,7 +3,7 @@
 require_relative 'lock'
 require_relative '../jar_dependencies'
 
-lock = Jars::Lock.new( java.lang.System.getProperty('outputFile') )
+lock = Jars::Lock.new( ENV_JAVA['jars.lock'] )
 
 lock.process( :all ) do |coord|
 
@@ -14,5 +14,3 @@ lock.process( :all ) do |coord|
   jar coord.group_id, coord.artifact_id, coord.version, options
 
 end
-
-properties :excludeTransitive => true

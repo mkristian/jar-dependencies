@@ -55,7 +55,7 @@ module Jars
     end
 
     def process( scope )
-      scope ||= :compile
+      scope ||= :runtime
       File.read( @file ).each_line do |line|
         next if not line =~ /:.+:/
         jar = JarDetails.new( line.strip
@@ -71,8 +71,7 @@ module Jars
           # jar.scope is maven scope
           yield jar if jar.scope != :test and jar.scope != :provided
         when :test
-          # jar.scope is maven scope
-          yield jar if jar.scope != :runtime
+          yield jar
         end
       end
     end

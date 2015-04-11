@@ -64,7 +64,7 @@ describe Jars::Classpath do
 
   it 'resolves classpath from gemspec' do
     ENV_JAVA[ 'jars.quiet' ] = 'true'
-    Jars.prepare( subject.classpath ).must_equal Jars.prepare( expected_with_bc )
+    Jars.prepare( subject.classpath ).must_equal Jars.prepare( bouncycastle )
 
     Jars.prepare( subject.classpath( :compile ) ).must_equal Jars.prepare( expected_with_bc )
 
@@ -74,7 +74,7 @@ describe Jars::Classpath do
   end
 
   it 'resolves classpath_string from gemspec' do
-      Jars.prepare( subject.classpath_string.split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Jars.prepare( expected_with_bc )
+      Jars.prepare( subject.classpath_string.split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Jars.prepare( bouncycastle )
 
     Jars.prepare( subject.classpath_string( :compile ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Jars.prepare( expected_with_bc )
 
@@ -123,7 +123,7 @@ describe Jars::Classpath do
     end
     subject.jars_lock( jars_lock )
 
-    Jars.prepare( subject.classpath ).must_equal Jars.prepare( lock_expected )
+    Jars.prepare( subject.classpath ).must_equal Jars.prepare( lock_expected_runtime )
     Jars.prepare( subject.classpath( :compile ) ).must_equal Jars.prepare( lock_expected )
 
     Jars.prepare( subject.classpath( :runtime ) ).must_equal Jars.prepare( lock_expected_runtime )

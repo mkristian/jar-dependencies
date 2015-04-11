@@ -161,7 +161,7 @@ module Jars
       @_jars_home_
     end
 
-    def require_jars_lock!( scope = :compile )
+    def require_jars_lock!( scope = :runtime )
       # funny error during spec where it tries to load it again
       # and finds it as gem instead of the LOAD_PATH
       require 'jars/classpath' unless defined? Jars::Classpath

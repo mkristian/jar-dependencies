@@ -60,11 +60,11 @@ module Jars
     end
 
     def resolve_dependencies_list( file )
-      do_resolve_dependencies( *setup_arguments( file, 'jar_pom.rb', 'dependency:copy-dependencies', 'dependency:list' ) )
+      do_resolve_dependencies( *setup_arguments( 'jar_pom.rb', 'dependency:copy-dependencies', 'dependency:list', "-DoutputFile=#{file}" ) )
     end
 
     def resolve_dependencies( file )
-      do_resolve_dependencies( *setup_arguments( file, 'jars_lock_pom.rb', 'dependency:copy-dependencies' ) )
+      do_resolve_dependencies( *setup_arguments( 'jars_lock_pom.rb', 'dependency:copy-dependencies', '-DexcludeTransitive=true' , "-Djars.lock=#{file}") )
     end
 
     private
@@ -77,9 +77,8 @@ module Jars
       maven.exec( *args )
     end
 
-    def setup_arguments( deps, pom, *goals )
-      args = [ *goals,
-               "-DoutputFile=#{deps}", 
+    def setup_arguments( pom, *goals )
+      args = [ *goals, 
                '-DoutputAbsoluteArtifactFilename=true', 
                '-DincludeTypes=jar', 
                '-DoutputScope=true',
