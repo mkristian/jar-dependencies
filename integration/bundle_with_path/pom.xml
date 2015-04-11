@@ -8,7 +8,7 @@
   <name>bundle_with_path</name>
   <properties>
     <gem.path>${gem.home}</gem.path>
-    <gem.home>${project.basedir}/../pkg/rubygems</gem.home>
+    <gem.home>${project.basedir}/../rubygems</gem.home>
   </properties>
   <dependencies>
     <dependency>
@@ -49,7 +49,7 @@
         <version>1.2</version>
         <executions>
           <execution>
-            <phase>test</phase>
+            <phase>compile</phase>
             <goals>
               <goal>exec</goal>
             </goals>
@@ -69,7 +69,6 @@
             <GEM_HOME>${gem.home}</GEM_HOME>
             <GEM_PATH>${gem.home}</GEM_PATH>
             <JARS_VERBOSE>true</JARS_VERBOSE>
-            <PATH>something</PATH>
           </environmentVariables>
         </configuration>
       </plugin>

@@ -6,16 +6,15 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
         :executable => :java,
         :environmentVariables => { 'GEM_HOME' => '${gem.home}',
           'GEM_PATH' => '${gem.home}',
-          'JARS_VERBOSE' => true,
-          'PATH' => 'something' } ) do
-  execute_goal( :exec, :phase => :test,
+          'JARS_VERBOSE' => true } ) do
+  execute_goal( :exec, :phase => :compile,
                 :arguments => ['-classpath',
                                xml('<classpath/>'),
                                'org.jruby.Main',
                                'bundle.rb' ] )
 end
 
-properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
+properties( 'gem.home' => '${project.basedir}/../rubygems',
             'gem.path' => '${gem.home}' )
 
 jar 'org.jruby:jruby-complete', '${jruby.version}'
