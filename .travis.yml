@@ -6,5 +6,5 @@ jdk:
   - openjdk7
   - oraclejdk7
   - oraclejdk8
-install: ./mvnm initialize
+install: ./mvnw initialize
 script: ./mvnw $GOAL
