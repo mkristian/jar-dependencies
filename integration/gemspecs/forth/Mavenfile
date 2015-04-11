@@ -7,8 +7,6 @@ gem 'jar-dependencies', '${jar-dependencies.version}'
 gemspec
 
 properties( 'gem.home' => '${basedir}/../pkg',
-            'gem.path' => '${gem.home}',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+            'gem.path' => '${gem.home}')
 
 # vim: syntax=Ruby

@@ -1,22 +1,13 @@
 #-*- mode: ruby -*-
 
-file = File.expand_path('../../../jar-dependencies.gemspec', __FILE__ )
-s = Dir.chdir( File.dirname( file ) ) do 
-  eval( File.read( file  ) )
-end
-
 plugin_repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
 
 properties( 'gem.home' => '${project.basedir}/../../pkg/rubygems',
-            'gem.path' => '${gem.home}',
-            'jruby.version' => '1.7.19',
-            'jar-dependencies.version' => s.version,
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+            'gem.path' => '${gem.home}', )
 
 jruby_plugin :gem, :filename => 'bundle', :args => 'install' do
   execute_goal :exec
-  gem 'bundler', '1.8.5'
+  gem 'bundler', '${bundler.version}'
   gem 'jar-dependencies', '${jar-dependencies.version}'
 end
 

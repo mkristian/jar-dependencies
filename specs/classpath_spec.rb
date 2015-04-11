@@ -84,6 +84,7 @@ describe Jars::Classpath do
   end
 
   it 'requires classpath from gemspec' do
+    # TODO see not to require compile scope for 9k
     skip( 'jruby-9.0.0.0.pre1 can not require jruby core jars' ) if JRUBY_VERSION == '9.0.0.0.pre1'
 
     old = $CLASSPATH.to_a
@@ -102,11 +103,7 @@ describe Jars::Classpath do
       expected = bouncycastle
     end
 
-p old
-p expected
-
     subject.require( :runtime )
-p $CLASSPATH.to_a
 
     Jars.reduce( $CLASSPATH.to_a, old ).must_equal Jars.prepare( expected )
 

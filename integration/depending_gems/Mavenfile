@@ -1,3 +1,5 @@
+#-*- mode: ruby -*-
+
 group_id 'jar-dependencies'
 
 packaging 'pom'

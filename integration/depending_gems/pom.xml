@@ -1,48 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>jar-dependencies</groupId>
-  <artifactId>depending_gems</artifactId>
+<project>
+  <groupId>jar-dependencies.its</groupId>
+  <artifactId>dummy</artifactId>
   <version>0.0.0</version>
-  <packaging>pom</packaging>
-  <name>depending_gems</name>
-  <modules>
-    <module>simplelib</module>
-    <module>biglib</module>
-  </modules>
-  <properties>
-    <gem.path>${project.basedir}/pkg/rubygems</gem.path>
-    <gem.home>${project.basedir}/pkg/rubygems</gem.home>
-    <tesla.version>0.1.1</tesla.version>
-  </properties>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>io.tesla.polyglot</groupId>
-        <artifactId>tesla-polyglot-maven-plugin</artifactId>
-        <version>${tesla.version}</version>
-        <executions>
-          <execution>
-            <id>verify</id>
-            <phase>test</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <taskId>verify</taskId>
-              <nativePom>Mavenfile</nativePom>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>io.tesla.polyglot</groupId>
-            <artifactId>tesla-polyglot-ruby</artifactId>
-            <version>${tesla.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
 </project>

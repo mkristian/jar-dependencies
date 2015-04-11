@@ -27,7 +27,11 @@ plugin :invoker, '1.8' do
                  :streamLogs => true,
                  :goals => ['install'],
                  :cloneProjectsTo => '${project.build.directory}',
-                 :properties => { 'jar-dependencies.version' => '${project.version}' })
+                 :properties => { 'jar-dependencies.version' => '${project.version}',
+                   'jruby.version' => '${jruby.version}',
+                   'jruby.plugins.version' => '${jruby.plugins.version}',
+                   'bundler.version' => '1.9.2',
+                   'ruby-maven.version' => '3.1.1.0.11' })
 end
 
 # vim: syntax=Ruby

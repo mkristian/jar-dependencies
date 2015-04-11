@@ -6,7 +6,4 @@ packaging 'pom'
 
 modules ['gem', 'verify']
 
-properties( 'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
-
 # vim: syntax=Ruby

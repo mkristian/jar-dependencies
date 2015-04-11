@@ -12,8 +12,6 @@ model.dependencies.each do |d|
 end
 
 properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
-            'gem.path' => '${gem.home}',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+            'gem.path' => '${gem.home}' )
 
 # vim: syntax=Ruby

@@ -1,18 +1,6 @@
 #-*- mode: ruby -*-
 
-file = File.expand_path('../../../jar-dependencies.gemspec', __FILE__ )
-s = Dir.chdir( File.dirname( file ) ) do 
-  eval( File.read( file  ) )
-end
-
 repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
-
-properties( 'gem.home' => '${project.basedir}/../../pkg/rubygems',
-            'gem.path' => '${gem.home}',
-            'jruby.version' => '1.7.19',
-            'jar-dependencies.version' => s.version,
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
 
 plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
         :executable => :java,
@@ -28,17 +16,15 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
 end
 
 properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
-            'gem.path' => '${gem.home}',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+            'gem.path' => '${gem.home}' )
 
 jar 'org.jruby:jruby-complete', '${jruby.version}'
 
 gem 'jar-dependencies', '${jar-dependencies.version}'
 gem 'bundler', '1.8.5'
-gem 'ruby-maven', '3.1.1.0.8'
+gem 'ruby-maven', '${ruby-maven.version}'
 
-jruby_plugin :gem, '1.0.8' do
+jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
 end
 

@@ -11,8 +11,4 @@ model.dependencies.each do |d|
   end
 end
 
-properties( 'jruby.plugins.version' => '1.0.8',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
-
 # vim: syntax=Ruby
