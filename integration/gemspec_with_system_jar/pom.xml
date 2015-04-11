@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
-  <groupId>jar-dependencies.its</groupId>
-  <artifactId>dummy</artifactId>
-  <version>0.0.0</version>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>jar-dependencies</groupId>
+  <artifactId>gemspec_with_system_jar</artifactId>
+  <version>0</version>
+  <packaging>pom</packaging>
+  <name>aggregator</name>
+  <modules>
+    <module>gem</module>
+    <module>verify</module>
+  </modules>
+  <properties>
+    <gem.path>${gem.home}</gem.path>
+    <gem.home>${project.basedir}/pkg/rubygems</gem.home>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+        <version>${jruby.plugins.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>initialize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

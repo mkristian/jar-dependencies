@@ -31,7 +31,9 @@ plugin :invoker, '1.8' do
                    'jruby.version' => '${jruby.version}',
                    'jruby.plugins.version' => '${jruby.plugins.version}',
                    'bundler.version' => '1.9.2',
-                   'ruby-maven.version' => '3.1.1.0.11' })
+                   'ruby-maven.version' => '3.1.1.0.11',
+                   # dump pom for the time being - for travis
+                   'polyglot.dump.pom' => 'pom.xml'})
 end
 
 # vim: syntax=Ruby

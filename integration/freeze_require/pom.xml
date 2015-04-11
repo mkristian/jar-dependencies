@@ -1,6 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
-  <groupId>jar-dependencies.its</groupId>
-  <artifactId>dummy</artifactId>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>no_group_id_given</groupId>
+  <artifactId>freeze_require</artifactId>
   <version>0.0.0</version>
+  <packaging>pom</packaging>
+  <name>freeze_require</name>
+  <properties>
+    <gem.path>${gem.home}</gem.path>
+    <gem.home>${project.basedir}/pkg/rubygems</gem.home>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>jar-dependencies</artifactId>
+      <version>${jar-dependencies.version}</version>
+      <type>gem</type>
+    </dependency>
+    <dependency>
+      <groupId>org.jruby</groupId>
+      <artifactId>jruby</artifactId>
+      <version>${jruby.version}</version>
+      <type>pom</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+        <version>${jruby.plugins.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>initialize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <id>no more warnings</id>
+            <phase>test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath />
+                <argument>org.jruby.Main</argument>
+                <argument>test_no_more_warnings.rb</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>freeze loading</id>
+            <phase>test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath />
+                <argument>org.jruby.Main</argument>
+                <argument>test_freeze_loading.rb</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>java</executable>
+          <environmentVariables>
+            <GEM_HOME>${gem.home}</GEM_HOME>
+            <GEM_PATH>${gem.home}</GEM_PATH>
+          </environmentVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
