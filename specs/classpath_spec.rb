@@ -6,7 +6,8 @@ require 'jars/classpath'
 module Jars
   def self.prepare!( array )
     result = array.collect do |a|
-      a.sub( /-native.jar$/, '.jar')
+      a.sub( /^.*META-INF/, 'file:')
+        .sub( /-native.jar$/, '.jar')
         .sub( /-[^-]+$/, '.jar')
         .sub( /[^\/]+\/([^\/]+)$/, '\1')
         .sub( /.*#{Jars.home}./, '' )
