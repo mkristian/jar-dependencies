@@ -101,7 +101,12 @@ describe Jars::Classpath do
       expected = bouncycastle
     end
 
+p old
+p expected
+
     subject.require( :runtime )
+p $CLASSPATH.to_a
+
     Jars.reduce( $CLASSPATH.to_a, old ).must_equal Jars.prepare( expected )
 
     expected = expected + example_expected
