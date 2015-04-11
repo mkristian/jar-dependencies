@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'jar_install_post_install_hook'
-   
-load Gem.bin_path('bundler', 'bundle') 
