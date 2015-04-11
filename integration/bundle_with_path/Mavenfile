@@ -21,7 +21,7 @@ properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
 jar 'org.jruby:jruby-complete', '${jruby.version}'
 
 gem 'jar-dependencies', '${jar-dependencies.version}'
-gem 'bundler', '1.8.5'
+gem 'bundler', '${bundler.version}'
 gem 'ruby-maven', '${ruby-maven.version}'
 
 jruby_plugin :gem, '${jruby.plugins.version}' do
