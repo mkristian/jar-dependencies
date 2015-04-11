@@ -34,4 +34,23 @@ default to **Jars.lock** but can be overwritten by environment **JARS_LOCK** or 
 
 ## maven plugin support
 
-gem-maven-plugin has a **jars-lock** goal which can produce Jars.lock file. see help on this goal for more options.
+[https://github.com/torquebox/jruby-maven-plugins](gem-maven-plugin) has a **jars-lock** goal which can produce Jars.lock file. see help on this goal for more options.
+
+## using it from the ruby
+
+if you use jar dependencies inside a gemspec and the require the jars-file then with the first ```require_jar``` jar dependencies will require all the Jars.lock with the default scope which is ```:compile```, ```:runtime``` maven scope.
+
+if you want to trigger to load the Jars.lock explicitly use
+
+    Jars.require_jars_lock!
+
+as second call has no further effect (unless the Jars.lock did change).
+
+it is also possible to require a different scope
+
+    Jars.require_jars_lock!(:all)
+    Jars.require_jars_lock!(:compile) # no :test
+    Jars.require_jars_lock!(:runtime) # the default
+    Jars.require_jars_lock!(:test) # same as :all
+
+
