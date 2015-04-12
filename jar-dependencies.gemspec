@@ -12,8 +12,6 @@ Gem::Specification.new do |s|
 
   s.license = 'MIT'
 
-  s.executable = 'bundle-with-jars'
-
   s.files = Dir[ 'lib/**/*rb' ]
   s.files += Dir[ '*file' ]
   s.files += [ 'Readme.md', 'jar-dependencies.gemspec', 'MIT-LICENSE' ]
