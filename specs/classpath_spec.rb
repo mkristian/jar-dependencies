@@ -47,7 +47,7 @@ describe Jars::Classpath do
 
   let( :lock_expected_runtime ) { ["org/apache/maven/maven-repository-metadata/3.1.0/maven-repository-metadata-3.1.0.jar", "org/sonatype/sisu/sisu-guice/3.1.0/sisu-guice-no_aop-3.1.0.jar", "${java.home}/../lib/tools.jar", "org/sonatype/plexus/plexus-cipher/1.4/plexus-cipher-1.4.jar"] }
 
-  let( :lock_expected_test ) { ["org/apache/maven/maven-repository-metadata/3.1.0/maven-repository-metadata-3.1.0.jar", "com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar", "org/apache/httpcomponents/httpclient/4.2.3/httpclient-4.2.3.jar", "org/sonatype/sisu/sisu-guice/3.1.0/sisu-guice-no_aop-3.1.0.jar", "${java.home}/../lib/tools.jar", "org/slf4j/slf4j-api/1.6.2/slf4j-api-1.6.2.jar"] }
+  let( :lock_expected_test ) { ["org/apache/maven/maven-repository-metadata/3.1.0/maven-repository-metadata-3.1.0.jar", "com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar", "org/apache/httpcomponents/httpclient/4.2.3/httpclient-4.2.3.jar", "org/sonatype/sisu/sisu-guice/3.1.0/sisu-guice-no_aop-3.1.0.jar", "${java.home}/../lib/tools.jar", "org/slf4j/slf4j-api/1.6.2/slf4j-api-1.6.2.jar", "org/sonatype/plexus/plexus-cipher/1.4/plexus-cipher-1.4.jar"] }
 
   let( :bc_prov ) { [ "org/bouncycastle/bcprov-jdk15on/1.49/bcprov-jdk15on-1.49.jar" ] }
 
