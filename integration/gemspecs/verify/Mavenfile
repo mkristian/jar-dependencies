@@ -50,6 +50,7 @@ execute :use_the_gems, :phase => :package do |ctx|
   end
 
   ENV_JAVA['jars.lock'] = File.join( ctx.basedir.to_pathname, 'Jars.lock' ) 
+  ENV_JAVA['jars.resolve'] = 'true'
   Jars.require_jars_lock!
   if $CLASSPATH.detect { |c| c =~ /jline/ } == nil
     raise 'no jline jar from Jars.lock loaded'
