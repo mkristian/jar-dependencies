@@ -167,16 +167,17 @@ module Jars
       require 'jars/classpath' unless defined? Jars::Classpath
       classpath = Jars::Classpath.new
       if jars_lock = classpath.jars_lock
+        @@jars_lock = jars_lock
         classpath.require( scope )
         self.no_more_warnings
       end
-      jars_lock
     end
 
     def require_jars_lock
       @@jars_lock ||= false
       unless @@jars_lock
-        @@jars_lock = require_jars_lock! || true
+        require_jars_lock!
+        @@jars_lock ||= true
       end
     end
 
