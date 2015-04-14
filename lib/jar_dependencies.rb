@@ -48,7 +48,7 @@ module Jars
 
     if defined? JRUBY_VERSION
       def to_prop( key )
-        java.lang.System.getProperty( key.downcase.gsub( /_/, '.' ) ) ||
+        ENV_JAVA[ key.downcase.gsub( /_/, '.' ) ] ||
           ENV[ key.upcase.gsub( /[.]/, '_' ) ]
       end
     else
