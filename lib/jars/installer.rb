@@ -1,6 +1,6 @@
 require 'jar_dependencies'
 require 'jars/maven_exec'
-require 'uri'
+
 module Jars
   class Installer
 
