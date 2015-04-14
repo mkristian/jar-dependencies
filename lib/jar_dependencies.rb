@@ -112,7 +112,10 @@ module Jars
     end
 
     def maven_user_settings
-      if @_jars_maven_user_settings_.nil?
+      unless instance_variable_defined?(:@_jars_maven_user_settings_)
+        @_jars_maven_user_settings_ = nil
+      end
+      if ( @_jars_maven_user_settings_ ||= nil ).nil?
         if settings = absolute( to_prop( MAVEN_SETTINGS ) )
           settings = File.expand_path(settings)
           unless File.exists?(settings)
@@ -130,6 +133,9 @@ module Jars
     alias maven_settings maven_user_settings
 
     def maven_global_settings
+      unless instance_variable_defined?(:@_jars_maven_global_settings_)
+        @_jars_maven_global_settings_ = nil
+      end
       if @_jars_maven_global_settings_.nil?
           if mvn_home = ENV[ 'M2_HOME' ] || ENV[ 'MAVEN_HOME' ]
             settings = File.join( mvn_home, 'conf/settings.xml' )
@@ -143,7 +149,7 @@ module Jars
     end
 
     def home
-      if @_jars_home_.nil?
+      if ( @_jars_home_ ||= nil ).nil?
         unless @_jars_home_ = absolute( to_prop( HOME ) )
           begin
             if user_settings = maven_user_settings
@@ -169,7 +175,7 @@ module Jars
       if jars_lock = classpath.jars_lock
         @@jars_lock = jars_lock
         classpath.require( scope )
-        self.no_more_warnings
+        no_more_warnings
       end
     end
 
@@ -229,7 +235,7 @@ module Jars
         ENV_JAVA[ a[2..-2] ] || a
       end
       if local_repo.empty? or not File.exists?( local_repo )
-        local_repo = nil 
+        local_repo = nil
       end
       local_repo
     end
