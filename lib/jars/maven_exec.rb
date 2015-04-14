@@ -1,5 +1,5 @@
 require 'jar_dependencies'
-require 'uri'
+
 module Jars
   class MavenExec
 
@@ -78,9 +78,9 @@ module Jars
     end
 
     def setup_arguments( pom, *goals )
-      args = [ *goals, 
-               '-DoutputAbsoluteArtifactFilename=true', 
-               '-DincludeTypes=jar', 
+      args = [ *goals,
+               '-DoutputAbsoluteArtifactFilename=true',
+               '-DincludeTypes=jar',
                '-DoutputScope=true',
                '-DuseRepositoryLayout=true',
                "-DoutputDirectory=#{Jars.home}",
@@ -94,7 +94,7 @@ module Jars
       end
 
       if Jars.maven_user_settings.nil? && (proxy = Gem.configuration[ :proxy ]).is_a?( String )
-        uri = URI.parse( proxy )
+        require 'uri'; uri = URI.parse( proxy )
         args << "-DproxySet=true"
         args << "-DproxyHost=#{uri.host}"
         args << "-DproxyPort=#{uri.port}"
