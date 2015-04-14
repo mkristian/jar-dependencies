@@ -67,11 +67,11 @@ module Jars
     end
 
     def no_require?
-      @frozen || to_boolean( NO_REQUIRE )
+      ( @frozen ||= false ) || to_boolean( NO_REQUIRE )
     end
 
     def quiet?
-      @silent || to_boolean( QUIET )
+      ( @silent ||= false ) || to_boolean( QUIET )
     end
 
     def verbose?
