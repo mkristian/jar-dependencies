@@ -48,12 +48,13 @@ module Jars
 
     if defined? JRUBY_VERSION
       def to_prop( key )
-        ENV_JAVA[ key.downcase.gsub( /_/, '.' ) ] ||
-          ENV[ key.upcase.gsub( /[.]/, '_' ) ]
+        key = key.gsub( '_', '.' )
+        ENV_JAVA[ ( key.downcase!; key ) ] ||
+          ENV[ ( key.gsub!( '.', '_' ); key.upcase!; key ) ]
       end
     else
       def to_prop( key )
-        ENV[ key.upcase.gsub( /[.]/, '_' ) ]
+        ENV[ key.gsub( '.', '_' ).upcase ]
       end
     end
 
