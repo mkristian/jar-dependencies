@@ -183,5 +183,5 @@ module Jars
     end
   end
   # to stay backward compatible
-  JarInstaller = Installer
+  JarInstaller = Installer unless defined? JarInstaller
 end
