@@ -123,7 +123,7 @@ module Jars
       dep = Gem::Dependency.new( name )
       dep.matching_specs( true ).last
     end
-      
+
     def add_gem_to_load_path( name )
       # if the gem is already activated => good
       return if Gem.loaded_specs[ name ]
@@ -141,7 +141,7 @@ module Jars
       jars = Gem.loaded_specs[ 'jar-dependencies' ]
       dep = jars.dependencies.detect { |d| d.name == name }
       req = dep.nil? ? Gem::Requirement.create( '>0' ) : dep.requirement
-      inst = Gem::DependencyInstaller.new( @options || {} )
+      inst = Gem::DependencyInstaller.new( @options ||= {} )
       inst.install name, req
     rescue => e
       warn e.backtrace.join( "\n" ) if Jars.verbose?
