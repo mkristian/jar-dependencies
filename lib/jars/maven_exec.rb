@@ -93,11 +93,18 @@ module Jars
         args << '--quiet'
       end
 
-      if Jars.maven_user_settings.nil? && (proxy = Gem.configuration[ :proxy ]).is_a?( String )
+      # TODO what todo with https proxy ?
+      # FIX this proxy settings seems not to work
+      if (proxy = Gem.configuration[ :http_proxy ]).is_a?( String )
         require 'uri'; uri = URI.parse( proxy )
         args << "-DproxySet=true"
         args << "-DproxyHost=#{uri.host}"
         args << "-DproxyPort=#{uri.port}"
+      end
+
+      if Jars.maven_settings
+        args << '-s'
+        args << Jars.maven_settings
       end
 
       args << "-Dmaven.repo.local=#{java.io.File.new( Jars.local_maven_repo ).absolute_path}"
