@@ -15,9 +15,9 @@ module Jars
       end
 
       def setup_type( line )
-        if line.match /:pom:/
+        if line.index(':pom:')
           @type = :pom
-        elsif line.match /:jar:/
+        elsif line.index(':jar:')
           @type = :jar
         end
       end
@@ -103,7 +103,7 @@ module Jars
         file.puts( "require( '#{dep.file}' )" ) if file
       elsif dep.scope == :runtime
         vendor_file( dir, dep ) if vendor
-        file.puts( "require_jar( '#{dep.gav.gsub( /:/, "', '" )}' )" ) if file
+        file.puts( "require_jar( '#{dep.gav.gsub( ':', "', '" )}' )" ) if file
       end
     end
 
