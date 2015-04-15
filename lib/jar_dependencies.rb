@@ -118,7 +118,6 @@ module Jars
       end
       if ( @_jars_maven_user_settings_ ||= nil ).nil?
         if settings = absolute( to_prop( MAVEN_SETTINGS ) )
-          settings = File.expand_path(settings)
           unless File.exists?(settings)
             warn "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found" unless quiet?
             settings = false
