@@ -10,20 +10,20 @@ if ( !log.contains( expected ) )
 }
 
 expected = "lib/foo_jars.rb";
-if ( ! new File( expected ).exists() )
+if ( ! new File( basedir, expected ).exists() )
 {
     throw new RuntimeException( "log file does not exists '" + expected + "'" );
 }
 
-expected = "lib/io";
-if ( ! new File( expected ).exists() )
-{
-    throw new RuntimeException( "log file does exists '" + expected + "'" );
-}
+// expected = "lib/io";
+// if ( ! new File( basedir, expected ).exists() )
+// {
+//     throw new RuntimeException( "log file does exists '" + expected + "'" );
+// }
 
-expected = "lib/org";
-if ( ! new File( expected ).exists() )
-{
-    throw new RuntimeException( "log file does exists '" + expected + "'" );
-}
+// expected = "lib/org";
+// if ( ! new File( basedir, expected ).exists() )
+// {
+//     throw new RuntimeException( "log file does exists '" + expected + "'" );
+// }
 

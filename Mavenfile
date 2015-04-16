@@ -25,6 +25,7 @@ plugin :invoker, '1.8' do
                  :projectsDirectory => 'integration',
                  :streamLogs => true,
                  :goals => ['install'],
+                 :postBuildHookScript =>  'verify.bsh',
                  :cloneProjectsTo => '${project.build.directory}',
                  :properties => { 'jar-dependencies.version' => '${project.version}',
                    'jruby.version' => '${jruby.version}',
