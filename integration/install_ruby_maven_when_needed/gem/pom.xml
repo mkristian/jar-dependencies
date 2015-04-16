@@ -19,6 +19,8 @@
     </developer>
   </developers>
   <properties>
+    <gem.path>${gem.home}</gem.path>
+    <gem.home>${project.basedir}/../../rubygems</gem.home>
     <jruby.plugins.version>1.0.8</jruby.plugins.version>
   </properties>
   <dependencies>

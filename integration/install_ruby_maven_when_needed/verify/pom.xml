@@ -14,7 +14,7 @@
   <name>verify</name>
   <properties>
     <gem.path>${gem.home}</gem.path>
-    <gem.home>${project.basedir}/../pkg/rubygems</gem.home>
+    <gem.home>${project.basedir}/../../rubygems</gem.home>
   </properties>
   <dependencies>
     <dependency>
@@ -28,7 +28,19 @@
       <version>${jar-dependencies.version}</version>
       <type>gem</type>
     </dependency>
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>bundler</artifactId>
+      <version>${bundler.version}</version>
+      <type>gem</type>
+    </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <id>rubygems-releases</id>
+      <url>http://rubygems-proxy.torquebox.org/releases</url>
+    </repository>
+  </repositories>
   <build>
     <plugins>
       <plugin>
@@ -37,6 +49,7 @@
         <version>1.2</version>
         <executions>
           <execution>
+            <id>gem install</id>
             <phase>test</phase>
             <goals>
               <goal>exec</goal>
@@ -55,6 +68,24 @@
               </arguments>
             </configuration>
           </execution>
+          <execution>
+            <id>bundler install</id>
+            <phase>test</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <arguments>
+                <argument>-classpath</argument>
+                <classpath />
+                <argument>org.jruby.Main</argument>
+                <argument>-S</argument>
+                <argument>bundle</argument>
+                <argument>install</argument>
+                <argument>--verbose</argument>
+              </arguments>
+            </configuration>
+          </execution>
         </executions>
         <configuration>
           <executable>java</executable>
@@ -62,6 +93,7 @@
             <GEM_HOME>${gem.home}</GEM_HOME>
             <GEM_PATH>${gem.home}</GEM_PATH>
             <JARS_VERBOSE>true</JARS_VERBOSE>
+            <BUNDLER_GEMFILE>${basedir}/Gemfile</BUNDLER_GEMFILE>
             <PATH>${gem.home}/bin${path.separator}${env.PATH}</PATH>
           </environmentVariables>
         </configuration>
