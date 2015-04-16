@@ -195,7 +195,7 @@ module Jars
 
       @@jars ||= {}
       coordinate = "#{group_id}:#{artifact_id}"
-      coordinate += ":#{classifier}" if classifier
+      coordinate << ":#{classifier}" if classifier
       if @@jars.key? coordinate
         if @@jars[ coordinate ] == version
           false
@@ -240,8 +240,8 @@ module Jars
       local_repo
     end
 
-    def to_jar( group_id, artifact_id, version, classifier )
-      file = "#{group_id.gsub( /\./, '/' )}/#{artifact_id}/#{version}/#{artifact_id}-#{version}"
+    def to_jar( group_id, artifact_id, version, classifier = nil )
+      file = "#{group_id.gsub( '.', '/' )}/#{artifact_id}/#{version}/#{artifact_id}-#{version}"
       file << "-#{classifier}" if classifier
       file << '.jar'
       file

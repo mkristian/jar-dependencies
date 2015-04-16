@@ -15,9 +15,9 @@ module Jars
       end
 
       def setup_type( line )
-        if line.match /:pom:/
+        if line.index(':pom:')
           @type = :pom
-        elsif line.match /:jar:/
+        elsif line.index(':jar:')
           @type = :jar
         end
       end
@@ -39,21 +39,21 @@ module Jars
       def initialize( line )
         setup_type( line )
 
-        line.sub!( /^\s+/, '' )
-        @coord = line.sub( /:[^:]+:([A-Z]:\\)?[^:]+$/, '' )
+        line.sub!( /^\s+/, empty = '' )
+        @coord = line.sub( /:[^:]+:([A-Z]:\\)?[^:]+$/, empty )
         first, second = @coord.split( /:#{type}:/ )
         group_id, artifact_id = first.split( /:/ )
         parts = group_id.split( '.' )
         parts << artifact_id
-        parts << second.split( /:/ )[ -1 ]
-        parts << File.basename( line.sub /.:/, '' )
+        parts << second.split( ':' )[ -1 ]
+        parts << File.basename( line.sub( /.:/, empty ) )
         @path = File.join( parts ).strip
 
         setup_scope( line )
 
         reg = /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:|:system:/
-        @file = line.slice(@coord.length, line.length).sub(reg, '').strip
-        @system = nil != (line =~ /:system:/)
+        @file = line.slice(@coord.length, line.length).sub(reg, empty).strip
+        @system = line.index(':system:') != nil
         @gav = @coord.sub(reg, ':')
       end
 
@@ -103,7 +103,7 @@ module Jars
         file.puts( "require( '#{dep.file}' )" ) if file
       elsif dep.scope == :runtime
         vendor_file( dir, dep ) if vendor
-        file.puts( "require_jar( '#{dep.gav.gsub( /:/, "', '" )}' )" ) if file
+        file.puts( "require_jar( '#{dep.gav.gsub( ':', "', '" )}' )" ) if file
       end
     end
 
@@ -117,6 +117,12 @@ module Jars
       f.close if f
     end
 
+    def initialize( spec = nil )
+      @mvn = MavenExec.new( spec )
+    end
+
+    def spec; @mvn.spec end
+
     def vendor_jars( write_require_file = true )
       return unless has_jars?
       case Jars.to_prop( Jars::VENDOR )
@@ -127,7 +133,7 @@ module Jars
       else
         # if the spec_file does not exists this means it is a local gem
         # coming via bundle :path or :git
-        do_vendor = File.exists?( @mvn.spec.spec_file )
+        do_vendor = File.exists?( spec.spec_file )
       end
       do_install( do_vendor, write_require_file )
     end
@@ -137,26 +143,24 @@ module Jars
       do_install( false, write_require_file )
     end
 
-    def initialize( spec = nil )
-      @mvn = MavenExec.new( spec )
-    end
-
     def ruby_maven_install_options=( options )
       @mvn.ruby_maven_install_options=( options )
     end
-
-    private
 
     def has_jars?
       # first look if there are any requirements in the spec
       # and then if gem depends on jar-dependencies
       # only then install the jars declared in the requirements
-      @mvn.spec != nil && ! @mvn.spec.requirements.empty? && @mvn.spec.dependencies.detect { |d| d.name == 'jar-dependencies' && d.type == :runtime }
+      spec && ! spec.requirements.empty? &&
+          spec.dependencies.detect { |d| d.name == 'jar-dependencies' && d.type == :runtime }
     end
+    alias_method :jars?, :has_jars?
+
+    private
 
     def do_install( vendor, write_require_file )
-      vendor_dir = File.join( @mvn.basedir, @mvn.spec.require_path )
-      jars_file = File.join( vendor_dir, "#{@mvn.spec.name}_jars.rb" )
+      vendor_dir = File.join( @mvn.basedir, spec.require_path )
+      jars_file = File.join( vendor_dir, "#{spec.name}_jars.rb" )
 
       # write out new jars_file it write_require_file is true or
       # check timestamps:
@@ -174,7 +178,7 @@ module Jars
     def install_dependencies
       deps = File.join( @mvn.basedir, 'deps.lst' )
 
-      puts "  jar dependencies for #{@mvn.spec.spec_name} . . ." unless Jars.quiet?
+      puts "  jar dependencies for #{spec.spec_name} . . ." unless Jars.quiet?
       @mvn.resolve_dependencies_list( deps )
 
       self.class.load_from_maven( deps )
