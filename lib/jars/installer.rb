@@ -39,21 +39,21 @@ module Jars
       def initialize( line )
         setup_type( line )
 
-        line.sub!( /^\s+/, '' )
-        @coord = line.sub( /:[^:]+:([A-Z]:\\)?[^:]+$/, '' )
+        line.sub!( /^\s+/, empty = '' )
+        @coord = line.sub( /:[^:]+:([A-Z]:\\)?[^:]+$/, empty )
         first, second = @coord.split( /:#{type}:/ )
         group_id, artifact_id = first.split( /:/ )
         parts = group_id.split( '.' )
         parts << artifact_id
-        parts << second.split( /:/ )[ -1 ]
-        parts << File.basename( line.sub /.:/, '' )
+        parts << second.split( ':' )[ -1 ]
+        parts << File.basename( line.sub( /.:/, empty ) )
         @path = File.join( parts ).strip
 
         setup_scope( line )
 
         reg = /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:|:system:/
-        @file = line.slice(@coord.length, line.length).sub(reg, '').strip
-        @system = nil != (line =~ /:system:/)
+        @file = line.slice(@coord.length, line.length).sub(reg, empty).strip
+        @system = line.index(':system:') != nil
         @gav = @coord.sub(reg, ':')
       end
 
