@@ -1,10 +1,11 @@
 #-*- mode: ruby -*-
 
-require './lib/jars/version'
-
 Gem::Specification.new do |s|
   s.name = 'jar-dependencies'
-  s.version = Jars::VERSION
+
+  path = File.expand_path('lib/jars/version.rb', File.dirname(__FILE__))
+  s.version = File.read(path).match( /.*VERSION\s*=\s*['"](.*)['"]/m )[1]
+  
   s.author = 'christian meier'
   s.email = [ 'mkristian@web.de' ]
   s.summary = 'manage jar dependencies for gems'
