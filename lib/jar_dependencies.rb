@@ -149,22 +149,10 @@ module Jars
     end
 
     def home
-      if ( @_jars_home_ ||= nil ).nil?
-        unless @_jars_home_ = absolute( to_prop( HOME ) )
-          begin
-            if user_settings = maven_user_settings
-              @_jars_home_ = detect_local_repository(user_settings)
-            end
-            if ! @_jars_home_ && global_settings = maven_global_settings
-              @_jars_home_ = detect_local_repository(global_settings)
-            end
-          rescue # ignore
-          end
-        end
-        # use maven default repository
-        @_jars_home_ ||= File.join( user_home, '.m2', 'repository' )
-      end
-      @_jars_home_
+      @_jars_home_ ||= absolute(to_prop(HOME)) ||
+                       detect_local_repository(maven_user_settings) ||
+                       detect_local_repository(maven_global_settings) ||
+                       File.join( user_home, '.m2', 'repository' )
     end
 
     def require_jars_lock!( scope = :runtime )
@@ -227,6 +215,8 @@ module Jars
     end
 
     def detect_local_repository(settings)
+      return nil unless settings
+      
       doc = File.read( settings )
       # TODO filter out xml comments
       local_repo = doc.sub( /<\/localRepository>.*/m, '' ).sub( /.*<localRepository>/m, '' )
