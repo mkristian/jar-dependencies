@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.email = [ 'mail@example.com' ]
   s.summary = 'first gem with jars vendored during installation'
 
+  s.platform = 'java'
   s.files << Dir[ 'lib/**/*.rb' ]
   s.files << Dir[ '*file' ]
   s.files << 'first.gemspec'

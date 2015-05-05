@@ -5,7 +5,8 @@ Gem::Specification.new do |s|
   s.version = '1'
   s.author = 'christian meier'
   s.email = [ 'm.kristian@web.de' ]
-  
+
+  s.platform = 'java'
   s.license = 'MIT'
   s.summary = %q(biglib)
   s.homepage = 'https://example.com'
