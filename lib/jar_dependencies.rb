@@ -228,6 +228,9 @@ module Jars
         local_repo = nil
       end
       local_repo
+    rescue
+      warn "error reading or parsing #{settings}"
+      nil
     end
 
     def to_jar( group_id, artifact_id, version, classifier = nil )
