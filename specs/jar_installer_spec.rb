@@ -1,6 +1,8 @@
 require_relative 'setup'
 require 'jar_installer'
 require 'fileutils'
+require 'rubygems/specification'
+
 class Jars::Installer
 
   def do_install( vendor, write )
@@ -58,6 +60,18 @@ describe Jars::Installer do
 
   it 'just skips install_jars and vendor_jars if there are no requirements' do
     jar = Jars::Installer.new
+    jar.install_jars
+    # vendor method is a mocked method
+    jar.vendor.must_be_nil
+    jar.vendor_jars
+    # vendor method is a mocked method
+    jar.vendor.must_be_nil
+  end
+
+  it 'just skips install_jars and vendor_jars if platform is not java' do
+    spec = Gem::Specification.load( example_spec )
+    spec.platform = 'ruby'
+    jar = Jars::Installer.new( spec )
     jar.install_jars
     # vendor method is a mocked method
     jar.vendor.must_be_nil
