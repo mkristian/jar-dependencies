@@ -7,17 +7,17 @@ plugin_repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.tor
 
 jruby_plugin( :minitest, :minispecDirectory => "specs/*_spec.rb" ) do
   execute_goals(:spec)
-  gem 'ruby-maven', '3.1.1.0.8'
+  gem 'ruby-maven', '${ruby-maven.version}'
 end
 
-properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.0.0.pre1'
+properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.0.0.pre2'
                                 ].join(','),
             'jruby.modes' => ['1.9', '2.0', '2.1'].join(','),
             # just lock the version
-            'jruby.version' => '1.7.19',
-            'jruby.plugins.version' => '1.0.9',
-            'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+            'bundler.version' => '1.9.2',
+            'ruby-maven.version' => '3.1.1.0.11',
+            'jruby.version' => '1.7.20',
+            'jruby.plugins.version' => '1.0.9' )
 
 plugin :invoker, '1.8' do
   execute_goals( :install, :run,
@@ -30,10 +30,28 @@ plugin :invoker, '1.8' do
                  :properties => { 'jar-dependencies.version' => '${project.version}',
                    'jruby.version' => '${jruby.version}',
                    'jruby.plugins.version' => '${jruby.plugins.version}',
-                   'bundler.version' => '1.9.2',
-                   'ruby-maven.version' => '3.1.1.0.11',
+                   'bundler.version' => '${bundler.version}',
+                   'ruby-maven.version' => '${ruby-maven.version}',
                    # dump pom for the time being - for travis
                    'polyglot.dump.pom' => 'pom.xml'})
+end
+
+distribution_management do
+  repository :id => :ossrh, :url => 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+end
+
+plugin :deploy, '2.8.2' do
+  execute_goal :deploy, :phase => :deploy, :id => 'deploy gem to maven central'
+end
+
+profile :id => :release do
+  properties 'maven.test.skip' => true, 'invoker.skip' => true
+  plugin :gpg, '1.5' do
+    execute_goal :sign, :id => 'sign artifacts', :phase => :verify
+  end
+  build do
+    default_goal :deploy
+  end
 end
 
 # vim: syntax=Ruby

@@ -5,6 +5,6 @@ Gemfile.lock
 *.gem
 target
 build.log
-*gemspec.xml
+pom*
 specs/repository/*
 example/dependencies.list
