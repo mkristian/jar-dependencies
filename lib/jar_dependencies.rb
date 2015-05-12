@@ -119,7 +119,7 @@ module Jars
       if ( @_jars_maven_user_settings_ ||= nil ).nil?
         if settings = absolute( to_prop( MAVEN_SETTINGS ) )
           unless File.exists?(settings)
-            warn "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found" unless quiet?
+            warn "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found"
             settings = false
           end
         else # use maven default (user) settings
@@ -188,14 +188,17 @@ module Jars
         if @@jars[ coordinate ] == version
           false
         else
-          # version of already registered jar
-          @@jars[ coordinate ]
+          @@jars[ coordinate ] # version of already registered jar
         end
       else
         do_require( group_id, artifact_id, version, classifier )
         @@jars[ coordinate ] = version
         return true
       end
+    end
+
+    def warn(msg)
+      Kernel.warn(msg) unless quiet?
     end
 
     private
@@ -216,7 +219,7 @@ module Jars
 
     def detect_local_repository(settings)
       return nil unless settings
-      
+
       doc = File.read( settings )
       # TODO filter out xml comments
       local_repo = doc.sub( /<\/localRepository>.*/m, '' ).sub( /.*<localRepository>/m, '' )
@@ -259,10 +262,10 @@ module Jars
 end
 
 def require_jar( *args )
-  return false if Jars.no_require?
+  return nil if Jars.no_require?
   result = Jars.require_jar( *args )
   if result.is_a? String
-    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}" unless Jars.quiet?
+    Jars.warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}"
     return false
   end
   result
