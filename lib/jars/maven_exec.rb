@@ -132,6 +132,9 @@ module Jars
       unless spec = find_spec_via_rubygems( name )
         spec = install_gem( name )
       end
+      unless spec
+        raise "failed to resolve gem '#{name}' if you're using Bundler add it as a dependency"
+      end
       $LOAD_PATH << File.join( spec.full_gem_path, spec.require_path )
     end
 
