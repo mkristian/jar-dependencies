@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '~> 5.3'
   s.add_development_dependency 'rake', '~> 10.2'
-  s.add_development_dependency 'ruby-maven', '~> 3.3.0.dev'
+  s.add_development_dependency 'ruby-maven', '~> 3.3.0'
 end
 
 # vim: syntax=Ruby
