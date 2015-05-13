@@ -10,12 +10,16 @@ jruby_plugin( :minitest, :minispecDirectory => "specs/*_spec.rb" ) do
   gem 'ruby-maven', '${ruby-maven.version}'
 end
 
+# retrieve the ruby-maven version
+pro = @model.profiles.detect { |p| p.id.to_sym == :gemfile }
+ruby_maven = pro.dependencies.detect { |d| p d;d.artifact_id == 'ruby-maven' }
+
 properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.0.0.pre2'
                                 ].join(','),
             'jruby.modes' => ['1.9', '2.0', '2.1'].join(','),
             # just lock the version
             'bundler.version' => '1.9.2',
-            'ruby-maven.version' => '3.1.1.0.11',
+            'ruby-maven.version' => ruby_maven.version,
             'jruby.version' => '1.7.20',
             'jruby.plugins.version' => '1.0.9' )
 
