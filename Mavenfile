@@ -11,7 +11,7 @@ jruby_plugin( :minitest, :minispecDirectory => "specs/*_spec.rb" ) do
 end
 
 # retrieve the ruby-maven version
-pro = @model.profiles.detect { |p| p.id.to_sym == :gemfile }
+pro = @model.profiles.detect { |p| p.id.to_sym == :gemfile } || @model
 ruby_maven = pro.dependencies.detect { |d| p d;d.artifact_id == 'ruby-maven' }
 
 properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.0.0.pre2'
