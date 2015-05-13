@@ -28,7 +28,9 @@ module Jars
     HOME = 'JARS_HOME'.freeze
     # skip the gem post install hook
     SKIP = 'JARS_SKIP'.freeze
-    # just do not require any jars
+    # do not require any jars if set to false
+    REQUIRE = 'JARS_REQUIRE'.freeze
+    # @private
     NO_REQUIRE = 'JARS_NO_REQUIRE'.freeze
     # no more warnings on conflict. this still requires jars but will
     # not warn. it is needed to load jars from (default) gems which
@@ -59,21 +61,34 @@ module Jars
     end
 
     def to_boolean( key )
-      prop = to_prop( key )
-      ! prop.nil? && ( prop.empty? || prop.eql?('true') )
+      return nil if ( prop = to_prop( key ) ).nil?
+      prop.empty? || prop.eql?('true')
     end
 
     def skip?
       to_boolean( SKIP )
     end
 
-    def no_require?
-      ( @frozen ||= false ) || to_boolean( NO_REQUIRE )
+    def require?
+      @require = nil unless instance_variable_defined?(:@require)
+      if @require.nil?
+        if ( require = to_boolean( REQUIRE ) ).nil?
+          no_require = to_boolean( NO_REQUIRE )
+          @require = no_require.nil? ? true : ! no_require
+        else
+          @require = require
+        end
+      end
+      @require
     end
+    attr_writer :require
 
     def quiet?
       ( @silent ||= false ) || to_boolean( QUIET )
     end
+    
+    # @deprecated
+    def no_require?; ! require? end
 
     def verbose?
       to_boolean( VERBOSE )
@@ -96,7 +111,7 @@ module Jars
     end
 
     def freeze_loading
-      @frozen = true
+      self.require = false
     end
 
     def lock
@@ -262,7 +277,7 @@ module Jars
 end
 
 def require_jar( *args )
-  return nil if Jars.no_require?
+  return nil unless Jars.require?
   result = Jars.require_jar( *args )
   if result.is_a? String
     Jars.warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}"

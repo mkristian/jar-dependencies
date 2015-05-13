@@ -25,6 +25,9 @@ describe Jars do
   end
 
   it 'extract boolean property' do
+    Jars.to_boolean( 'JARS_SOMETHING' ).must_equal nil
+
+    ENV[ 'JARS_SOMETHING' ] = 'falsy'
     Jars.to_boolean( 'JARS_SOMETHING' ).must_equal false
 
     ENV[ jars_verbose = 'JARS_VERBOSE' ] = 'true'
@@ -102,34 +105,39 @@ describe Jars do
   it 'warn on version conflict' do
     ENV['JARS_HOME'] = File.join( 'specs', 'repo' )
 
-    require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ).must_equal true
-    $stderr = StringIO.new
-    require_jar( 'org.slf4j', 'slf4j-simple', '1.6.4' ).must_equal false
+    begin
+      require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ).must_equal true
+      $stderr = StringIO.new
+      require_jar( 'org.slf4j', 'slf4j-simple', '1.6.4' ).must_equal false
 
-    $stderr.string.must_equal "jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6\n"
-
-    $stderr = STDERR
-    ENV['JARS_HOME'] = nil
+      $stderr.string.must_equal "jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6\n"
+    ensure
+      $stderr = STDERR
+      ENV['JARS_HOME'] = nil
+    end
   end
 
   it 'finds jars on the load_path' do
     $LOAD_PATH << File.join( 'specs', 'load_path' )
     ENV['JARS_HOME'] = 'something'
-    $stderr = StringIO.new
 
-    lambda { require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError
+    begin
+      $stderr = StringIO.new
 
-    $stderr.flush
+      lambda { require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ) }.must_raise RuntimeError
 
-    $stderr = StringIO.new
-    require_jar( 'org.slf4j', 'slf4j-simple', '1.6.4' ).must_equal true
+      $stderr.flush
 
-    require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ).must_equal false
+      $stderr = StringIO.new
+      require_jar( 'org.slf4j', 'slf4j-simple', '1.6.4' ).must_equal true
 
-    $stderr.string.must_equal "jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.4\n"
+      require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ).must_equal false
 
-    $stderr = STDERR
-    ENV['JARS_HOME'] = nil
+      $stderr.string.must_equal "jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.4\n"
+    ensure
+      $stderr = STDERR
+      ENV['JARS_HOME'] = nil
+    end
   end
 
   it 'freezes jar loading unless jar is not loaded yet' do
@@ -150,7 +158,32 @@ describe Jars do
 
       $stderr.string.must_equal ''
 
+    rescue LoadError => e
+      p e
+      skip 'assume we have an old jruby'
+    rescue NameError => e
+      p e
+      skip 'assume we have an old jruby'
+    ensure
       $stderr = STDERR
+    end
+  end
+
+  it 'allows to programatically disable require_jar' do
+    begin
+      require 'jopenssl/version'
+
+      size = $CLASSPATH.length
+
+      Jars.require = false
+
+      out = require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
+      assert_nil out
+
+      out = require_jar 'org.jruby', 'jruby-rack', '1.1.16'
+      assert_nil out
+
+      $CLASSPATH.length.must_equal size
 
     rescue LoadError => e
       p e
@@ -159,7 +192,7 @@ describe Jars do
       p e
       skip 'assume we have an old jruby'
     end
-  end 
+  end
 
   it 'does not warn on conflicts after turning into silent mode' do
     begin
@@ -192,7 +225,7 @@ describe Jars do
       p e
       skip 'assume we have an old jruby'
     end
-  end 
+  end
 
   it 'no warnings on reload' do
     $stderr = StringIO.new
