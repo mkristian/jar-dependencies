@@ -13,7 +13,7 @@ module Jars
         .sub( /.*#{Jars.home}./, '' )
         .sub( /.*#{Jars.local_maven_repo}./, '' )
         .sub( /.*repository./, '' ) # make sure we trim this
-    end.select { |a| a != 'org/yaml/snakeyaml/snakeyaml.jar' }
+    end.select { |a| a != 'org/yaml/snakeyaml/snakeyaml.jar' && a != 'org/jruby/dirgra/dirgra.jar' && a != 'org/jruby/yecht/yecht.jar' }
     # omit ruby-maven jars
     result.delete_if { |c| c =~ /ruby-maven/ }
     result.uniq.sort
@@ -38,7 +38,7 @@ describe Jars::Classpath do
 
   let( :example_spec ) { File.join( pwd, '..', 'example', 'example.gemspec' ) }
 
-  let( :example_expected ) { ["joda-time/joda-time/2.3/joda-time-2.3.jar", "com/martiansoftware/nailgun-server/0.9.1/nailgun-server-0.9.1.jar", "com/github/jnr/jffi/1.2.7/jffi-1.2.7-native.jar", "org/ow2/asm/asm-analysis/4.0/asm-analysis-4.0.jar", "org/jruby/joni/joni/2.1.2/joni-2.1.2.jar", "com/jcraft/jzlib/1.1.2/jzlib-1.1.2.jar", "com/github/jnr/jnr-enxio/0.4/jnr-enxio-0.4.jar", "com/github/jnr/jnr-netdb/1.1.2/jnr-netdb-1.1.2.jar", "org/ow2/asm/asm-commons/4.0/asm-commons-4.0.jar", "org/ow2/asm/asm-util/4.0/asm-util-4.0.jar", "org/jruby/yecht/1.0/yecht-1.0.jar", "com/headius/invokebinder/1.2/invokebinder-1.2.jar", "org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar", "org/jruby/jruby-core/1.7.15/jruby-core-1.7.15.jar", "org/jruby/extras/bytelist/1.0.11/bytelist-1.0.11.jar", "org/jruby/jcodings/jcodings/1.0.10/jcodings-1.0.10.jar", "com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar", "com/github/jnr/jffi/1.2.7/jffi-1.2.7.jar", "org/yaml/snakeyaml/1.13/snakeyaml-1.13.jar", "com/github/jnr/jnr-posix/3.0.6/jnr-posix-3.0.6.jar", "com/github/jnr/jnr-constants/0.8.5/jnr-constants-0.8.5.jar", "com/headius/options/1.2/options-1.2.jar", "com/github/jnr/jnr-unixsocket/0.3/jnr-unixsocket-0.3.jar", "com/github/jnr/jnr-ffi/1.0.10/jnr-ffi-1.0.10.jar", "org/ow2/asm/asm/4.0/asm-4.0.jar"] }
+  let( :example_expected ) { ["joda-time/joda-time/2.3/joda-time-2.3.jar", "com/martiansoftware/nailgun-server/0.9.1/nailgun-server-0.9.1.jar", "com/github/jnr/jffi/1.2.7/jffi-1.2.7-native.jar", "org/ow2/asm/asm-analysis/4.0/asm-analysis-4.0.jar", "org/jruby/joni/joni/2.1.2/joni-2.1.2.jar", "com/jcraft/jzlib/1.1.2/jzlib-1.1.2.jar", "com/github/jnr/jnr-enxio/0.4/jnr-enxio-0.4.jar", "com/github/jnr/jnr-netdb/1.1.2/jnr-netdb-1.1.2.jar", "org/ow2/asm/asm-commons/4.0/asm-commons-4.0.jar", "org/ow2/asm/asm-util/4.0/asm-util-4.0.jar", "com/headius/invokebinder/1.2/invokebinder-1.2.jar", "org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar", "org/jruby/jruby-core/1.7.15/jruby-core-1.7.15.jar", "org/jruby/extras/bytelist/1.0.11/bytelist-1.0.11.jar", "org/jruby/jcodings/jcodings/1.0.10/jcodings-1.0.10.jar", "com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar", "com/github/jnr/jffi/1.2.7/jffi-1.2.7.jar", "org/yaml/snakeyaml/1.13/snakeyaml-1.13.jar", "com/github/jnr/jnr-posix/3.0.6/jnr-posix-3.0.6.jar", "com/github/jnr/jnr-constants/0.8.5/jnr-constants-0.8.5.jar", "com/headius/options/1.2/options-1.2.jar", "com/github/jnr/jnr-unixsocket/0.3/jnr-unixsocket-0.3.jar", "com/github/jnr/jnr-ffi/1.0.10/jnr-ffi-1.0.10.jar", "org/ow2/asm/asm/4.0/asm-4.0.jar"] }
 
   let( :expected_with_bc ) { example_expected + bouncycastle }
 
@@ -85,7 +85,7 @@ describe Jars::Classpath do
 
   it 'requires classpath from gemspec' do
     # TODO see not to require compile scope for 9k
-    skip( 'jruby-9.0.0.0.pre1 can not require jruby core jars' ) if JRUBY_VERSION == '9.0.0.0.pre1'
+    skip( 'jruby-9.0.0.x can not require jruby core jars' ) if JRUBY_VERSION =~ /9.0.0.0/
 
     old = $CLASSPATH.to_a
     
@@ -100,7 +100,7 @@ describe Jars::Classpath do
     elsif old.detect {|c| c =~ /bcpkix-jdk15on/ }
       expected = bc_prov
     else
-      expected = bouncycastle
+      expected =bc_prov# bouncycastle
     end
 
     subject.require( :runtime )
