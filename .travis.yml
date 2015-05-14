@@ -1,6 +1,5 @@
 language: java
 before_script:
-  - unset M2_HOME
   - export MAVEN_SKIP_RC=true
 env:
   - GOAL=test

@@ -113,8 +113,8 @@ module Jars
     end
 
     def lazy_load_maven
-      add_gem_to_load_path( 'ruby-maven' )
       add_gem_to_load_path( 'ruby-maven-libs' )
+      add_gem_to_load_path( 'ruby-maven' )
       require 'maven/ruby/maven'
     end
 
