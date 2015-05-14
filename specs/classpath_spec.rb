@@ -13,7 +13,7 @@ module Jars
         .sub( /.*#{Jars.home}./, '' )
         .sub( /.*#{Jars.local_maven_repo}./, '' )
         .sub( /.*repository./, '' ) # make sure we trim this
-    end
+    end.select { |a| a != 'org/yaml/snakeyaml/snakeyaml.jar' }
     # omit ruby-maven jars
     result.delete_if { |c| c =~ /ruby-maven/ }
     result.uniq.sort
