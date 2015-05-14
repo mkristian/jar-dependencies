@@ -3,7 +3,8 @@ before_script:
   - export MAVEN_SKIP_RC=true
 env:
   - GOAL=test
-  - GOAL='verify -Dmaven.test.skip'
+  # the install_ruby_maven_when_needed can not resolve ruby-maven on travis
+  - GOAL='verify -Dmaven.test.skip -Dinvoker.test=!install*
 jdk:
   - openjdk7
   - oraclejdk7
