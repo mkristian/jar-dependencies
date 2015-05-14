@@ -1,4 +1,6 @@
 language: java
+before_script:
+  - unset M2_HOME
 env:
   - GOAL=test
   - GOAL='verify -Dmaven.test.skip'
