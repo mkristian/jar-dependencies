@@ -20,8 +20,8 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
                                '-S', 'gem', 'install', '-l',
                                '--ignore-dependencies',
                                '${project.basedir}/../gem/pkg/my-1.1.1.gem' ] ) 
-  # uninstall of ruby-maven does not work
-  # but this bundler install found an regression once so keep it
+  # uninstall of ruby-maven does not work !
+  # this bundler install once found an regression so keep it
   execute_goal( :exec, :id => 'bundler install', :phase => :test,
                 :arguments => ['-classpath',
                                xml('<classpath/>'),
