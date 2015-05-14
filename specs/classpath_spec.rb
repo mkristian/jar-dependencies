@@ -100,7 +100,7 @@ describe Jars::Classpath do
     elsif old.detect {|c| c =~ /bcpkix-jdk15on/ }
       expected = bc_prov
     else
-      expected =bc_prov# bouncycastle
+      expected = bouncycastle
     end
 
     subject.require( :runtime )
