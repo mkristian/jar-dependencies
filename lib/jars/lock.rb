@@ -8,18 +8,14 @@ module Jars
     end
 
     def file
-      f = self[ -1 ].strip
-      if f.empty?
-        path
-      else
-        f
-      end
+      file = self[ -1 ].strip
+      file.empty? ? path : file
     end
 
     def group_id
       self[ 0 ]
     end
-    
+
     def artifact_id
       self[ 1 ]
     end
@@ -33,7 +29,7 @@ module Jars
     end
 
     def gacv
-      classifier ? self[ 0..3 ] : self[ 0..2 ] 
+      classifier ? self[ 0..3 ] : self[ 0..2 ]
     end
 
     def path
@@ -58,9 +54,7 @@ module Jars
       scope ||= :runtime
       File.read( @file ).each_line do |line|
         next if not line =~ /:.+:/
-        jar = JarDetails.new( line.strip
-                                .sub( /:jar:/, ':' )
-                                .sub( /:$/, ': ' ).split( /:/ ) )
+        jar = JarDetails.new( line.strip.sub( /:jar:/, ':' ).sub( /:$/, ': ' ).split( /:/ ) )
         case scope
         when :all
           yield jar
