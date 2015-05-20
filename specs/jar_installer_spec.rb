@@ -1,4 +1,5 @@
-require_relative 'setup'
+require File.expand_path('setup', File.dirname(__FILE__))
+
 require 'jar_installer'
 require 'fileutils'
 require 'rubygems/specification'

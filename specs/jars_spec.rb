@@ -1,4 +1,4 @@
-require_relative 'setup'
+require File.expand_path('setup', File.dirname(__FILE__))
 
 require 'stringio'
 describe Jars do

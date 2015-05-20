@@ -1,4 +1,5 @@
-require_relative 'setup'
+require File.expand_path('setup', File.dirname(__FILE__))
+
 require 'jars/maven_exec'
 require 'fileutils'
 
@@ -17,7 +18,7 @@ describe Jars::MavenExec do
 
   it 'uses logging config' do
     jar = Jars::MavenExec.new( example_spec )
-    
+
     ENV[ 'JARS_VERBOSE' ] = nil
     ENV[ 'JARS_DEBUG' ] = nil
     args = jar.send :setup_arguments, "deps.file", 'pom'
@@ -48,7 +49,7 @@ describe Jars::MavenExec do
     ENV['JARS_MAVEN_SETTINGS'] = 'specs/does/no/exists/settings.xml'
     Jars.reset
     jar = Jars::MavenExec.new( example_spec )
-    
+
     Gem.configuration[ :proxy ] = 'https://localhost:3128'
     args = jar.send :setup_arguments, "deps.file", 'pom'
     args.member?( '-DproxySet=true' ).must_equal true
