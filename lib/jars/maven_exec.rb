@@ -78,14 +78,14 @@ module Jars
     end
 
     def setup_arguments( pom, *goals )
-      args = [ *goals,
-               '-DoutputAbsoluteArtifactFilename=true',
-               '-DincludeTypes=jar',
-               '-DoutputScope=true',
-               '-DuseRepositoryLayout=true',
-               "-DoutputDirectory=#{Jars.home}",
-               '-f', File.dirname( __FILE__ ) + '/' + pom,
-               "-Djars.specfile=#{@specfile}" ]
+      args = goals.dup
+      args << '-DoutputAbsoluteArtifactFilename=true'
+      args << '-DincludeTypes=jar'
+      args << '-DoutputScope=true'
+      args << '-DuseRepositoryLayout=true'
+      args << "-DoutputDirectory=#{Jars.home}"
+      args << '-f' << "#{File.dirname( __FILE__ )}/#{pom}"
+      args << "-Djars.specfile=#{@specfile}"
 
       if Jars.debug?
         args << '-X'
