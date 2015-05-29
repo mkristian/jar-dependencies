@@ -28,7 +28,9 @@ module Jars
     HOME = 'JARS_HOME'.freeze
     # skip the gem post install hook
     SKIP = 'JARS_SKIP'.freeze
-    # just do not require any jars
+    # do not require any jars if set to false
+    REQUIRE = 'JARS_REQUIRE'.freeze
+    # @private
     NO_REQUIRE = 'JARS_NO_REQUIRE'.freeze
     # no more warnings on conflict. this still requires jars but will
     # not warn. it is needed to load jars from (default) gems which
@@ -59,21 +61,34 @@ module Jars
     end
 
     def to_boolean( key )
-      prop = to_prop( key )
-      ! prop.nil? && ( prop.empty? || prop.eql?('true') )
+      return nil if ( prop = to_prop( key ) ).nil?
+      prop.empty? || prop.eql?('true')
     end
 
     def skip?
       to_boolean( SKIP )
     end
 
-    def no_require?
-      ( @frozen ||= false ) || to_boolean( NO_REQUIRE )
+    def require?
+      @require = nil unless instance_variable_defined?(:@require)
+      if @require.nil?
+        if ( require = to_boolean( REQUIRE ) ).nil?
+          no_require = to_boolean( NO_REQUIRE )
+          @require = no_require.nil? ? true : ! no_require
+        else
+          @require = require
+        end
+      end
+      @require
     end
+    attr_writer :require
 
     def quiet?
       ( @silent ||= false ) || to_boolean( QUIET )
     end
+    
+    # @deprecated
+    def no_require?; ! require? end
 
     def verbose?
       to_boolean( VERBOSE )
@@ -96,7 +111,7 @@ module Jars
     end
 
     def freeze_loading
-      @frozen = true
+      self.require = false
     end
 
     def lock
@@ -119,7 +134,7 @@ module Jars
       if ( @_jars_maven_user_settings_ ||= nil ).nil?
         if settings = absolute( to_prop( MAVEN_SETTINGS ) )
           unless File.exists?(settings)
-            warn "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found" unless quiet?
+            warn "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found"
             settings = false
           end
         else # use maven default (user) settings
@@ -187,6 +202,10 @@ module Jars
       end
     end
 
+    def warn(msg)
+      Kernel.warn(msg) unless quiet?
+    end
+
     private
 
     def require_jar_with_block( group_id, artifact_id, *classifier_version )
@@ -200,8 +219,7 @@ module Jars
         if @@jars[ coordinate ] == version
           false
         else
-          # version of already registered jar
-          @@jars[ coordinate ]
+          @@jars[ coordinate ] # version of already registered jar
         end
       else
         yield group_id, artifact_id, version, classifier
@@ -226,7 +244,7 @@ module Jars
 
     def detect_local_repository(settings)
       return nil unless settings
-      
+
       doc = File.read( settings )
       # TODO filter out xml comments
       local_repo = doc.sub( /<\/localRepository>.*/m, '' ).sub( /.*<localRepository>/m, '' )
@@ -269,10 +287,10 @@ module Jars
 end
 
 def require_jar( *args )
-  return false if Jars.no_require?
+  return nil unless Jars.require?
   result = Jars.require_jar( *args )
   if result.is_a? String
-    warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}" unless Jars.quiet?
+    Jars.warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}"
     return false
   end
   result

@@ -151,10 +151,10 @@ module Jars
       # first look if there are any requirements in the spec
       # and then if gem depends on jar-dependencies for runtime.
       # only then install the jars declared in the requirements
-      result = spec && ! spec.requirements.empty? &&
-               spec.dependencies.detect { |d| d.name == 'jar-dependencies' && d.type == :runtime } != nil
+      result = ( spec = self.spec ) && ! spec.requirements.empty? &&
+        spec.dependencies.detect { |d| d.name == 'jar-dependencies' && d.type == :runtime } != nil
       if result && spec.platform.to_s != 'java'
-        warn "\njar dependencies found on non-java platform gem - do not install jars\n"
+        Jars.warn "\njar dependencies found on non-java platform gem - do not install jars\n"
         false
       else
         result

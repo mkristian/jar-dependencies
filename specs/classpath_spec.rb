@@ -1,4 +1,4 @@
-require_relative 'setup'
+require File.expand_path('setup', File.dirname(__FILE__))
 
 require 'yaml'
 require 'jars/classpath'
@@ -6,19 +6,19 @@ require 'jars/classpath'
 module Helper
   def self.prepare!( array )
     result = array.collect do |a|
-      a.sub( /-native.jar$/, '.jar')
-        .sub( /-[^-]+$/, '.jar')
-        .sub( /[^\/]+\/([^\/]+)$/, '\1')
-        .sub( /^.*META-INF.jruby.home.lib.ruby.s....../, '')
-        .sub( /.*#{Jars.home}./, '' )
-        .sub( /.*#{Jars.local_maven_repo}./, '' )
-        .sub( /.*repository./, '' ) # make sure we trim this
+      a.sub( /-native.jar$/, '.jar').
+        sub( /-[^-]+$/, '.jar').
+        sub( /[^\/]+\/([^\/]+)$/, '\1').
+        sub( /^.*META-INF.jruby.home.lib.ruby.s....../, '').
+        sub( /.*#{Jars.home}./, '' ).
+        sub( /.*#{Jars.local_maven_repo}./, '' ).
+        sub( /.*repository./, '' ) # make sure we trim this
     end.select { |a| a != 'org/yaml/snakeyaml/snakeyaml.jar' && a != 'org/jruby/dirgra/dirgra.jar' && a != 'org/jruby/yecht/yecht.jar' }
     # omit ruby-maven jars
     result.delete_if { |c| c =~ /ruby-maven/ }
     result.uniq.sort
   end
-  
+
   def self.reduce( big, small )
     (prepare!(big) - prepare!(small)).uniq.sort.to_yaml
   end
@@ -93,7 +93,7 @@ describe Jars::Classpath do
     skip( 'jruby-9.0.0.x can not require jruby core jars' ) if JRUBY_VERSION =~ /9.0.0.0/
 
     old = $CLASSPATH.to_a
-    
+
     # sometimes the $CLASSPATH can already have BC jars
     # and it is not possible to unload entries from $CLASSPATH
     if old.detect {|c| c =~ /bcprov-jdk15on/ }

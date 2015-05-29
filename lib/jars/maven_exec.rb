@@ -78,14 +78,14 @@ module Jars
     end
 
     def setup_arguments( pom, *goals )
-      args = [ *goals,
-               '-DoutputAbsoluteArtifactFilename=true',
-               '-DincludeTypes=jar',
-               '-DoutputScope=true',
-               '-DuseRepositoryLayout=true',
-               "-DoutputDirectory=#{Jars.home}",
-               '-f', File.dirname( __FILE__ ) + '/' + pom,
-               "-Djars.specfile=#{@specfile}" ]
+      args = goals.dup
+      args << '-DoutputAbsoluteArtifactFilename=true'
+      args << '-DincludeTypes=jar'
+      args << '-DoutputScope=true'
+      args << '-DuseRepositoryLayout=true'
+      args << "-DoutputDirectory=#{Jars.home}"
+      args << '-f' << "#{File.dirname( __FILE__ )}/#{pom}"
+      args << "-Djars.specfile=#{@specfile}"
 
       if Jars.debug?
         args << '-X'
@@ -131,6 +131,9 @@ module Jars
       # and leave activated gems as they are
       unless spec = find_spec_via_rubygems( name )
         spec = install_gem( name )
+      end
+      unless spec
+        raise "failed to resolve gem '#{name}' if you're using Bundler add it as a dependency"
       end
       $LOAD_PATH << File.join( spec.full_gem_path, spec.require_path )
     end
