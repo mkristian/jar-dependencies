@@ -175,9 +175,21 @@ module Jars
       end
     end
 
+    def mark_as_required( group_id, artifact_id, *classifier_version )
+      require_jar_with_block( group_id, artifact_id, *classifier_version ) do
+      end
+    end
+
     def require_jar( group_id, artifact_id, *classifier_version )
       require_jars_lock
+      require_jar_with_block( group_id, artifact_id, *classifier_version ) do |group_id, artifact_id, version, classifier|
+        do_require( group_id, artifact_id, version, classifier )
+      end
+    end
 
+    private
+
+    def require_jar_with_block( group_id, artifact_id, *classifier_version )
       version = classifier_version[ -1 ]
       classifier = classifier_version[ -2 ]
 
@@ -192,13 +204,11 @@ module Jars
           @@jars[ coordinate ]
         end
       else
-        do_require( group_id, artifact_id, version, classifier )
+        yield group_id, artifact_id, version, classifier
         @@jars[ coordinate ] = version
         return true
       end
     end
-
-    private
 
     def absolute( file )
       File.expand_path( file ) if file

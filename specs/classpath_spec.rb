@@ -3,7 +3,7 @@ require_relative 'setup'
 require 'yaml'
 require 'jars/classpath'
 
-module Jars
+module Helper
   def self.prepare!( array )
     result = array.collect do |a|
       a.sub( /-native.jar$/, '.jar')
@@ -36,6 +36,8 @@ describe Jars::Classpath do
 
   let( :jars_lock ) { File.join( pwd, 'Jars.lock' ) }
 
+  let( :jars_no_jline_lock ) { File.join( pwd, 'Jars_no_jline.lock' ) }
+
   let( :example_spec ) { File.join( pwd, '..', 'example', 'example.gemspec' ) }
 
   let( :example_expected ) { ["joda-time/joda-time/2.3/joda-time-2.3.jar", "com/martiansoftware/nailgun-server/0.9.1/nailgun-server-0.9.1.jar", "com/github/jnr/jffi/1.2.7/jffi-1.2.7-native.jar", "org/ow2/asm/asm-analysis/4.0/asm-analysis-4.0.jar", "org/jruby/joni/joni/2.1.2/joni-2.1.2.jar", "com/jcraft/jzlib/1.1.2/jzlib-1.1.2.jar", "com/github/jnr/jnr-enxio/0.4/jnr-enxio-0.4.jar", "com/github/jnr/jnr-netdb/1.1.2/jnr-netdb-1.1.2.jar", "org/ow2/asm/asm-commons/4.0/asm-commons-4.0.jar", "org/ow2/asm/asm-util/4.0/asm-util-4.0.jar", "com/headius/invokebinder/1.2/invokebinder-1.2.jar", "org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar", "org/jruby/jruby-core/1.7.15/jruby-core-1.7.15.jar", "org/jruby/extras/bytelist/1.0.11/bytelist-1.0.11.jar", "org/jruby/jcodings/jcodings/1.0.10/jcodings-1.0.10.jar", "com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar", "com/github/jnr/jffi/1.2.7/jffi-1.2.7.jar", "org/yaml/snakeyaml/1.13/snakeyaml-1.13.jar", "com/github/jnr/jnr-posix/3.0.6/jnr-posix-3.0.6.jar", "com/github/jnr/jnr-constants/0.8.5/jnr-constants-0.8.5.jar", "com/headius/options/1.2/options-1.2.jar", "com/github/jnr/jnr-unixsocket/0.3/jnr-unixsocket-0.3.jar", "com/github/jnr/jnr-ffi/1.0.10/jnr-ffi-1.0.10.jar", "org/ow2/asm/asm/4.0/asm-4.0.jar"] }
@@ -64,23 +66,23 @@ describe Jars::Classpath do
 
   it 'resolves classpath from gemspec' do
     ENV_JAVA[ 'jars.quiet' ] = 'true'
-    Jars.prepare( subject.classpath ).must_equal Jars.prepare( bouncycastle )
+    Helper.prepare( subject.classpath ).must_equal Helper.prepare( bouncycastle )
 
-    Jars.prepare( subject.classpath( :compile ) ).must_equal Jars.prepare( expected_with_bc )
+    Helper.prepare( subject.classpath( :compile ) ).must_equal Helper.prepare( expected_with_bc )
 
-    Jars.prepare( subject.classpath( :test ) ).must_equal Jars.prepare( expected_with_bc << 'junit/junit/4.1/junit-4.1.jar' )
+    Helper.prepare( subject.classpath( :test ) ).must_equal Helper.prepare( expected_with_bc << 'junit/junit/4.1/junit-4.1.jar' )
 
-    Jars.prepare( subject.classpath( :runtime ) ).must_equal Jars.prepare( bouncycastle )
+    Helper.prepare( subject.classpath( :runtime ) ).must_equal Helper.prepare( bouncycastle )
   end
 
   it 'resolves classpath_string from gemspec' do
-      Jars.prepare( subject.classpath_string.split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Jars.prepare( bouncycastle )
+      Helper.prepare( subject.classpath_string.split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( bouncycastle )
 
-    Jars.prepare( subject.classpath_string( :compile ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Jars.prepare( expected_with_bc )
+    Helper.prepare( subject.classpath_string( :compile ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc )
 
-    Jars.prepare( subject.classpath_string( :test ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Jars.prepare( expected_with_bc << "junit/junit/4.1/junit-4.1.jar" )
+    Helper.prepare( subject.classpath_string( :test ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc << "junit/junit/4.1/junit-4.1.jar" )
 
-    Jars.prepare( subject.classpath_string( :runtime ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Jars.prepare( bouncycastle )
+    Helper.prepare( subject.classpath_string( :runtime ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( bouncycastle )
   end
 
   it 'requires classpath from gemspec' do
@@ -105,29 +107,43 @@ describe Jars::Classpath do
 
     subject.require( :runtime )
 
-    Jars.reduce( $CLASSPATH.to_a, old ).must_equal Jars.prepare( expected )
+    Helper.reduce( $CLASSPATH.to_a, old ).must_equal Helper.prepare( expected )
 
     expected = expected + example_expected
     subject.require( :compile )
-    Jars.reduce( $CLASSPATH.to_a, old ).must_equal Jars.prepare( expected )
+    Helper.reduce( $CLASSPATH.to_a, old ).must_equal Helper.prepare( expected )
 
     expected << "junit/junit/4.1/junit-4.1.jar"
     subject.require( :test )
-    Jars.reduce( $CLASSPATH.to_a, old ).must_equal Jars.prepare( expected )
+    Helper.reduce( $CLASSPATH.to_a, old ).must_equal Helper.prepare( expected )
   end
 
-  it 'processes Jars.load if exists' do
+  it 'processes Jars.lock if exists' do
     def subject.jars_lock( lock = nil )
       @lock = lock if lock
       @lock
     end
     subject.jars_lock( jars_lock )
 
-    Jars.prepare( subject.classpath ).must_equal Jars.prepare( lock_expected_runtime )
-    Jars.prepare( subject.classpath( :compile ) ).must_equal Jars.prepare( lock_expected )
+    Helper.prepare( subject.classpath ).must_equal Helper.prepare( lock_expected_runtime )
+    Helper.prepare( subject.classpath( :compile ) ).must_equal Helper.prepare( lock_expected )
 
-    Jars.prepare( subject.classpath( :runtime ) ).must_equal Jars.prepare( lock_expected_runtime )
+    Helper.prepare( subject.classpath( :runtime ) ).must_equal Helper.prepare( lock_expected_runtime )
 
-    Jars.prepare( subject.classpath( :test ) ).must_equal Jars.prepare( lock_expected_test )
+    Helper.prepare( subject.classpath( :test ) ).must_equal Helper.prepare( lock_expected_test )
+  end
+
+  it 'processes Jars.lock and block loading of jars' do
+    def subject.jars_lock( lock = nil )
+      @lock = lock if lock
+      @lock
+    end
+    subject.jars_lock( jars_no_jline_lock )
+
+    subject.require
+
+    require_jar 'example', 'example', '1'
+
+    $CLASSPATH.detect { |c| c =~ /example/ }.must_be_nil
   end
 end

@@ -50,6 +50,11 @@ module Jars
           require_jar( *jar.gacv )
         end
       end
+      if scope == nil || scope == :runtime
+        process( :provided ) do |jar|
+          Jars.mark_as_required( *jar.gacv )
+        end
+      end
     end
 
     def classpath( scope = nil )
