@@ -87,6 +87,9 @@ describe Jars::Classpath do
 
   it 'requires classpath from gemspec' do
     # TODO see not to require compile scope for 9k
+
+    skip( 'TODO just use some empty jars for this spec' )
+    
     skip( 'jruby-9.0.0.x can not require jruby core jars' ) if JRUBY_VERSION =~ /9.0.0.0/
 
     old = $CLASSPATH.to_a
