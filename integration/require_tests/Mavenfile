@@ -28,7 +28,7 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
                 :arguments => ['-classpath',
                                xml('<classpath/>'),
                                'org.jruby.Main',
-                               '-rjar-dependencies', '-e',
+                               '-I.', '-rjar-dependencies', '-e',
                                'require_jar "jline", "jline", "2.11"'] )
 end
 
