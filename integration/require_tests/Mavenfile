@@ -24,6 +24,12 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
                                xml('<classpath/>'),
                                'org.jruby.Main',
                                'test_freeze_loading.rb' ] )
+  execute_goal( :exec, :id => 'ignore gemspec on require_jar', :phase => :test,
+                :arguments => ['-classpath',
+                               xml('<classpath/>'),
+                               'org.jruby.Main',
+                               '-rjar-dependencies', '-e',
+                               'require_jar "jline", "jline", "2.11"'] )
 end
 
 properties( 'gem.home' => '${project.basedir}/pkg/rubygems',

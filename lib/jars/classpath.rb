@@ -6,27 +6,24 @@ module Jars
 
   class Classpath
 
-    def initialize( spec = nil )
-      @mvn = MavenExec.new( spec )
+    def initialize( spec = nil, deps = nil )
+      @spec = spec
+      @deps = deps
+    end
+
+    def mvn
+      @mvn ||= MavenExec.new( @spec )
     end
 
     def workdir( dirname )
-      dir = File.join( @mvn.basedir, dirname )
+      dir = File.join( mvn.basedir, dirname )
       dir if File.directory?( dir )
     end
 
-    def jars_lock
-      deps = Jars.lock
-      return deps if File.exists?( deps )
-      deps = File.join( @mvn.basedir || '.', Jars.lock )
-      deps if File.exists?( deps )
-    end
-
     def dependencies_list
-      deps = jars_lock
-      if deps and File.exists?( deps )
-        @mvn.resolve_dependencies( deps ) if Jars.resolve?
-        deps
+      if @deps ||= Jars.lock_path( mvn.basedir )
+        mvn.resolve_dependencies( @deps ) if Jars.resolve?
+        @deps
       else
         resolve_dependencies
       end
@@ -37,7 +34,7 @@ module Jars
     def resolve_dependencies
       basedir = workdir( 'pkg' ) || workdir( 'target' ) || workdir( '' )
       deps = File.join( basedir, DEPENDENCY_LIST )      
-      @mvn.resolve_dependencies_list( deps )
+      mvn.resolve_dependencies_list( deps )
       deps
     end
     private :resolve_dependencies

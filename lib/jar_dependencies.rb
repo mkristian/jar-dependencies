@@ -118,6 +118,13 @@ module Jars
       to_prop( LOCK ) || 'Jars.lock'
     end
 
+    def lock_path( basedir = nil )
+      deps = self.lock
+      return deps if File.exists?( deps )
+      deps = File.join( basedir || '.', self.lock )
+      deps if File.exists?( deps )
+    end
+
     def local_maven_repo
       to_prop( LOCAL_MAVEN_REPO ) || home
     end
@@ -171,12 +178,12 @@ module Jars
     end
 
     def require_jars_lock!( scope = :runtime )
-      # funny error during spec where it tries to load it again
-      # and finds it as gem instead of the LOAD_PATH
-      require 'jars/classpath' unless defined? Jars::Classpath
-      classpath = Jars::Classpath.new
-      if jars_lock = classpath.jars_lock
+      if jars_lock = Jars.lock_path
         @@jars_lock = jars_lock
+        # funny error during spec where it tries to load it again
+        # and finds it as gem instead of the LOAD_PATH
+        require 'jars/classpath' unless defined? Jars::Classpath
+        classpath = Jars::Classpath.new( nil, jars_lock )
         classpath.require( scope )
         no_more_warnings
       end

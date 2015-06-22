@@ -122,31 +122,22 @@ describe Jars::Classpath do
   end
 
   it 'processes Jars.lock if exists' do
-    def subject.jars_lock( lock = nil )
-      @lock = lock if lock
-      @lock
-    end
-    subject.jars_lock( jars_lock )
+    subject.instance_variable_set(:@deps, jars_lock )
 
     Helper.prepare( subject.classpath ).must_equal Helper.prepare( lock_expected_runtime )
     Helper.prepare( subject.classpath( :compile ) ).must_equal Helper.prepare( lock_expected )
 
-    Helper.prepare( subject.classpath( :runtime ) ).must_equal Helper.prepare( lock_expected_runtime )
-
     Helper.prepare( subject.classpath( :test ) ).must_equal Helper.prepare( lock_expected_test )
+
+    Helper.prepare( subject.classpath( :runtime ) ).must_equal Helper.prepare( lock_expected_runtime )
   end
 
   it 'processes Jars.lock and block loading of jars' do
-    def subject.jars_lock( lock = nil )
-      @lock = lock if lock
-      @lock
-    end
-    subject.jars_lock( jars_no_jline_lock )
+    subject.instance_variable_set(:@deps, jars_no_jline_lock )
 
     subject.require
 
     require_jar 'example', 'example', '1'
-
     $CLASSPATH.detect { |c| c =~ /example/ }.must_be_nil
   end
 end
