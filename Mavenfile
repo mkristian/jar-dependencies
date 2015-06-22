@@ -14,14 +14,15 @@ end
 pro = @model.profiles.detect { |p| p.id.to_sym == :gemfile } || @model
 ruby_maven = pro.dependencies.detect { |d| d.artifact_id == 'ruby-maven' }
 
-properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.0.0.pre2'
+properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.0.0.rc1'
                                 ].join(','),
             'jruby.modes' => ['1.9', '2.0', '2.1'].join(','),
             # just lock the version
             'bundler.version' => '1.9.2',
             'ruby-maven.version' => ruby_maven.version,
             'jruby.version' => '1.7.20',
-            'jruby.plugins.version' => '1.0.9' )
+            'jruby.plugins.version' => '1.0.9',
+            'push.skip' => true  )
 
 plugin :invoker, '1.8' do
   execute_goals( :install, :run,
@@ -44,17 +45,22 @@ distribution_management do
   repository :id => :ossrh, :url => 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
 end
 
-plugin :deploy, '2.8.2' do
-  execute_goal :deploy, :phase => :deploy, :id => 'deploy gem to maven central'
-end
-
 profile :id => :release do
-  properties 'maven.test.skip' => true, 'invoker.skip' => true
+  properties 'maven.test.skip' => true, 'invoker.skip' => true, 'push.skip' => false
+
+  distribution_management do
+    repository :id => :ossrh, :url => 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+  end
+
+  build do
+    default_goal :deploy
+  end
+
   plugin :gpg, '1.5' do
     execute_goal :sign, :id => 'sign artifacts', :phase => :verify
   end
-  build do
-    default_goal :deploy
+  plugin :deploy, '2.8.2' do
+    execute_goal :deploy, :phase => :deploy, :id => 'deploy gem to maven central'
   end
 end
 
