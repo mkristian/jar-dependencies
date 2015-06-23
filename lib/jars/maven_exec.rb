@@ -20,6 +20,10 @@ module Jars
 
     def initialize( spec = nil )
       setup( spec )
+    rescue StandardError, LoadError => e
+      # If spec load fails, skip looking for jar-dependencies
+      warn "jar-dependencies: " + e.to_s
+      warn e.backtrace.join( "\n" ) if Jars.verbose?
     end
 
     def setup( spec = nil, allow_no_file = false )
@@ -48,10 +52,7 @@ module Jars
       else
         raise 'spec must be either String or Gem::Specification'
       end
-
       @spec = spec
-    rescue
-      # for all those strange gemspec we skip looking for jar-dependencies
     end
 
     def ruby_maven_install_options=( options )
