@@ -17,7 +17,7 @@ plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2',
                 :arguments => ['-classpath',
                                xml('<classpath/>'),
                                'org.jruby.Main',
-                               '-S', 'gem', 'install', '-l',
+                               '-S', 'gem', 'install',
                                '--ignore-dependencies',
                                '${project.basedir}/../gem/pkg/my-1.1.1.gem' ] ) 
   # uninstall of ruby-maven does not work !
