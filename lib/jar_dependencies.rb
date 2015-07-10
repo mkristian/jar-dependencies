@@ -86,7 +86,7 @@ module Jars
     def quiet?
       ( @silent ||= false ) || to_boolean( QUIET )
     end
-    
+
     # @deprecated
     def no_require?; ! require? end
 
@@ -204,8 +204,8 @@ module Jars
 
     def require_jar( group_id, artifact_id, *classifier_version )
       require_jars_lock
-      require_jar_with_block( group_id, artifact_id, *classifier_version ) do |group_id, artifact_id, version, classifier|
-        do_require( group_id, artifact_id, version, classifier )
+      require_jar_with_block( group_id, artifact_id, *classifier_version ) do |gid, aid, version, classifier|
+        do_require( gid, aid, version, classifier )
       end
     end
 
