@@ -85,6 +85,7 @@ module Jars
       args << '-DoutputScope=true'
       args << '-DuseRepositoryLayout=true'
       args << "-DoutputDirectory=#{Jars.home}"
+      # TODO copy pom to tmp dir in case it is not a real file
       args << '-f' << "#{File.dirname( __FILE__ )}/#{pom}"
       args << "-Djars.specfile=#{@specfile}"
 
@@ -140,6 +141,7 @@ module Jars
     end
 
     def install_gem( name )
+      puts "Installing gem '#{name}' . . ."
       require 'rubygems/dependency_installer'
       jars = Gem.loaded_specs[ 'jar-dependencies' ]
       dep = jars.dependencies.detect { |d| d.name == name }
@@ -147,8 +149,11 @@ module Jars
       inst = Gem::DependencyInstaller.new( @options ||= {} )
       inst.install( name, req ).first
     rescue => e
-      warn e.backtrace.join( "\n" ) if Jars.verbose?
-      raise "there was an error installing '#{name}'. please install it manually: #{e.inspect}"
+      if Jars.verbose?
+        warn "#{e.inspect}"
+        warn e.backtrace.join( "\n" )
+      end
+      raise "there was an error installing '#{name} (#{req})' #{@option[:domain]}. please install it manually: #{e.inspect}"
     end
   end
 end
