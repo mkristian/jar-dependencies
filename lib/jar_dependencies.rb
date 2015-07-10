@@ -48,6 +48,11 @@ module Jars
 
   class << self
 
+    def lock_down( debug = false, verbose = false, options = {} )
+      require 'jars/executor' # do this lazy to keep things clean
+      Jars::Executor.new( debug, verbose ).lock_down( options )
+    end
+
     if defined? JRUBY_VERSION
       def to_prop( key )
         key = key.gsub( '_', '.' )
@@ -85,6 +90,10 @@ module Jars
 
     def quiet?
       ( @silent ||= false ) || to_boolean( QUIET )
+    end
+
+    def self.jarfile
+      ENV[ 'JARFILE' ] || ENV_JAVA[ 'jarfile' ] || ENV[ 'JBUNDLER_JARFILE' ] || ENV_JAVA[ 'jbundler.jarfile' ] || 'Jarfile'
     end
 
     # @deprecated

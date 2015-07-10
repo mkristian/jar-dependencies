@@ -11,6 +11,9 @@ Gem::Specification.new do |s|
   s.summary = 'manage jar dependencies for gems'
   s.homepage = 'https://github.com/mkristian/jar-dependencies'
 
+  s.bindir = "bin"
+  s.executables = ['lock_jars']
+
   s.license = 'MIT'
 
   s.files = `git ls-files`.split($/).select do |file|
