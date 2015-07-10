@@ -80,11 +80,11 @@ module Jars
     end
 
     def self.write_require_file( require_filename )
-      FileUtils.mkdir_p( File.dirname( require_filename ) )
-      comment = '# this is a generated file, to avoid over-writing it just delete this comment'
-      if ! File.exists?( require_filename ) || File.read( require_filename ).match( comment )
+      warn "deprecated"
+      if needs_to_write?(require_filename)
+        FileUtils.mkdir_p( File.dirname( require_filename ) )
         f = File.open( require_filename, 'w' )
-        f.puts comment
+        f.puts COMMENT
         f.puts "require 'jar_dependencies'"
         f.puts
         f
@@ -92,29 +92,58 @@ module Jars
     end
 
     def self.vendor_file( dir, dep )
-      vendored = File.join( dir, dep.path )
-      FileUtils.mkdir_p( File.dirname( vendored ) )
-      FileUtils.cp( dep.file, vendored ) unless dep.system?
+      if !dep.system? && dep.type == :jar && dep.scope == :runtime
+        vendored = File.join( dir, dep.path )
+        FileUtils.mkdir_p( File.dirname( vendored ) )
+        FileUtils.cp( dep.file, vendored )
+      end
     end
 
     def self.write_dep( file, dir, dep, vendor )
+      warn "deprecated"
+      print_require_jar( file, dep )
+    end
+
+    def self.print_require_jar( file, dep )
       return if dep.type != :jar || dep.scope != :runtime
       if dep.system?
         file.puts( "require( '#{dep.file}' )" ) if file
       elsif dep.scope == :runtime
-        vendor_file( dir, dep ) if vendor
         file.puts( "require_jar( '#{dep.gav.gsub( ':', "', '" )}' )" ) if file
       end
     end
 
+    COMMENT = '# this is a generated file, to avoid over-writing it just delete this comment'
+    def self.needs_to_write?(require_filename)
+      ( require_filename and not File.exists?( require_filename ) ) or
+        File.read( require_filename ).match( COMMENT)
+    end
+
     def self.install_deps( deps, dir, require_filename, vendor )
-      f = write_require_file( require_filename ) if require_filename
-      deps.each do |dep|
-        write_dep( f, dir, dep, vendor )
+      warn "deprecated"
+      write_require_jars( deps, require_filename )
+      vendor_jars( deps, dir ) if dir && vendor
+    end
+
+    def self.write_require_jars( deps, require_filename )
+      if needs_to_write?(require_filename)
+        FileUtils.mkdir_p( File.dirname( require_filename ) )
+        File.open( require_filename, 'w' ) do |f|
+          f.puts COMMENT
+          f.puts "require 'jar_dependencies'"
+          f.puts
+          deps.each do |dep|
+            print_require_jar( f, dep )
+          end
+          yield f if block_given?
+        end
       end
-      yield f if block_given? and f
-    ensure
-      f.close if f
+    end
+
+    def self.vendor_jars( deps, dir )
+      deps.each do |dep|
+        vendor_file( dir, dep )
+      end
     end
 
     def initialize( spec = nil )
@@ -165,8 +194,8 @@ module Jars
     private
 
     def do_install( vendor, write_require_file )
-      vendor_dir = File.join( @mvn.basedir, spec.require_path )
-      jars_file = File.join( vendor_dir, "#{spec.name}_jars.rb" )
+      target_dir = File.join( @mvn.basedir, spec.require_path )
+      jars_file = File.join( target_dir, "#{spec.name}_jars.rb" )
 
       # write out new jars_file it write_require_file is true or
       # check timestamps:
@@ -177,8 +206,11 @@ module Jars
         # leave jars_file as is
         jars_file = nil
       end
-      self.class.install_deps( install_dependencies, vendor_dir,
-                               jars_file, vendor )
+      deps = install_dependencies()
+      self.class.write_require_jars( deps, jars_file )
+      if vendor
+        self.class.vendor_jars( deps, target_dir )
+      end
     end
 
     def install_dependencies
