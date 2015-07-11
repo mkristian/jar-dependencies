@@ -42,8 +42,6 @@ module Jars
     DEBUG = 'JARS_DEBUG'.freeze
     # vendor jars inside gem when installing gem
     VENDOR = 'JARS_VENDOR'.freeze
-    # resolve jars from Jars.lock
-    RESOLVE = 'JARS_RESOLVE'.freeze
   end
 
   class << self
@@ -109,10 +107,6 @@ module Jars
 
     def vendor?
       to_boolean( VENDOR )
-    end
-
-    def resolve?
-      to_boolean( RESOLVE )
     end
 
     def no_more_warnings
@@ -312,7 +306,7 @@ module Jars
         require jar
       end
     rescue LoadError => e
-      raise "\n\n\tyou might need to reinstall the gem which depends on the missing jar or in case there is Jars.lock then JARS_RESOLVE=true will install the missing jars\n\n" + e.message + " (LoadError)"
+      raise "\n\n\tyou might need to reinstall the gem which depends on the missing jar or in case there is Jars.lock then resolve the jars with `lock_jars` command\n\n" + e.message + " (LoadError)"
     end
 
   end # class << self

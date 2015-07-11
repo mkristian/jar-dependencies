@@ -64,10 +64,6 @@ module Jars
       do_resolve_dependencies( *setup_arguments( 'jar_pom.rb', 'dependency:copy-dependencies', 'dependency:list', "-DoutputFile=#{file}" ) )
     end
 
-    def resolve_dependencies( file )
-      do_resolve_dependencies( *setup_arguments( 'jars_lock_pom.rb', 'dependency:copy-dependencies', '-DexcludeTransitive=true' , "-Djars.lock=#{file}") )
-    end
-
     private
 
     def do_resolve_dependencies( *args )
