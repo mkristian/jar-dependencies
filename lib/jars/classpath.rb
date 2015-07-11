@@ -22,7 +22,6 @@ module Jars
 
     def dependencies_list
       if @deps ||= Jars.lock_path( mvn.basedir )
-        mvn.resolve_dependencies( @deps ) if Jars.resolve?
         @deps
       else
         resolve_dependencies
