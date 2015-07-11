@@ -1,5 +1,7 @@
-bdir = java.lang.System.getProperty( "jars.basedir" )
-jfile = java.lang.System.getProperty( "jars.jarfile" )
+# this file is maven DSL and used by maven via jars/executor.rb
+
+bdir = ENV_JAVA[ "jars.basedir" ]
+jfile = ENV_JAVA[ "jars.jarfile" ]
 
 basedir( bdir )
 if basedir != bdir
@@ -8,19 +10,22 @@ if basedir != bdir
 end
 
 ( 0..10000 ).each do |i|
-  coord = java.lang.System.getProperty( "jars.#{i}" )
+  coord = ENV_JAVA[ "jars.#{i}" ]
   break unless coord
-  artifact = Maven::Tools::Artifact.from_coordinate( coord.to_s )
-  # HACK around broken maven-tools
-  if artifact.exclusions
-    ex = artifact.classifier[1..-1] + ':' +  artifact.exclusions.join(':')
-    artifact.classifier = nil
-    artifact.exclusions = ex.split /,/
+  artifact = Maven::Tools::Artifact.from_coordinate( coord )
+  exclusions = []
+  ( 0..10000 ).each do |j|
+    exclusion = ENV_JAVA[ "jars.#{i}.exclusion.#{j}" ]
+    break unless exclusion
+    exclusions << exclusion
   end
+  artifact.exclusions = exclusions unless exclusions.empty?
+  scope = ENV_JAVA[ "jars.#{i}.scope" ]
+  artifact.scope = scope if scope
   dependency_artifact( artifact ) 
 end
 
-jruby_plugin! :gem, '1.0.10'
+jruby_plugin :gem, ENV_JAVA[ "jruby.plugins.version" ]
 
 jarfile( jfile ) if File.exists?( jfile )
 
@@ -28,9 +33,7 @@ gemspec rescue nil
 
 properties( 'project.build.sourceEncoding' => 'utf-8' )
 
-plugin_repository :id => 'sonatype-snapshots', :url => 'https://oss.sonatype.org/content/repositories/snapshots'
-
-plugin :dependency, '2.8'
+plugin :dependency, ENV_JAVA[ "dependency.plugin.version" ]
 
 # some output
 model.dependencies.each do |d|

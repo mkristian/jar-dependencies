@@ -1,6 +1,6 @@
 # this file is maven DSL and used by maven via jars/maven_exec.rb
 
-specfile = java.lang.System.getProperty('jars.specfile')
+specfile = ENV_JAVA[ 'jars.specfile' ]
 
 # needed since the gemspec does not allow absolute files
 basedir( File.dirname( specfile ) )
