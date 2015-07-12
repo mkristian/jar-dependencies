@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name = 'jar-dependencies'
 
   path = File.expand_path('lib/jars/version.rb', File.dirname(__FILE__))
-  s.version = File.read(path).match( /.*VERSION\s*=\s*['"](.*)['"]/m )[1]
+  s.version = File.read(path).match( /\s*VERSION\s*=\s*['"](.*)['"]/ )[1]
   
   s.author = 'christian meier'
   s.email = [ 'mkristian@web.de' ]
@@ -26,8 +26,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '~> 5.3'
   s.add_development_dependency 'rake', '~> 10.2'
-  s.add_development_dependency 'ruby-maven', '~> 3.3.0'
-  s.add_development_dependency 'ruby-maven-libs', '~> 3.3.0'
+  s.add_development_dependency 'ruby-maven', '~> 3.3.3'
 end
 
 # vim: syntax=Ruby

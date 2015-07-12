@@ -20,7 +20,7 @@ properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.0.0.rc1'
             # just lock the version
             'bundler.version' => '1.9.2',
             'ruby-maven.version' => ruby_maven.version,
-            'jruby.version' => '1.7.20',
+            'jruby.version' => '1.7.21',
             'jruby.plugins.version' => '1.0.9',
             'push.skip' => true  )
 
