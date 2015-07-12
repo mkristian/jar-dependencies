@@ -1,33 +1,24 @@
-require 'maven/ruby/maven'
 require 'fileutils'
 require 'jar_dependencies'
 require 'jars/version'
+require 'jars/maven_factory'
 
 module Jars
-  class Executor
+  class LockDownMavenExec
 
     attr_reader :debug, :verbose
 
-    def initialize( debug = false, verbose = false )
+    def initialize( debug, verbose )
       @debug = debug
       @verbose = verbose
     end
 
     def maven_new
-      m = Maven::Ruby::Maven.new
-      m.property( 'jruby.plugins.version', Jars::JRUBY_PLUGINS_VERSION )
-      m.property( 'dependency.plugin.version', Jars::DEPENDENCY_PLUGIN_VERSION )
-      m.property( 'jars.basedir', File.expand_path( basedir ) )
-      m.property( 'jars.jarfile', File.expand_path( Jars.jarfile ) )
-      m.property( 'verbose', (debug || verbose) == true )
-      if debug
-        m.options[ '-X' ] = nil
-      elsif verbose
-        m.options[ '-e' ] = nil
-      else
-        m.options[ '-q' ] = nil
-      end
-      m.verbose = debug
+      m = MavenFactory.new( {}, @debug, @verbose ).maven_new
+      m[ 'jruby.plugins.version' ] = Jars::JRUBY_PLUGINS_VERSION
+      m[ 'dependency.plugin.version' ] = Jars::DEPENDENCY_PLUGIN_VERSION
+      m[ 'jars.basedir' ] = File.expand_path( basedir )
+      m[ 'jars.jarfile' ] = File.expand_path( Jars.jarfile )
       attach_jar_coordinates_from_bundler_dependencies( m )
       m
     end
@@ -39,11 +30,6 @@ module Jars
 
     def basedir
       File.expand_path( '.' )
-    end
-
-    def exec( *args )
-      maven.options[ '-f' ] = File.expand_path( '../lock_down_pom.rb', __FILE__ )
-      maven.exec( *args )
     end
 
     def attach_jar_coordinates_from_bundler_dependencies( maven )
@@ -93,7 +79,7 @@ module Jars
       puts
       puts '-- jar root dependencies --'
       puts
-      status = exec( *args )
+      status = maven.exec( *args )
       exit 1 unless status
       if File.exists?( tree )
         puts
