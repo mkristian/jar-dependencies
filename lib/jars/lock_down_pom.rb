@@ -20,12 +20,15 @@ end
   dependency_artifact( artifact ) 
 end
 
-jarfile( jfile )
+jruby_plugin! :gem, '1.0.10'
+
+jarfile( jfile ) if File.exists?( jfile )
+
+gemspec rescue nil
 
 properties( 'project.build.sourceEncoding' => 'utf-8' )
 
 plugin_repository :id => 'sonatype-snapshots', :url => 'https://oss.sonatype.org/content/repositories/snapshots'
-jruby_plugin :gem, '1.0.10-SNAPSHOT'
 
 plugin :dependency, '2.8'
 

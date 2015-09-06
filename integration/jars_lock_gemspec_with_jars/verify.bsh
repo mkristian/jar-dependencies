@@ -1,0 +1,20 @@
+import java.io.*;
+import org.codehaus.plexus.util.FileUtils;
+
+
+String log = FileUtils.fileRead( new File( basedir, "build.log" ) );
+
+String expected = "org.apache.hbase:hbase-annotations:jar:";
+if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
+
+expected = "jdk.tools:jdk.tools:jar:";
+if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
+
+expected = "com.github.stephenc.findbugs:findbugs-annotations:jar:";
+if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
+
+expected = "log4j:log4j:jar:";
+if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
+
+expected = "org.jruby:jruby:jar:";
+if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );

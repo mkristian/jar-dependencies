@@ -1,3 +1,3 @@
 module Jars
-  VERSION = '0.1.16.pre'.freeze
+  VERSION = '0.2.0'.freeze
 end

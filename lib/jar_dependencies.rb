@@ -92,7 +92,7 @@ module Jars
       ( @silent ||= false ) || to_boolean( QUIET )
     end
 
-    def self.jarfile
+    def jarfile
       ENV[ 'JARFILE' ] || ENV_JAVA[ 'jarfile' ] || ENV[ 'JBUNDLER_JARFILE' ] || ENV_JAVA[ 'jbundler.jarfile' ] || 'Jarfile'
     end
 
@@ -130,8 +130,12 @@ module Jars
     def lock_path( basedir = nil )
       deps = self.lock
       return deps if File.exists?( deps )
-      deps = File.join( basedir || '.', self.lock )
-      deps if File.exists?( deps )
+      basedir ||= '.'
+      [ '.', 'jars', 'vendor/jars' ].each do |dir|
+        file = File.join( basedir, dir, self.lock )
+        return file if File.exists?( file )
+      end
+      nil
     end
 
     def local_maven_repo
@@ -195,6 +199,19 @@ module Jars
         classpath = Jars::Classpath.new( nil, jars_lock )
         classpath.require( scope )
         no_more_warnings
+      end
+    end
+
+    def setup( options = nil )
+      case options
+      when Symbol
+        require_jars_lock!( options )
+      when Hash
+        @_jars_home = options[:jars_home]
+        @_jars_lock = options[:jars_lock]
+        require_jars_lock!( options[:scope] || :runtime )
+      else
+        require_jars_lock!
       end
     end
 

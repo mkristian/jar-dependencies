@@ -4,4 +4,4 @@
 
 require 'jar_dependencies'
 
-Jars.require_jars_lock!
+Jars.setup

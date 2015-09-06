@@ -1,6 +1,4 @@
 require 'maven/ruby/maven'
-require 'maven/tools/artifact'
-require 'maven/tools/gemspec_dependencies'
 require 'fileutils'
 require 'jar_dependencies'
 module Jars
@@ -46,21 +44,21 @@ module Jars
     end
 
     def attach_jar_coordinates( maven )
-      load_path = $LOAD_PATH.dup
-      require 'bundler/setup'
-      done = []
-      index = 0
-      Gem.loaded_specs.each do |name, spec|
-        # TODO get rid of this somehow
-        deps = Maven::Tools::GemspecDependencies.new( spec )
-        deps.java_dependency_artifacts.each do |a|
-          unless done.include? a.key
-            maven.property( "jars.#{index}", a.to_s )
-            index += 1
-            done << a.key
-          end
-        end
-      end
+       load_path = $LOAD_PATH.dup
+       require 'bundler/setup'
+       done = []
+       index = 0
+       Gem.loaded_specs.each do |name, spec|
+    #     # TODO get rid of this somehow
+    #     deps = Maven::Tools::GemspecDependencies.new( spec )
+    #     deps.java_dependency_artifacts.each do |a|
+    #       unless done.include? a.key
+    #         maven.property( "jars.#{index}", a.to_s )
+    #         index += 1
+    #         done << a.key
+    #       end
+       #  end
+       end
     rescue LoadError
       warn "no bundler found - ignore Gemfile if exists"
     ensure
