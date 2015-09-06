@@ -21,7 +21,7 @@ properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.1.0'
             'bundler.version' => '1.9.2',
             'ruby-maven.version' => ruby_maven.version,
             'jruby.version' => '1.7.22',
-            'jruby.plugins.version' => '1.0.10',
+            'jruby.plugins.version' => '1.0.9',
             'push.skip' => true  )
 
 plugin :invoker, '1.8' do
