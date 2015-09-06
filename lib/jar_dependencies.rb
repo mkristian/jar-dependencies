@@ -90,7 +90,7 @@ module Jars
       ( @silent ||= false ) || to_boolean( QUIET )
     end
 
-    def self.jarfile
+    def jarfile
       ENV[ 'JARFILE' ] || ENV_JAVA[ 'jarfile' ] || ENV[ 'JBUNDLER_JARFILE' ] || ENV_JAVA[ 'jbundler.jarfile' ] || 'Jarfile'
     end
 
