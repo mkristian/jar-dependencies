@@ -1,7 +1,6 @@
 # this file is maven DSL and used by maven via jars/executor.rb
 
 bdir = ENV_JAVA[ "jars.basedir" ]
-jfile = ENV_JAVA[ "jars.jarfile" ]
 
 basedir( bdir )
 if basedir != bdir
@@ -15,18 +14,22 @@ end
   artifact = Maven::Tools::Artifact.from_coordinate( coord )
   exclusions = []
   ( 0..10000 ).each do |j|
-    exclusion = ENV_JAVA[ "jars.#{i}.exclusion.#{j}" ]
+    exclusion = ENV_JAVA[ "jars.#{i}.exclusions.#{j}" ]
     break unless exclusion
     exclusions << exclusion
   end
-  artifact.exclusions = exclusions unless exclusions.empty?
   scope = ENV_JAVA[ "jars.#{i}.scope" ]
   artifact.scope = scope if scope
-  dependency_artifact( artifact ) 
+  dependency_artifact( artifact ) do
+    exclusions.each do |ex|
+      exclusion ex
+    end
+  end
 end
 
 jruby_plugin :gem, ENV_JAVA[ "jruby.plugins.version" ]
 
+jfile = ENV_JAVA[ "jars.jarfile" ]
 jarfile( jfile ) if File.exists?( jfile )
 
 gemspec rescue nil
@@ -38,4 +41,5 @@ plugin :dependency, ENV_JAVA[ "dependency.plugin.version" ]
 # some output
 model.dependencies.each do |d|
   puts "      " + d.group_id + ':' + d.artifact_id + (d.classifier ? ":" + d.classifier : "" ) + ":" + d.version + ':' + (d.scope || 'compile')
+  puts "          exclusions: " + d.exclusions.collect{ |e| e.group_id + ':' + e.artifact_id }.join unless d.exclusions.empty?
 end

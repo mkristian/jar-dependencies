@@ -31,7 +31,7 @@ optparse = OptionParser.new do|opts|
     options[:tree] = t
   end
 
-  opts.on( '-u', '--update JAR_COORDINATE', 'Resolves given dependency and use  latest version' ) do |u|
+  opts.on( '-u', '--update JAR_COORDINATE', 'Resolves given dependency and use  latest version. JAR_COORDINATE is either artifact_id or group_id:artifact_id' ) do |u|
     options[:update] = u
   end
 

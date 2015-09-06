@@ -1,5 +1,63 @@
 module Jars
 
+  class MavenVersion < String
+    def self.new(*args)
+      if args.size == 0 || (args.size == 1 && args[0].nil?)
+        nil
+      else
+        low, high = convert(args[0])
+        low, high = convert(args[1], low, high) if args[1] =~ /[=~><]/
+        if low == high
+          low
+        else
+          super "#{low || '[0'},#{high || ')'}"
+        end
+      end
+    end
+
+    private
+
+    def self.convert(arg, low = nil, high = nil)
+      if arg =~ /~>/
+        val = arg.sub(/~>\s*/, '')
+        last = val=~/\./ ? val.sub(/\.[0-9]*[a-z]+.*$/, '').sub(/\.[^.]+$/, '.99999') : '99999'
+        ["[#{snapshot_version(val)}", "#{snapshot_version(last)}]"]
+      elsif arg =~ />=/
+        val = arg.sub(/>=\s*/, '')
+        ["[#{snapshot_version(val)}", (nil || high)]
+      elsif arg =~ /<=/
+        val = arg.sub(/<=\s*/, '')
+        [(nil || low), "#{snapshot_version(val)}]"]
+      # treat '!' the same way as '>' since maven can not describe such range
+      elsif arg =~ /[!>]/  
+        val = arg.sub(/[!>]\s*/, '')
+        ["(#{snapshot_version(val)}", (nil || high)]
+      elsif arg =~ /</
+        val = arg.sub(/<\s*/, '')
+        [(nil || low), "#{snapshot_version(val)})"]
+      elsif arg =~ /\=/
+        val = arg.sub(/=\s*/, '')
+        # for prereleased version pick the maven version (no version range)
+        if val.match /[a-z]|[A-Z]/
+          [ val, val ]
+        else
+          ["[#{val}", "#{val}.0.0.0.0.1)"]
+        end
+      else
+        # no conversion here, i.e. assume maven version
+        [arg, arg]
+      end
+    end
+
+    def self.snapshot_version( val )
+      if val.match(/[a-z]|[A-Z]/) && !val.match(/-SNAPSHOT|[${}]/)
+        val + '-SNAPSHOT'
+      else
+        val
+      end
+    end
+  end
+
   class GemspecArtifacts
 
     class Exclusion
@@ -111,7 +169,15 @@ module Jars
         args = [@group_id, @artifact_id]
         args << @classifier if @classifier
         args << @version
-        args.join(', ')
+        args.join(':')
+      end
+
+      def to_coord
+        args = [@group_id, @artifact_id]
+        args << @classifier if @classifier
+        args << @type
+        args << MavenVersion.new( @version )
+        args.join(':')
       end
 
       def key
