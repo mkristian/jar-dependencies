@@ -47,8 +47,8 @@ module Jars
   class << self
 
     def lock_down( debug = false, verbose = false, options = {} )
-      require 'jars/lock_down_maven_exec' # do this lazy to keep things clean
-      Jars::LockDownMavenExec.new( debug, verbose ).lock_down( options )
+      require 'jars/lock_down' # do this lazy to keep things clean
+      Jars::LockDown.new( debug, verbose ).lock_down( options )
     end
 
     if defined? JRUBY_VERSION

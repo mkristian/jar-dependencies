@@ -1,0 +1,4 @@
+import java.io.*;
+
+new File(basedir, "Jars.lock.old").renameTo(new File(basedir, "Jars.lock"));
+true;

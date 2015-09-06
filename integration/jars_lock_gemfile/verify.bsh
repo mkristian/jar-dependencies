@@ -4,20 +4,14 @@ import org.codehaus.plexus.util.FileUtils;
 
 String log = FileUtils.fileRead( new File( basedir, "build.log" ) );
 
-String expected = "Jars.lock created";
+String expected = "Jars.lock updated";
 if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
 
-expected = "org.apache.hbase:hbase-annotations:jar:";
+expected = "org.jruby:jruby-core:jar:1.7.20:provided";
 if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
 
-expected = "jdk.tools:jdk.tools:jar:";
+expected = "org.slf4j:slf4j-simple:jar:1.7.7:compile";
 if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
 
-expected = "com.github.stephenc.findbugs:findbugs-annotations:jar:";
-if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
-
-expected = "log4j:log4j:jar:";
-if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
-
-expected = "org.jruby:jruby:jar:";
+expected = "io.dropwizard.metrics:metrics-core:jar:3.1.0:compile";
 if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );

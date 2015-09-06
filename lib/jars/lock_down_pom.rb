@@ -30,7 +30,7 @@ end
 jruby_plugin :gem, ENV_JAVA[ "jruby.plugins.version" ]
 
 jfile = ENV_JAVA[ "jars.jarfile" ]
-jarfile( jfile ) if File.exists?( jfile )
+jarfile( jfile ) if jfile
 
 gemspec rescue nil
 
