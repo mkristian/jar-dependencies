@@ -34,11 +34,11 @@ Gem::Specification.new do |s|
 
 if you want to use the executable #{LOCK_JARS} then install ruby-maven gem before using #{LOCK_JARS} 
 
-   $ gem install ruby-maven #{RUBY_MAVEN_VERSION}
+   $ gem install ruby-maven -v '#{RUBY_MAVEN_VERSION}'
 
 or add it as deveopment dependency to your Gemfile
 
-   gem 'ruby-maven', #{RUBY_MAVEN_VERSION}
+   gem 'ruby-maven', '#{RUBY_MAVEN_VERSION}'
 
 EOF
 end
