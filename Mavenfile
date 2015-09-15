@@ -34,7 +34,8 @@ plugin :invoker, '1.8' do
                  :postBuildHookScript => 'verify.bsh',
                  :cloneProjectsTo => '${project.build.directory}',
                  :properties => { 'jar-dependencies.version' => '${project.version}',
-                   'jruby.version' => '${jruby.version}',
+                   # use an old jruby with old ruby-maven here
+                   'jruby.version' => '1.7.20',
                    'jruby.plugins.version' => '${jruby.plugins.version}',
                    'bundler.version' => '${bundler.version}',
                    'ruby-maven.version' => '${ruby-maven.version}',

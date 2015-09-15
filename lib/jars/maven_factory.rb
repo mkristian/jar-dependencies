@@ -56,14 +56,14 @@ module Jars
     private
 
     def lazy_load_maven
-      add_gem_to_load_path( 'ruby-maven-libs' )
       add_gem_to_load_path( 'ruby-maven' )
+      add_gem_to_load_path( 'ruby-maven-libs' )
       require 'maven/ruby/maven'
     end
 
-    def find_spec_via_rubygems( name )
+    def find_spec_via_rubygems( name, req )
       require 'rubygems/dependency'
-      dep = Gem::Dependency.new( name )
+      dep = Gem::Dependency.new( name, req )
       dep.matching_specs( true ).last
     end
 
@@ -72,8 +72,9 @@ module Jars
       return if Gem.loaded_specs[ name ]
       # just install gem if needed and add it to the load_path
       # and leave activated gems as they are
-      unless spec = find_spec_via_rubygems( name )
-        spec = install_gem( name )
+      req = requirement( name )
+      unless spec = find_spec_via_rubygems( name, req )
+        spec = install_gem( name, req )
       end
       unless spec
         raise "failed to resolve gem '#{name}' if you're using Bundler add it as a dependency"
@@ -81,12 +82,15 @@ module Jars
       $LOAD_PATH << File.join( spec.full_gem_path, spec.require_path )
     end
 
-    def install_gem( name )
+    def requirement( name )
+      jars = Gem.loaded_specs[ 'jar-dependencies' ]
+      dep = jars.nil? ? nil : jars.dependencies.detect { |d| d.name == name }
+      dep.nil? ? Gem::Requirement.create( '>0' ) : dep.requirement
+    end
+
+    def install_gem( name, req )
       puts "Installing gem '#{name}' . . ."
       require 'rubygems/dependency_installer'
-      jars = Gem.loaded_specs[ 'jar-dependencies' ]
-      dep = jars.dependencies.detect { |d| d.name == name }
-      req = dep.nil? ? Gem::Requirement.create( '>0' ) : dep.requirement
       inst = Gem::DependencyInstaller.new( @options ||= {} )
       inst.install( name, req ).first
     rescue => e
