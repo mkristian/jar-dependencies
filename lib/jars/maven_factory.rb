@@ -98,7 +98,7 @@ module Jars
         warn "#{e.inspect}"
         warn e.backtrace.join( "\n" )
       end
-      raise "there was an error installing '#{name} (#{req})' #{@option[:domain]}. please install it manually: #{e.inspect}"
+      raise "there was an error installing '#{name} (#{req})' #{@options[:domain]}. please install it manually: #{e.inspect}"
     end
   end
 end
