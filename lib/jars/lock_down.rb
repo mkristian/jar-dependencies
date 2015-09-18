@@ -38,7 +38,9 @@ module Jars
 
     def attach_jar_coordinates_from_bundler_dependencies( maven )
       load_path = $LOAD_PATH.dup
-      require 'bundler/setup'
+      require 'bundler'
+      #TODO make this group a commandline option
+      Bundler.setup( 'default' )
       done = []
       index = 0
       Gem.loaded_specs.each do |name, spec|
@@ -58,13 +60,14 @@ module Jars
           end
         end
       end
+    rescue Gem::LoadError => e
+      # not sure why to reraise the exception
+      raise e
     rescue LoadError => e
       if Jars.verbose?
         warn e.message
         warn "no bundler found - ignore Gemfile if exists"
       end
-    rescue SystemExit
-      # we want to continue
     ensure
       $LOAD_PATH.replace( load_path )
     end
