@@ -68,6 +68,9 @@ module Jars
         warn e.message
         warn "no bundler found - ignore Gemfile if exists"
       end
+    rescue Bundler::GemNotFound => e
+      warn "can not setup bundler with #{Bundler.default_lockfile}"
+      raise e
     ensure
       $LOAD_PATH.replace( load_path )
     end
