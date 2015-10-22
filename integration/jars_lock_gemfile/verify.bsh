@@ -7,8 +7,8 @@ String log = FileUtils.fileRead( new File( basedir, "build.log" ) );
 String expected = "Jars.lock updated";
 if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
 
-expected = "org.jruby:jruby-core:jar:1.7.20:provided";
-if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
+String unexpected = "org.jruby:jruby-core:jar:1.7.20:provided";
+if ( log.contains( unexpected ) ) throw new RuntimeException( "log file does contain unexpected '" + unexpected + "'" );
 
 expected = "org.slf4j:slf4j-simple:jar:1.7.7:compile";
 if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
