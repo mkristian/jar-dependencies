@@ -46,7 +46,7 @@ module Jars
       Gem.loaded_specs.each do |name, spec|
         deps = GemspecArtifacts.new( spec )
         deps.artifacts.each do |a|
-          unless done.include?( a.key ) and a.scope != 'provided' and a.scope != 'test'
+          if !done.include?( a.key ) and a.scope != 'provided' and a.scope != 'test'
             maven.property( "jars.#{index}", a.to_coord )
             if a.exclusions
               jndex = 0
