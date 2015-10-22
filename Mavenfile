@@ -14,14 +14,14 @@ end
 pro = @model.profiles.detect { |p| p.id.to_sym == :gemfile } || @model
 ruby_maven = pro.dependencies.detect { |d| d.artifact_id == 'ruby-maven' }
 
-properties( 'jruby.versions' => ['1.7.12', '${jruby.version}', '9.0.1.0'
+properties( 'jruby.versions' => ['1.7.12', '1.7.22', '${jruby.version}'
                                 ].join(','),
-            'jruby.modes' => ['1.9', '2.0', '2.1'].join(','),
+            'jruby.modes' => ['1.9', '2.0', '2.2'].join(','),
             # just lock the version
             'bundler.version' => '1.9.2',
             'ruby-maven.version' => ruby_maven.version,
-            'jruby.version' => '1.7.22',
-            'jruby.plugins.version' => '1.0.9',
+            'jruby.version' => '9.0.3.0',
+            'jruby.plugins.version' => '1.1.2',
             'push.skip' => true  )
 
 plugin :invoker, '1.8' do
