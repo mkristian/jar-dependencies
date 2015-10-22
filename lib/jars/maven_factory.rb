@@ -10,6 +10,7 @@ module Jars
       @options.delete( :ignore_dependencies )
       @debug = debug
       @verbose = verbose
+      @installed_maven = false
     end
 
     def maven_new( pom )
@@ -58,6 +59,14 @@ module Jars
     def lazy_load_maven
       add_gem_to_load_path( 'ruby-maven' )
       add_gem_to_load_path( 'ruby-maven-libs' )
+      if @installed_maven
+        puts
+        puts 'using maven for the first time results in maven'
+        puts 'downloading all its default plugin and can take time.'
+        puts 'as those plugins get cached on disk and further execution'
+        puts 'of maven is much faster then the first time.'
+        puts
+      end
       require 'maven/ruby/maven'
     end
 
@@ -89,6 +98,7 @@ module Jars
     end
 
     def install_gem( name, req )
+      @installed_maven = true
       puts "Installing gem '#{name}' . . ."
       require 'rubygems/dependency_installer'
       inst = Gem::DependencyInstaller.new( @options ||= {} )
