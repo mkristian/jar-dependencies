@@ -121,6 +121,14 @@ module Jars
       to_prop( LOCK ) || 'Jars.lock'
     end
 
+    def jars_lock_from_class_loader
+      if to_prop( LOCK ).nil? && defined?(JRUBY_VERSION)
+        JRuby.runtime.jruby_class_loader.get_resources( 'Jars.lock' ).collect do |url|
+          url.to_s
+        end
+      end
+    end
+
     def lock_path( basedir = nil )
       deps = self.lock
       return deps if File.exists?( deps )
@@ -188,7 +196,24 @@ module Jars
     end
 
     def require_jars_lock!( scope = :runtime )
-      if jars_lock = Jars.lock_path
+      urls = jars_lock_from_class_loader
+      if urls and urls.size > 0
+        @@jars_lock = true
+        # funny error during spec where it tries to load it again
+        # and finds it as gem instead of the LOAD_PATH
+        require 'jars/classpath' unless defined? Jars::Classpath
+        done = []
+        while done != urls do
+          urls.each do |url|
+            unless done.member?( url )
+              classpath = Jars::Classpath.new( nil, "uri:#{url}" )
+              classpath.require( scope )
+              done << url
+            end
+          end
+          urls = jars_lock_from_class_loader
+        end
+      elsif jars_lock = Jars.lock_path
         @@jars_lock = jars_lock
         # funny error during spec where it tries to load it again
         # and finds it as gem instead of the LOAD_PATH
