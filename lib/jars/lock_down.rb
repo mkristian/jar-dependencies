@@ -80,7 +80,7 @@ module Jars
       out = File.expand_path( '.jars.output' )
       tree = File.expand_path( '.jars.tree' )
       maven.property( 'jars.outputFile', out )
-      maven.property( 'maven.repo.local', Jars.home )
+      maven.property( 'maven.repo.local', Jars.local_maven_repo )
       maven.property( 'jars.home', vendor_dir ) if vendor_dir
       maven.property( 'jars.lock', File.expand_path( Jars.lock ) )
       maven.property( 'jars.force', options[ :force ] == true )

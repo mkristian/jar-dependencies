@@ -1,12 +1,6 @@
 # this file is maven DSL and used by maven via jars/executor.rb
 
-bdir = ENV_JAVA[ "jars.basedir" ]
-
-basedir( bdir )
-if basedir != bdir
-  # older maven-tools needs this
-  self.instance_variable_set( :@basedir, bdir )
-end
+basedir( ENV_JAVA[ "jars.basedir" ] )
 
 ( 0..10000 ).each do |i|
   coord = ENV_JAVA[ "jars.#{i}" ]

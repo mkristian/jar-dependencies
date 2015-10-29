@@ -177,11 +177,14 @@ module Jars
       @_jars_maven_global_settings_ || nil
     end
 
+    def local_maven_repo
+      @_local_maven_repo ||= detect_local_repository(maven_user_settings) ||
+                             detect_local_repository(maven_global_settings) ||
+                             File.join( user_home, '.m2', 'repository' )
+    end
+
     def home
-      @_jars_home_ ||= absolute(to_prop(HOME)) ||
-                       detect_local_repository(maven_user_settings) ||
-                       detect_local_repository(maven_global_settings) ||
-                       File.join( user_home, '.m2', 'repository' )
+      @_jars_home_ ||= absolute(to_prop(HOME)) || local_maven_repo
     end
 
     def require_jars_lock!( scope = :runtime )
