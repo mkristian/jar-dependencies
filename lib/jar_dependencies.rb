@@ -206,6 +206,7 @@ module Jars
         while done != urls do
           urls.each do |url|
             unless done.member?( url )
+              Jars.debug("--- load jars from #{url}")
               classpath = Jars::Classpath.new( nil, "uri:#{url}" )
               classpath.require( scope )
               done << url
@@ -214,14 +215,19 @@ module Jars
           urls = jars_lock_from_class_loader
         end
       elsif jars_lock = Jars.lock_path
+        Jars.debug("--- load jars from #{jars_lock}")
         @@jars_lock = jars_lock
         # funny error during spec where it tries to load it again
         # and finds it as gem instead of the LOAD_PATH
         require 'jars/classpath' unless defined? Jars::Classpath
         classpath = Jars::Classpath.new( nil, jars_lock )
         classpath.require( scope )
-        no_more_warnings
       end
+      no_more_warnings
+      Jars.debug {
+        loaded = @@jars.collect{ |k,v| "#{k}:#{v}" }
+        "--- loaded jars ---\n\t#{loaded.join("\n\t")}"
+      }
     end
 
     def setup( options = nil )
@@ -258,7 +264,11 @@ module Jars
     end
 
     def warn(msg)
-      Kernel.warn(msg) unless quiet?
+      Kernel.warn(msg) unless quiet? and not verbose?
+    end
+
+    def debug(msg = nil)
+      Kernel.warn(msg || yield) if verbose?
     end
 
     private
@@ -345,7 +355,8 @@ def require_jar( *args )
   return nil unless Jars.require?
   result = Jars.require_jar( *args )
   if result.is_a? String
-    Jars.warn "jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result}"
+    Jars.warn "--- jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result} - omit version #{args[-1]}"
+    Jars.debug "    try to load from #{caller.join("\n\t")}"
     return false
   end
   result
