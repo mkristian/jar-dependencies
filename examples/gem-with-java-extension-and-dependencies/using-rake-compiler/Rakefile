@@ -1,0 +1,20 @@
+#-*- mode: ruby -*-
+
+require 'jars/classpath'
+require 'rake/javaextensiontask'
+
+spec = eval File.read( 'mygem.gemspec' )
+Rake::JavaExtensionTask.new("mygem", spec) do |ext|
+  ext.classpath = Jars::Classpath.new.classpath_string
+  ext.ext_dir = 'src/main/java'
+end
+
+task :default => [ :jar ]
+
+require 'rubygems/package_task'
+Gem::PackageTask.new( spec ) do
+  desc 'Pack gem'
+  task :package => [:jar]
+end
+
+# vim: syntax=Ruby

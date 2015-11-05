@@ -1,0 +1,22 @@
+#-*- mode: ruby -*-
+
+require 'ruby-maven'
+desc "Pack jar after compiling classes"
+task :jar do
+  RubyMaven.exec('prepare-package')
+end
+
+desc "Clean build"
+task :clean do
+  RubyMaven.exec('clean')
+end
+
+task :default => [ :jar ]
+
+require 'rubygems/package_task'
+Gem::PackageTask.new( eval File.read( 'mygem.gemspec' ) ) do
+  desc 'Pack gem'
+  task :package => [:jar]
+end
+
+# vim: syntax=Ruby
