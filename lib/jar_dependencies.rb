@@ -156,7 +156,7 @@ module Jars
       if ( @_jars_maven_user_settings_ ||= nil ).nil?
         if settings = absolute( to_prop( MAVEN_SETTINGS ) )
           unless File.exists?(settings)
-            warn "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found"
+            Jars.warn { "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found" }
             settings = false
           end
         else # use maven default (user) settings
@@ -206,7 +206,7 @@ module Jars
         while done != urls do
           urls.each do |url|
             unless done.member?( url )
-              Jars.debug("--- load jars from #{url}")
+              Jars.debug { "--- load jars from #{url}" }
               classpath = Jars::Classpath.new( nil, "uri:#{url}" )
               classpath.require( scope )
               done << url
@@ -215,7 +215,7 @@ module Jars
           urls = jars_lock_from_class_loader
         end
       elsif jars_lock = Jars.lock_path
-        Jars.debug("--- load jars from #{jars_lock}")
+        Jars.debug { "--- load jars from #{jars_lock}" }
         @@jars_lock = jars_lock
         # funny error during spec where it tries to load it again
         # and finds it as gem instead of the LOAD_PATH
@@ -263,12 +263,12 @@ module Jars
       end
     end
 
-    def warn(msg)
-      Kernel.warn(msg) unless quiet? and not verbose?
+    def warn(msg = nil, &block)
+      Kernel.warn(msg || block.call) unless quiet? and not verbose?
     end
 
-    def debug(msg = nil)
-      Kernel.warn(msg || yield) if verbose?
+    def debug(msg = nil, &block)
+      Kernel.warn(msg || block.call) if verbose?
     end
 
     private
@@ -322,7 +322,7 @@ module Jars
       end
       local_repo
     rescue
-      warn "error reading or parsing #{settings}"
+      Jars.warn { "error reading or parsing #{settings}" }
       nil
     end
 
@@ -355,8 +355,8 @@ def require_jar( *args )
   return nil unless Jars.require?
   result = Jars.require_jar( *args )
   if result.is_a? String
-    Jars.warn "--- jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result} - omit version #{args[-1]}"
-    Jars.debug "    try to load from #{caller.join("\n\t")}"
+    Jars.warn { "--- jar coordinate #{args[0..-2].join( ':' )} already loaded with version #{result} - omit version #{args[-1]}" }
+    Jars.debug { "    try to load from #{caller.join("\n\t")}" }
     return false
   end
   result

@@ -104,6 +104,7 @@ describe Jars do
 
   it 'warn on version conflict' do
     ENV['JARS_HOME'] = File.join( 'specs', 'repo' )
+    Jars.reset
 
     begin
       require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ).must_equal true
@@ -120,6 +121,7 @@ describe Jars do
   it 'finds jars on the load_path' do
     $LOAD_PATH << File.join( 'specs', 'load_path' )
     ENV['JARS_HOME'] = 'something'
+    Jars.reset
 
     begin
       $stderr = StringIO.new
