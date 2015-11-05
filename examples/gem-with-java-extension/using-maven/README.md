@@ -1,6 +1,6 @@
 # using maven-3.3.x to build jar and pack gem
 
-it is configured by .mvn/extensions.xml
+the ruby DSL for maven is configured by .mvn/extensions.xml
 
 ## build compile and create jar
 

@@ -15,6 +15,9 @@ and installs the jar dependencies into a local cache (local maven repository)
 
 ### install/lockdown the jars
 
+since there is Jarfile the jar dependencies from there only get installed with
+
+
 ```
 lock_jars
 ```

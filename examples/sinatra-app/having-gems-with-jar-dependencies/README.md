@@ -17,7 +17,7 @@ rackup
 
 ## lock down version of jar dependencies
 
-this may or may not be needed - maven discourages the use of version ranges resulting in a deterministic version resolution. in case you want to lock down your versions for the jars execute:
+lock down may or may not be needed. in case you want to lock down your versions for the jars execute:
 
 ```
 lock_jars

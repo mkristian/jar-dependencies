@@ -56,9 +56,11 @@ per default all jars need to come from maven-central (<search.maven.org>), in or
 
 **NOTE:** gems depending on jars other then maven-central will **NOT** work when they get published on rubygems.org since the user of those gems will not have the right settings.xml to allow them to access the jar dependencies.
 
-## just look at the example ##
+## examples ##
 
-the [readme.md](example/Readme.md) walks you through an example and shows how development works and shows what happens during installation.
+an [example with rspec and all](example/Readme.md) walks you through setup and shows how development works and shows what happens during installation.
+
+there are some more examples with the various [project setups for gems and application](examples/README.md). this includes using proper maven for the project or ruby-maven with rake or the rake-compiler in conjuction with jar-dependencies.
 
 # configuration #
 

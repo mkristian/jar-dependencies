@@ -17,6 +17,27 @@ examples
     └── having-jarfile-and-gems-with-jar-dependencies
 ```
 
+to build the java extension you can do it with either proper maven, or
+with help of the ruby-maven gem or the rake-compiler gem.
+
+## version ranges against a picked version
+
+jar-dependencies uses maven under the hood to resolve and install jar
+dependencies. maven discourages the use of version ranges and without
+version ranges there a deterministic version resolution, i.e. there is
+way to
+[resolve conflicts in maven](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Transitive_Dependencies)
+(see section 'Dependency mediation').
+
+so if you use version ranges like rubygems does it, then lock down the
+versions of jar dependencies is needed. for this use the command
+
+```
+lock_jars
+```
+
+from the jar-dependencies plugin.
+
 ## gem with jar dependencies
 
 see the project here: [gem with jar dependencies](https://github.com/mkristian/jar-dependencies/tree/master/examples/gem-with-jar-dependencies)
