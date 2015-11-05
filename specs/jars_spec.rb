@@ -110,7 +110,7 @@ describe Jars do
       $stderr = StringIO.new
       require_jar( 'org.slf4j', 'slf4j-simple', '1.6.4' ).must_equal false
 
-      $stderr.string.must_equal "jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6\n"
+      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version 1.6.4\n"
     ensure
       $stderr = STDERR
       ENV['JARS_HOME'] = nil
@@ -133,7 +133,7 @@ describe Jars do
 
       require_jar( 'org.slf4j', 'slf4j-simple', '1.6.6' ).must_equal false
 
-      $stderr.string.must_equal "jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.4\n"
+      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.4 - omit version 1.6.6\n"
     ensure
       $stderr = STDERR
       ENV['JARS_HOME'] = nil
