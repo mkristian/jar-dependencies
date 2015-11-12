@@ -12,11 +12,11 @@ phase :test do
     # need to uninstall bundler otherwise it finds the Gemfile from the project
     # root. bundler does descend the directory until it finds a Gemfile.
     execute_goal( :exec,
-                  :id => 'jruby -S gem uninstall bundler',
+                  :id => 'jruby -S gem uninstall -a bundler',
                   :arguments => ['-classpath',
                                  xml('<classpath/>'),
                                  'org.jruby.Main',
-                                 '-S', 'gem', 'uninstall', 'bundler' ] )
+                                 '-S', 'gem', 'uninstall', '-a', 'bundler' ] )
     execute_goal( :exec,
                   :id => 'jruby -S lock_jars',
                   :arguments => ['-classpath',
