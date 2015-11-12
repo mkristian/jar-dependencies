@@ -214,6 +214,7 @@ module Jars
           end
           urls = jars_lock_from_class_loader
         end
+        no_more_warnings
       elsif jars_lock = Jars.lock_path
         Jars.debug { "--- load jars from #{jars_lock}" }
         @@jars_lock = jars_lock
@@ -222,8 +223,8 @@ module Jars
         require 'jars/classpath' unless defined? Jars::Classpath
         classpath = Jars::Classpath.new( nil, jars_lock )
         classpath.require( scope )
+        no_more_warnings
       end
-      no_more_warnings
       Jars.debug {
         loaded = @@jars.collect{ |k,v| "#{k}:#{v}" }
         "--- loaded jars ---\n\t#{loaded.join("\n\t")}"
