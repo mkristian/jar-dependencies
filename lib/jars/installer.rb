@@ -65,11 +65,7 @@ module Jars
     def self.install_jars( write_require_file = false )
       new.install_jars( write_require_file )
     end
-
-    def self.vendor_jars( write_require_file = false )
-      new.vendor_jars( write_require_file )
-    end
-
+    
     def self.load_from_maven( file )
       result = []
       File.read( file ).each_line do |line|
