@@ -115,8 +115,7 @@ module Jars
 
     COMMENT = '# this is a generated file, to avoid over-writing it just delete this comment'
     def self.needs_to_write?(require_filename)
-      ( require_filename and not File.exists?( require_filename ) ) or
-        File.read( require_filename ).match( COMMENT)
+      require_filename and (not File.exists?( require_filename ) or File.read( require_filename ).match( COMMENT))
     end
 
     def self.install_deps( deps, dir, require_filename, vendor )
