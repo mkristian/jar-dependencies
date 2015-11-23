@@ -3,7 +3,7 @@
 ## build compile and create jar
 
 ```
-rake jar
+rake compile
 ```
 
 ## pack gem
