@@ -46,7 +46,8 @@ module Jars
       index = 0
       cwd = File.expand_path( "." )
       Gem.loaded_specs.each do |name, spec|
-        maven.attach_jars( spec )
+        # if gemspec is local then include all dependencies
+        maven.attach_jars( spec, cwd == spec.full_gem_path )
       end
     rescue Gem::LoadError => e
       # not sure why to reraise the exception

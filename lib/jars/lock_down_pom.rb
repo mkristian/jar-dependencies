@@ -2,18 +2,19 @@
 
 basedir( ENV_JAVA[ "jars.basedir" ] )
 
-load File.join( File.dirname(__FILE__), 'attach_jars_pom.rb' )
+eval( File.read( File.join( File.dirname(__FILE__), 'attach_jars_pom.rb' ) ) )
 
 jfile = ENV_JAVA[ "jars.jarfile" ]
 jarfile( jfile ) if jfile
+
+# need to fix the version of this plugin for gem:jars_lock goal
+jruby_plugin :gem, ENV_JAVA[ "jruby.plugins.version" ]
 
 
 # if you use bundler we collect all root jar dependencies
 # from each gemspec file. otherwise we need to resolve
 # the gemspec artifact in the maven way
 unless ENV_JAVA[ "jars.bundler" ]
-
-  jruby_plugin :gem, ENV_JAVA[ "jruby.plugins.version" ]
 
   gemspec rescue nil
 
@@ -23,4 +24,4 @@ properties( 'project.build.sourceEncoding' => 'utf-8' )
 
 plugin :dependency, ENV_JAVA[ "dependency.plugin.version" ]
 
-load File.join( File.dirname(__FILE__), 'output_jars_pom.rb' )
+eval( File.read( File.join( File.dirname(__FILE__), 'output_jars_pom.rb' ) ) )

@@ -66,23 +66,27 @@ describe Jars::Classpath do
 
   it 'resolves classpath from gemspec' do
     ENV_JAVA[ 'jars.quiet' ] = 'true'
-    Helper.prepare( subject.classpath ).must_equal Helper.prepare( bouncycastle )
+    Dir.chdir( File.dirname( example_spec ) ) do
+      Helper.prepare( subject.classpath ).must_equal Helper.prepare( bouncycastle )
 
-    Helper.prepare( subject.classpath( :compile ) ).must_equal Helper.prepare( expected_with_bc )
+      Helper.prepare( subject.classpath( :compile ) ).must_equal Helper.prepare( expected_with_bc )
 
-    Helper.prepare( subject.classpath( :test ) ).must_equal Helper.prepare( expected_with_bc << 'junit/junit/4.1/junit-4.1.jar' )
+      Helper.prepare( subject.classpath( :test ) ).must_equal Helper.prepare( expected_with_bc << 'junit/junit/4.1/junit-4.1.jar' )
 
-    Helper.prepare( subject.classpath( :runtime ) ).must_equal Helper.prepare( bouncycastle )
+      Helper.prepare( subject.classpath( :runtime ) ).must_equal Helper.prepare( bouncycastle )
+    end
   end
 
   it 'resolves classpath_string from gemspec' do
+    Dir.chdir( File.dirname( example_spec ) ) do
       Helper.prepare( subject.classpath_string.split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( bouncycastle )
 
-    Helper.prepare( subject.classpath_string( :compile ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc )
+      Helper.prepare( subject.classpath_string( :compile ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc )
 
-    Helper.prepare( subject.classpath_string( :test ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc << "junit/junit/4.1/junit-4.1.jar" )
+      Helper.prepare( subject.classpath_string( :test ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc << "junit/junit/4.1/junit-4.1.jar" )
 
-    Helper.prepare( subject.classpath_string( :runtime ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( bouncycastle )
+      Helper.prepare( subject.classpath_string( :runtime ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( bouncycastle )
+    end
   end
 
   it 'requires classpath from gemspec' do

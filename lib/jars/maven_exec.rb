@@ -35,8 +35,8 @@ module Jars
       when String
         @specfile = File.expand_path( spec )
         @basedir = File.dirname( @specfile )
-        spec =  Dir.chdir( File.dirname(@specfile) ) do
-          eval( File.read( @specfile ) )
+        Dir.chdir( @basedir ) do
+          spec = eval( File.read( @specfile ) )
         end
       when Gem::Specification
         if File.exists?( spec.spec_file )
@@ -65,12 +65,15 @@ module Jars
       factory = MavenFactory.new( @options )
       maven = factory.maven_new( File.expand_path( '../gemspec_pom.rb', __FILE__ ) )
 
+      is_local_file = File.expand_path( File.dirname( @specfile ) ) == File.expand_path( Dir.pwd )
+      maven.attach_jars( @spec, is_local_file )
+
+      maven[ 'jars.specfile' ] = "#{@specfile}"
       maven[ 'outputAbsoluteArtifactFilename' ] = 'true'
       maven[ 'includeTypes' ] = 'jar'
       maven[ 'outputScope' ] = 'true'
       maven[ 'useRepositoryLayout' ] = 'true'
       maven[ 'outputDirectory' ] = "#{Jars.home}"
-      maven[ 'jars.specfile' ] = "#{@specfile}"
       maven[ 'outputFile' ] = "#{file}"
 
       maven.exec( 'dependency:copy-dependencies', 'dependency:list' )

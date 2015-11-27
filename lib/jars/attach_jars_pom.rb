@@ -14,6 +14,8 @@
   artifact.scope = scope if scope
   classifier = ENV_JAVA[ "jars.#{i}.classifier" ]
   artifact.classifier = classifier if classifier
+
+  # declare the artifact inside the POM
   dependency_artifact( artifact ) do
     exclusions.each do |ex|
       exclusion ex
