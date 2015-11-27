@@ -12,7 +12,7 @@ and installs the jar dependencies into a local cache (local maven repository)
 ## build compile and create jar
 
 ```
-rake jar
+rake compile
 ```
 
 ## use it

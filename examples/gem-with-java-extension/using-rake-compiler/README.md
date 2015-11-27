@@ -16,5 +16,5 @@ rake package
 
 make sure you use jruby (via rbenv, rvm, etc)
 ```
-ruby -Ilib -e "require 'mygem'"
+jruby test.rb
 ```
