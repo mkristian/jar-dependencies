@@ -1,0 +1,33 @@
+#-*- mode: ruby -*-
+
+repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
+
+plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
+        :executable => :java,
+        :environmentVariables => { 'GEM_HOME' => '${gem.home}',
+          'GEM_PATH' => '${gem.home}',
+          'JARS_VERBOSE' => true } ) do
+  execute_goal( :exec, :phase => :compile,
+                :arguments => ['-classpath',
+                               xml('<classpath/>'),
+                               'org.jruby.Main',
+                               '${gem.home}/bin/lock_jars',
+                               '--tree' ] )
+
+  # TODO more tests on Jars::Classpath.require(:test) etc
+end
+
+properties( 'gem.home' => '${project.basedir}/../rubygems',
+            'gem.path' => '${gem.home}' )
+
+jar 'org.jruby:jruby-complete', '${jruby.version}'
+
+gem 'jar-dependencies', '${jar-dependencies.version}'
+gem 'bundler', '${bundler.version}'
+gem 'ruby-maven', '${ruby-maven.version}'
+
+jruby_plugin :gem, '${jruby.plugins.version}' do
+  execute_goal :initialize
+end
+
+# vim: syntax=Ruby

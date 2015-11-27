@@ -14,6 +14,8 @@ basedir( ENV_JAVA[ "jars.basedir" ] )
   end
   scope = ENV_JAVA[ "jars.#{i}.scope" ]
   artifact.scope = scope if scope
+  classifier = ENV_JAVA[ "jars.#{i}.classifier" ]
+  artifact.classifier = classifier if classifier
   dependency_artifact( artifact ) do
     exclusions.each do |ex|
       exclusion ex
@@ -26,7 +28,28 @@ jruby_plugin :gem, ENV_JAVA[ "jruby.plugins.version" ]
 jfile = ENV_JAVA[ "jars.jarfile" ]
 jarfile( jfile ) if jfile
 
-gemspec rescue nil
+
+# if you use bundler we collect all root jar dependencies
+# from each gemspec file. otherwise we need to resolve
+# the gemspec artifact in the maven way
+if ENV_JAVA[ "jars.bundler" ]
+  # we just want to go to maven-central, no rubygems repo
+  model.repositories.clear
+
+  # we do not want those gem dependencies, each gem takes care of its
+  # own jar dependencies
+  gems = model.dependencies.select do |d|
+    d.group_id == 'rubygems'
+  end
+  gems.each do |d|
+    model.dependencies.remove( d )
+  end
+else
+
+  # without bundler we need to resolve the gems the maven way
+  gemspec rescue nil
+
+end
 
 properties( 'project.build.sourceEncoding' => 'utf-8' )
 
