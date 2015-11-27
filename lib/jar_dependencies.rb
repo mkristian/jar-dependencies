@@ -149,11 +149,25 @@ module Jars
       ( @@jars ||= {} ).clear
     end
 
+    def maven_local_settings
+      unless instance_variable_defined?(:@_jars_maven_local_settings_)
+        @_jars_maven_local_settings_ = nil
+      end
+      if @_jars_maven_local_settings_.nil?
+        if settings = absolute( 'settings.xml' )
+          if File.exists?(settings)
+            @_jars_maven_local_settings_ = settings
+          end
+        end
+      end
+      @_jars_maven_local_settings_ || nil
+    end
+
     def maven_user_settings
       unless instance_variable_defined?(:@_jars_maven_user_settings_)
         @_jars_maven_user_settings_ = nil
       end
-      if ( @_jars_maven_user_settings_ ||= nil ).nil?
+      if @_jars_maven_user_settings_.nil?
         if settings = absolute( to_prop( MAVEN_SETTINGS ) )
           unless File.exists?(settings)
             Jars.warn { "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found" }
@@ -167,7 +181,10 @@ module Jars
       end
       @_jars_maven_user_settings_ || nil
     end
-    alias maven_settings maven_user_settings
+
+    def maven_settings
+      maven_local_settings || maven_user_settings
+    end
 
     def maven_global_settings
       unless instance_variable_defined?(:@_jars_maven_global_settings_)
@@ -186,7 +203,8 @@ module Jars
     end
 
     def local_maven_repo
-      @_local_maven_repo ||= detect_local_repository(maven_user_settings) ||
+      @_local_maven_repo ||= detect_local_repository(maven_local_settings) ||
+                             detect_local_repository(maven_user_settings) ||
                              detect_local_repository(maven_global_settings) ||
                              File.join( user_home, '.m2', 'repository' )
     end
@@ -226,6 +244,7 @@ module Jars
         no_more_warnings
       end
       Jars.debug {
+        @@jars ||= {}
         loaded = @@jars.collect{ |k,v| "#{k}:#{v}" }
         "--- loaded jars ---\n\t#{loaded.join("\n\t")}"
       }

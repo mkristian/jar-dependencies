@@ -66,6 +66,13 @@ describe Jars do
     Jars.maven_settings.must_equal File.expand_path( 'specs/settings.xml' )
 
     ENV['JARS_MAVEN_SETTINGS'] = nil
+
+    
+    Jars.reset
+    Dir.chdir(File.dirname(__FILE__)) do
+      settings.wont_equal Jars.maven_settings
+      Jars.maven_settings.must_equal File.expand_path( 'settings.xml' )
+    end
   end
 
   it 'determines JARS_HOME' do
