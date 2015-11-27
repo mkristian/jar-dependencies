@@ -32,21 +32,8 @@ jarfile( jfile ) if jfile
 # if you use bundler we collect all root jar dependencies
 # from each gemspec file. otherwise we need to resolve
 # the gemspec artifact in the maven way
-if ENV_JAVA[ "jars.bundler" ]
-  # we just want to go to maven-central, no rubygems repo
-  model.repositories.clear
+unless ENV_JAVA[ "jars.bundler" ]
 
-  # we do not want those gem dependencies, each gem takes care of its
-  # own jar dependencies
-  gems = model.dependencies.select do |d|
-    d.group_id == 'rubygems'
-  end
-  gems.each do |d|
-    model.dependencies.remove( d )
-  end
-else
-
-  # without bundler we need to resolve the gems the maven way
   gemspec rescue nil
 
 end
