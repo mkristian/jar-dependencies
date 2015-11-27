@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.requirements << "jar org.bouncycastle:bcpkix-jdk15on, 1.49"
   s.requirements << "jar org.bouncycastle:bcprov-jdk15on, 1.49"
   s.requirements << "jar junit:junit, 4.1, :scope => :test"
+  s.requirements << "jar org.jruby:jruby-core, 1.7.12, :scope => :provided"
 
   s.add_development_dependency 'rspec', '~> 2.14.0'
   s.add_development_dependency 'rake', '~> 10.3.2'
