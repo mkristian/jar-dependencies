@@ -4,7 +4,7 @@ inherit 'jar-dependencies:install-ruby-maven:0'
 
 packaging 'pom'
 
-jar 'org.jruby:jruby-complete', '${jruby.version}'
+jar 'org.jruby:jruby-complete', '${jruby.old-version}'
 
 plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
         :executable => :java,

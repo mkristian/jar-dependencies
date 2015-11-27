@@ -5,7 +5,7 @@ properties( 'gem.home' => '${basedir}/../pkg',
 
 repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
 
-pom 'org.jruby:jruby', '${jruby.version}'
+pom 'org.jruby:jruby', '${jruby.old-version}'
 
 gem 'jar-dependencies', '${jar-dependencies.version}'
 gem 'bundler', '${bundler.version}'

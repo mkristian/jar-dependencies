@@ -10,7 +10,7 @@ jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
 end
 
-pom 'org.jruby:jruby', '${jruby.version}'
+pom 'org.jruby:jruby', '${jruby.old-version}'
 
 plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
         :executable => :java,

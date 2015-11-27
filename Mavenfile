@@ -40,7 +40,8 @@ plugin :invoker, '1.8' do
                  :cloneProjectsTo => '${project.build.directory}',
                  :properties => { 'jar-dependencies.version' => '${project.version}',
                    # use an old jruby with old ruby-maven here
-                   'jruby.version' => '1.7.20',
+                   'jruby.old-version' => '1.7.20',
+                   'jruby.version' => '${jruby.version}',
                    'jruby.plugins.version' => '${jruby.plugins.version}',
                    'bundler.version' => '${bundler.version}',
                    'ruby-maven.version' => '${ruby-maven.version}',
