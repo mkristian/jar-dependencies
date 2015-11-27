@@ -1,29 +1,8 @@
-# this file is maven DSL and used by maven via jars/executor.rb
+# this file is maven DSL and used by maven via jars/lock_down.rb
 
 basedir( ENV_JAVA[ "jars.basedir" ] )
 
-( 0..10000 ).each do |i|
-  coord = ENV_JAVA[ "jars.#{i}" ]
-  break unless coord
-  artifact = Maven::Tools::Artifact.from_coordinate( coord )
-  exclusions = []
-  ( 0..10000 ).each do |j|
-    exclusion = ENV_JAVA[ "jars.#{i}.exclusions.#{j}" ]
-    break unless exclusion
-    exclusions << exclusion
-  end
-  scope = ENV_JAVA[ "jars.#{i}.scope" ]
-  artifact.scope = scope if scope
-  classifier = ENV_JAVA[ "jars.#{i}.classifier" ]
-  artifact.classifier = classifier if classifier
-  dependency_artifact( artifact ) do
-    exclusions.each do |ex|
-      exclusion ex
-    end
-  end
-end
-
-jruby_plugin :gem, ENV_JAVA[ "jruby.plugins.version" ]
+load File.join( File.dirname(__FILE__), 'attach_jars_pom.rb' )
 
 jfile = ENV_JAVA[ "jars.jarfile" ]
 jarfile( jfile ) if jfile
@@ -34,6 +13,8 @@ jarfile( jfile ) if jfile
 # the gemspec artifact in the maven way
 unless ENV_JAVA[ "jars.bundler" ]
 
+  jruby_plugin :gem, ENV_JAVA[ "jruby.plugins.version" ]
+
   gemspec rescue nil
 
 end
@@ -42,8 +23,4 @@ properties( 'project.build.sourceEncoding' => 'utf-8' )
 
 plugin :dependency, ENV_JAVA[ "dependency.plugin.version" ]
 
-# some output
-model.dependencies.each do |d|
-  puts "      " + d.group_id + ':' + d.artifact_id + (d.classifier ? ":" + d.classifier : "" ) + ":" + d.version + ':' + (d.scope || 'compile')
-  puts "          exclusions: " + d.exclusions.collect{ |e| e.group_id + ':' + e.artifact_id }.join unless d.exclusions.empty?
-end
+load File.join( File.dirname(__FILE__), 'output_jars_pom.rb' )

@@ -46,29 +46,7 @@ module Jars
       index = 0
       cwd = File.expand_path( "." )
       Gem.loaded_specs.each do |name, spec|
-        deps = GemspecArtifacts.new( spec )
-        is_this_gemspec = cwd == spec.full_gem_path
-        deps.artifacts.each do |a|
-          # for this gemspec we want to include all artifacts but
-          # for all others we want to exclude provided and test artifacts
-          if !done.include?( a.key ) and (is_this_gemspec or (a.scope != 'provided' and a.scope != 'test'))
-
-            # ruby dsl is not working reliably for classifier
-            maven.property( "jars.#{index}", a.to_coord_no_classifier )
-            if a.exclusions
-              jndex = 0
-              a.exclusions.each do |ex|
-                maven.property( "jars.#{index}.exclusions.#{jndex}", ex.to_s )
-              end
-            end
-            maven.property( "jars.#{index}.scope", a.scope ) if a.scope
-            if a.classifier
-              maven.property( "jars.#{index}.classifier", a.classifier )
-            end
-            index += 1
-            done << a.key
-          end
-        end
+        maven.attach_jars( spec )
       end
     rescue Gem::LoadError => e
       # not sure why to reraise the exception
