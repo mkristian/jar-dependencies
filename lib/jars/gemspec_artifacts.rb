@@ -116,7 +116,7 @@ module Jars
         line.strip!
 
         options = {}
-        line.sub!(/,\s*:exclusions\s*(:|=>)\s*(\[[a-zA-Z0-9_:,]+\])/) do
+        line.sub!(/,\s*:exclusions\s*(:|=>)\s*(\[[^\]]+\])/) do
           options[ :exclusions ] = Exclusions.new( $2.strip )
           ''
         end
@@ -124,7 +124,6 @@ module Jars
           options[ $1.to_sym ] = $3.sub(/^:/, '')
           ''
         end
-
         exclusions = nil
         line.sub!(/[,:]\s*\[(.+:.+,?\s*)+\]$/) do |a|
           exclusions = Exclusions.new( a[1..-1].strip )
@@ -169,6 +168,13 @@ module Jars
         args = [@group_id, @artifact_id]
         args << @classifier if @classifier
         args << @version
+        args.join(':')
+      end
+
+      def to_coord_no_classifier
+        args = [@group_id, @artifact_id]
+        args << @type
+        args << MavenVersion.new( @version )
         args.join(':')
       end
 

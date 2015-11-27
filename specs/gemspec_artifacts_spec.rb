@@ -35,6 +35,10 @@ describe Jars::GemspecArtifacts::Exclusions do
     line = ' [ "group:artifact "] '
     ex = Jars::GemspecArtifacts::Exclusions.new( line )
     ex.to_s.must_equal expected
+    expected = '[group-id:artifact-id]'
+    line = ' [ "group-id:artifact-id "] '
+    ex = Jars::GemspecArtifacts::Exclusions.new( line )
+    ex.to_s.must_equal expected
   end
 
   it 'parse and to_s of list of exclusions' do
