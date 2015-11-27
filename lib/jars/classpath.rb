@@ -6,6 +6,21 @@ module Jars
 
   class Classpath
 
+    # convenient method
+    def self.require( scope = nil )
+      new.require( scope )
+    end
+
+    # convenient method
+    def self.classpath( scope = nil )
+      new.classpath( scope )
+    end
+
+    # convenient method
+    def self.classpath_string( scope = nil )
+      new.classpath_string( scope )
+    end
+
     def initialize( spec = nil, deps = nil )
       @spec = spec
       @deps = deps
