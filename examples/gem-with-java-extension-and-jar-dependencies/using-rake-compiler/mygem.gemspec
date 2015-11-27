@@ -1,7 +1,7 @@
 #-*- mode: ruby -*-
 
 # use the version from the main project
-require "#{File.dirname File.expand_path(__FILE__)}/../../lib/jars/version"
+require "#{File.dirname File.expand_path(__FILE__)}/../../../lib/jars/version"
 
 Gem::Specification.new do |s|
   s.name = File.basename( File.dirname( File.expand_path( __FILE__ ) ) )
@@ -25,8 +25,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'jar-dependencies', "~> #{Jars::VERSION}"
 
   s.add_development_dependency 'rake', '~> 10.3'
-  # needed to compile src/main/java/** and create jar file
-  s.add_development_dependency 'rake-compile', '~> 0.9'
+  # needed to compile ext/** and create jar file
+  s.add_development_dependency 'rake-compiler', '~> 0.9'
 end
 
 # vim: syntax=Ruby

@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.files += Dir[ '*.gemspec' ]
   
   s.add_development_dependency 'rake', '~> 10.3'
-  # needed to compile src/main/java/** and create jar file
+  # needed to compile ext/** and create jar file
   s.add_development_dependency 'rake-compile', '~> 0.9'
 end
 

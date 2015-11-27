@@ -2,7 +2,7 @@
 
 require 'ruby-maven'
 desc "Pack jar after compiling classes"
-task :jar do
+task :compile do
   RubyMaven.exec('prepare-package')
 end
 
@@ -11,12 +11,12 @@ task :clean do
   RubyMaven.exec('clean')
 end
 
-task :default => [ :jar ]
+task :default => [ :compile ]
 
 require 'rubygems/package_task'
 Gem::PackageTask.new( eval File.read( 'mygem.gemspec' ) ) do
   desc 'Pack gem'
-  task :package => [:jar]
+  task :package => [:compile]
 end
 
 # vim: syntax=Ruby

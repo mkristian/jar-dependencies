@@ -19,3 +19,10 @@ mvn package
 ```
 mvn push
 ```
+
+## just run the code
+
+make sure you use jruby (via rbenv, rvm, etc)
+```
+jruby test.rb
+```

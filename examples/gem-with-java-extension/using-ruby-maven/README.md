@@ -15,14 +15,15 @@ and installs the jar dependencies into a local cache (local maven repository)
 rake compile
 ```
 
-## use it
-
-```
-jruby test.rb
-```
-
 ## pack gem
 
 ```
 rake package
+```
+
+## just run the code
+
+make sure you use jruby (via rbenv, rvm, etc)
+```
+jruby test.rb
 ```

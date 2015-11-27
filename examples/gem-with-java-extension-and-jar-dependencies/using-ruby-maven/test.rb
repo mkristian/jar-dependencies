@@ -1,7 +1,7 @@
 # setup env
 $LOAD_PATH << 'lib'
 
-# load our gem
+# load our gem and its jars
 require 'mygem'
 
 # load test jar
