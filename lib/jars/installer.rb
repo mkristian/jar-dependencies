@@ -9,7 +9,7 @@ module Jars
       attr_reader :path, :file, :gav, :scope, :type, :coord
 
       def self.new( line )
-        if line.match /:jar:|:pom:/
+        if line.match( /:jar:|:pom:/ )
           super
         end
       end

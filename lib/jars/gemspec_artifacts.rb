@@ -38,7 +38,7 @@ module Jars
       elsif arg =~ /\=/
         val = arg.sub(/=\s*/, '')
         # for prereleased version pick the maven version (no version range)
-        if val.match /[a-z]|[A-Z]/
+        if val.match( /[a-z]|[A-Z]/ )
           [ val, val ]
         else
           ["[#{val}", "#{val}.0.0.0.0.1)"]
