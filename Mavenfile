@@ -53,6 +53,12 @@ distribution_management do
   repository :id => :ossrh, :url => 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
 end
 
+profile :id => :skip do
+
+ properties 'maven.test.skip' => true, 'invoker.skip' => true
+
+end
+
 profile :id => :release do
   properties 'maven.test.skip' => true, 'invoker.skip' => true, 'push.skip' => false
 
