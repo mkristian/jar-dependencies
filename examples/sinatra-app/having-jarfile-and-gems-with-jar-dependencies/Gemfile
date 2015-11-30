@@ -6,4 +6,9 @@ gem 'leafy-complete', '0.6.2'
 
 gem 'sinatra', '~> 1.4'
 
+group :development do
+  gem 'jar-dependencies', '0.3.0'
+  gem 'ruby-maven', '~> 3.3', '>= 3.3.8'
+end
+
 # vim: syntax=Ruby
