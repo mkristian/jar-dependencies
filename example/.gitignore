@@ -1,2 +1,5 @@
 *.jar
 *_jars.rb
+*.lock
+pkg
+tmp

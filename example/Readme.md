@@ -2,23 +2,33 @@
 
 (assume all commands will be executed via jruby !)
 
-    rake setup jar
-	gem build example.gemspec
-	
-this will install the jar dependencies, compile the java files and build the jar of the gem, generates *_jars.rb file which requires all the dependent jars and build the gem.
+    bundle install
+    lock_jars
+	rake
+	rake package
 
-now install the gem
+* bundler will lock down the gem dependencies and generates the *_jars.rb file
+* lock\_jars does create JArs.lock file the version lock down of the
+jar dependencies. see ```lock_jars --help``` for more options.
+* the default rake task compile the java files and runs the specs after it
+* the rake task compiles the java files and builds the jar of the gem
+  and packs everything into a gem
 
-	gem install -l example-2.gem
+now install the gem and look at the installed content
 
-during installation the dependent jars get vendored (not the jar extension which is part of the gem itself).
+    gem install -l pkg/example-2-java.gem
+    gem content example
+
+during installation the dependent jars get vendored (not the jar
+extension which is already part of the packed gem itself).
 
 to run the spec do (after ```bundle install```)
 
-    bundle exec rake spec
+    bundle exec rake
 
 or
 
+	bundle exec rake compile
     bundle exec rspec spec/*spec.rb
 
 
@@ -26,7 +36,9 @@ if you look into the gem itself it just contains the following files:
 
     .
     ├── example.gemspec
-    ├── lib
+    ├── lib│
+	|   ├── example
+    │   │   └── bc_info.rb
     │   ├── example.jar
     │   ├── example_jars.rb
     │   └── example.rb
@@ -35,41 +47,59 @@ if you look into the gem itself it just contains the following files:
 and the installed gem looks like this
 
     .
+	├── Gemfile
+	├── Rakefile
 	├── example.gemspec
-	├── lib
-	│   ├── example.jar
-	│   ├── example_jars.rb
-	│   ├── example.rb
-	│   └── org
-	│       └── bouncycastle
-	│           ├── bcpkix-jdk15on
-	│           │   └── 1.49
-	│           │       └── bcpkix-jdk15on-1.49.jar
-	│           └── bcprov-jdk15on
-	│               └── 1.49
-	│                   └── bcprov-jdk15on-1.49.jar
-	└── Rakefile
+	└── lib
+		├── example
+		│   └── bc_info.rb
+		├── example.jar
+		├── example.rb
+		├── example_jars.rb
+		└── org
+			├── bouncycastle
+			|   ├── bcpkix-jdk15on
+			│   │   └── 1.49
+			│   │       └── bcpkix-jdk15on-1.49.jar
+			│   └── bcprov-jdk15on
+			│       └── 1.49
+			│           └── bcprov-jdk15on-1.49.jar
+			└── slf4j
+				└── slf4j-api
+					└── 1.7.7
+						└── slf4j-api-1.7.7.jar
 
 in order to use the jar dependencies for development you need to run
 
-    rake jar
+    rake compile
 
-which builds the **lib/example.jar** as well the **lib/example_jars.rb**. the latter will add the jar dependencies to jruby's runtime when required.
+which builds the **lib/example.jar** and
 
-during development the jars will be stored in **$HOME/.m2/repository** (the maven default location). and that is the place where the jars get loaded from. when you install the gem via bundler (use bundle-with-jars command) or rubygems then the jars will vendored inside the gem.
+    bundle install
+
+generates the **lib/example_jars.rb**. this file adds the jar dependencies to jruby's runtime when required.
+
+during development the jars will be stored in **$HOME/.m2/repository**
+(the maven default location). this local-maven-repository can be
+configured with the settings.xml from the project or at
+**$HOME/.m2/settings.xml**. from the local-maven-repository the jars
+get loaded. whenever you install the gem via bundler or rubygems then the
+jars will vendored inside the gem.
 
 in case you do not want to vendor your jars during installation, then you can set the environment **export JRUBY\_JARS\_VENDOR=false**. then the installed gem looks exactly like during development.
 
 in any case the execution of the example.rb file produces the same output. the local development
 
-    $ ruby -I lib/ -r example -e 1
+    $ jruby -Ilib -r example/bc_info -e 'puts Example.bc_info'
 
 or via the installed gem
 
-    $ ruby -r example -e 1
+    $ jruby -r example/bc_info -e 'puts Example.bc_info'
 
 gives:
 
     BouncyCastle Security Provider v1.49
 
-with the environmen **JARS\_HOME** you can control the location of the local maven repository or use the **$HOME/.m2/settings.xml** to setup a custom local repository (the maven way). if you vendor the jars on install then the local maven repository is just a cache for those jars, if you do not vendor the jars, **jar\_dependencies** will use the jars directly from the local repository.
+for mirror or proxy settings either use the settings.xml from the
+project or from $HOME/.m2/settings.xml and see maven documentions on
+more details on this and the settings.xml.example of here.

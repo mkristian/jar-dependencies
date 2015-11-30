@@ -1,10 +1,10 @@
-require 'bundler/setup'
-Bundler.setup
+# load all jars including with scope test
+require 'jars/classpath'
+Jars::Classpath.require( :test )
+
+p $CLASSPATH
 
 require 'rspec'
-
-# loads all dependent jars and exmaple.jar
-require 'example'
 
 RSpec.configure do |config|
   config.order = "random"

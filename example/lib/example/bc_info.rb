@@ -1,3 +1,6 @@
+# loads all dependent jars and exmaple.jar
+require 'example'
+
 java_import org.bouncycastle.jce.provider.BouncyCastleProvider
 
 module Example

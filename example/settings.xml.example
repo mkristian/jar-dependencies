@@ -1,0 +1,64 @@
+<?xml version='1.0'?>
+<!--
+    the settings.xml from this project can be bypassed by
+
+JARS_MAVEN_SETTINGS=/path/to/settings.xml
+
+    or via a java system property
+
+jars.maven.settings=/path/to/settings.xml
+
+-->
+<settings>
+  <mirrors>
+    <mirror>
+      <id>local-mirror</id>
+      <!-- mirror all but localhost and file base urls and the
+	   "mavengems" repo -->
+      <mirrorOf>external:*,!mavengems</mirrorOf>
+      <url>http://localhost:8081/nexus/content/groups/public</url>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+      <id>local</id>
+      <!--
+	  
+	  http://books.sonatype.com/nexus-book/reference/config-maven.html
+
+          mvn has a hardcoded “central” repo, and unless you reconfigure it to
+	  something unrelsolvable it will still attempt to use that vs. your
+	  mirror
+
+      -->
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>local</activeProfile>
+  </activeProfiles>
+</settings>
