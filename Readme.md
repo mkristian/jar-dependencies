@@ -94,9 +94,59 @@ an [example with rspec and all](example/Readme.md) walks you through setup and
 shows how development works and shows what happens during installation.
 
 there are some more examples with the various [project setups for gems and application](examples/README.md).
-this includes using proper Maven for the project or **ruby-maven** with rake or
+this includes using proper Maven for the project or ruby-maven with rake or
 the rake-compiler in conjuction with jar-dependencies.
 
+# lock down versions #
+
+whenever there are version ranges for jar dependencies then it is advisable to lock down the versions of dependecies. for the jar dependencies inside the gemspec declaration this can be done with:
+
+    lock_jars
+
+this is also working in **any** project which uses a gem with
+jar-dependencies. it also uses a Jarfile if present. see the [sinatra
+application from the examples](examples/sinatra-app/having-jarfile-and-gems-with-jar-dependencies/).
+
+this means for project using bundler and jar-dependencies the setup is
+
+     bundle install
+     lock_jars
+
+which will install both gems and jars for the project.
+
+update a specific version is done with (use only the artifact_id)
+
+    lock_jars --update slf4j-api
+
+and look at the dependencies tree
+
+    lock_jars --tree
+
+as ```lock_jars``` uses ruby-maven to resolve the jar dependencies.
+since jar-dependencies does not declare ruby-maven as runtime dependency
+(you just not need ruby-maven during runtime only when you want to
+setup the project it is needed) it is advicable to have it as
+development dependency in you Gemfile.
+
+# gradle, maven, etc
+
+for dependency management frameworks like gradle (via
+jruby-gradle-plugin) or maven (via jruby-maven-plugins
+or jruby9-maven-plugins) or probably ivy or sbt can use the gem
+artifacts from a maven repository like
+[rubygems-proxy from torquebox](http://rubygems-proxy.torquebox.org/)
+or
+[rubygems.lasagna.io/proxy/maven/releases](http://rubygems.lasagna.io/proxy/maven/releases/).
+
+each of these tools (including jar-dependencies) does the dependency
+resolution slightly different and in rare cases can produce different
+outcomes. but overall each tool can manage both jars and gems and
+their transitive dependencies.
+
+popular gems like jrjackson or nokogiri do not declare their jars in
+the gemspec files and just load the bundle jars into jruby
+classloader, can easily create problems as the jackson and
+xalan/xerces libraries used by those gems are popular ones in the java world.
 
 # configuration #
 
