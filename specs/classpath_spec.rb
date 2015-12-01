@@ -40,7 +40,7 @@ describe Jars::Classpath do
 
   let( :example_spec ) { File.join( pwd, '..', 'example', 'example.gemspec' ) }
 
-  let( :example_expected ) { [] }
+  let( :example_expected ) { ["com/fasterxml/jackson/core/jackson-databind/2.5.1/jackson-databind-2.5.1.jar", "io/dropwizard/dropwizard-jackson/0.8.0-rc5/dropwizard-jackson-0.8.0-rc5.jar", "com/fasterxml/classmate/1.0.0/classmate-1.0.0.jar", "io/dropwizard/dropwizard-util/0.8.0-rc5/dropwizard-util-0.8.0-rc5.jar", "com/fasterxml/jackson/module/jackson-module-afterburner/2.5.1/jackson-module-afterburner-2.5.1.jar", "com/fasterxml/jackson/datatype/jackson-datatype-guava/2.5.1/jackson-datatype-guava-2.5.1.jar", "org/bouncycastle/bcpkix-jdk15on/1.49/bcpkix-jdk15on-1.49.jar", "org/bouncycastle/bcprov-jdk15on/1.49/bcprov-jdk15on-1.49.jar", "com/google/code/findbugs/jsr305/3.0.0/jsr305-3.0.0.jar", "org/jboss/logging/jboss-logging/3.1.3.GA/jboss-logging-3.1.3.GA.jar", "io/dropwizard/metrics/metrics-core/3.1.0/metrics-core-3.1.0.jar", "org/slf4j/jcl-over-slf4j/1.7.10/jcl-over-slf4j-1.7.10.jar", "org/slf4j/log4j-over-slf4j/1.7.10/log4j-over-slf4j-1.7.10.jar", "org/hibernate/hibernate-validator/5.1.3.Final/hibernate-validator-5.1.3.Final.jar", "ch/qos/logback/logback-core/1.1.2/logback-core-1.1.2.jar", "com/fasterxml/jackson/core/jackson-core/2.5.1/jackson-core-2.5.1.jar", "org/slf4j/jul-to-slf4j/1.7.10/jul-to-slf4j-1.7.10.jar", "io/dropwizard/dropwizard-logging/0.8.0-rc5/dropwizard-logging-0.8.0-rc5.jar", "org/glassfish/javax.el/3.0.0/javax.el-3.0.0.jar", "io/dropwizard/metrics/metrics-logback/3.1.0/metrics-logback-3.1.0.jar", "com/google/guava/guava/18.0/guava-18.0.jar", "com/fasterxml/jackson/datatype/jackson-datatype-jdk7/2.5.1/jackson-datatype-jdk7-2.5.1.jar", "io/dropwizard/dropwizard-validation/0.8.0-rc5/dropwizard-validation-0.8.0-rc5.jar", "javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar", "ch/qos/logback/logback-classic/1.1.2/logback-classic-1.1.2.jar", "com/google/protobuf/protobuf-java/2.2.0/protobuf-java-2.2.0-lite.jar", "com/fasterxml/jackson/core/jackson-annotations/2.5.0/jackson-annotations-2.5.0.jar", "org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar", "com/fasterxml/jackson/datatype/jackson-datatype-joda/2.5.1/jackson-datatype-joda-2.5.1.jar", "org/eclipse/jetty/jetty-util/9.2.9.v20150224/jetty-util-9.2.9.v20150224.jar"] }
 
   let( :expected_with_bc ) { example_expected + bouncycastle }
 
@@ -67,25 +67,27 @@ describe Jars::Classpath do
   it 'resolves classpath from gemspec' do
     ENV_JAVA[ 'jars.quiet' ] = 'true'
     Dir.chdir( File.dirname( example_spec ) ) do
-      Helper.prepare( subject.classpath ).must_equal Helper.prepare( bouncycastle )
+      Helper.prepare( subject.classpath ).must_equal Helper.prepare( example_expected )
 
-      Helper.prepare( subject.classpath( :compile ) ).must_equal Helper.prepare( expected_with_bc )
+      Helper.prepare( subject.classpath( :compile ) ).must_equal Helper.prepare( expected_with_bc + ['org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar']  )
 
-      Helper.prepare( subject.classpath( :test ) ).must_equal Helper.prepare( expected_with_bc + ['org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar'] )
+      Helper.prepare( subject.classpath( :test ) ).must_equal Helper.prepare( expected_with_bc + ['junit/junit/4.12/junit-4.12.jar', 'org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar', 'org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar'] )
 
-      Helper.prepare( subject.classpath( :runtime ) ).must_equal Helper.prepare( bouncycastle )
+      Helper.prepare( subject.classpath( :runtime ) ).must_equal Helper.prepare( example_expected )
     end
   end
 
   it 'resolves classpath_string from gemspec' do
+    ENV_JAVA[ 'jars.quiet' ] = 'true'
     Dir.chdir( File.dirname( example_spec ) ) do
-      Helper.prepare( subject.classpath_string.split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( bouncycastle )
 
-      Helper.prepare( subject.classpath_string( :compile ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc )
+      Helper.prepare( subject.classpath_string.split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( example_expected )
 
-      Helper.prepare( subject.classpath_string( :test ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc << "org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar" )
+      Helper.prepare( subject.classpath_string( :compile ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc + ['org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar']  )
 
-      Helper.prepare( subject.classpath_string( :runtime ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( bouncycastle )
+      Helper.prepare( subject.classpath_string( :test ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( expected_with_bc + ['junit/junit/4.12/junit-4.12.jar', 'org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar', 'org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar'] )
+
+      Helper.prepare( subject.classpath_string( :runtime ).split( /#{File::PATH_SEPARATOR}/ ) ).must_equal Helper.prepare( example_expected )
     end
   end
 
