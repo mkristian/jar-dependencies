@@ -212,9 +212,32 @@ describe Jars::GemspecArtifacts do
     artifacts = Jars::GemspecArtifacts.new( spec )
     artifacts[0].to_s.must_equal( 'jar org.bouncycastle:bcpkix-jdk15on, 1.49' )
     artifacts[1].to_s.must_equal( 'jar org.bouncycastle:bcprov-jdk15on, 1.49' )
-    artifacts[2].to_s.must_equal( 'jar junit:junit, 4.1' )
+    artifacts[3].to_s.must_equal( 'jar io.dropwizard:dropwizard-logging, 0.8.0-rc5, [joda-time:joda-time]' )
+    artifacts[4].to_s.must_equal( 'jar com.google.protobuf:protobuf-java, lite, 2.2.0' )
+    artifacts[5].to_s.must_equal( 'jar junit:junit, 4.12' )
     artifacts[0].scope.must_be_nil
     artifacts[1].scope.must_be_nil
-    artifacts[2].scope.must_equal( 'test')
+    artifacts[2].scope.must_be_nil
+    artifacts[3].scope.must_be_nil
+    artifacts[4].scope.must_be_nil
+    artifacts[5].scope.must_equal( 'test')
+    artifacts[0].classifier.must_be_nil
+    artifacts[1].classifier.must_be_nil
+    artifacts[2].classifier.must_be_nil
+    artifacts[3].classifier.must_be_nil
+    artifacts[4].classifier.must_equal( 'lite')
+    artifacts[5].classifier.must_be_nil
+    artifacts[0].exclusions.must_be_nil
+    artifacts[1].exclusions.must_be_nil
+    artifacts[2].exclusions.must_be_nil
+    artifacts[3].exclusions.to_s.must_equal( '[joda-time:joda-time]' )
+    artifacts[4].exclusions.must_be_nil
+    artifacts[5].exclusions.must_be_nil
+
+    artifacts.each do |a|
+      a.to_s.must_equal Jars::GemspecArtifacts::Artifact.new( a.to_s ).to_s
+    end
+
+    artifacts.size.must_equal 7
   end
 end

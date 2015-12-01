@@ -210,5 +210,13 @@ module Jars
     def [](index)
       @artifacts[index]
     end
+
+    def each(&block)
+      @artifacts.each(&block)
+    end
+
+    def size
+      @artifacts.size
+    end
   end
 end

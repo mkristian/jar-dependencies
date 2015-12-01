@@ -106,7 +106,7 @@ describe Jars::Installer do
     Jars.reset
     jar = Jars::Installer.new( example_spec )
     result = jar.send :install_dependencies
-    result.size.must_equal 2
+    result.size.must_equal 30
     result.each do |d|
       d.type.must_equal :jar
       d.scope.must_equal :runtime

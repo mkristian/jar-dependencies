@@ -30,8 +30,19 @@ Gem::Specification.new do |s|
   s.requirements << "jar org.bouncycastle:bcprov-jdk15on, 1.49"
   s.requirements << "jar org.slf4j:slf4j-api, 1.7.7"
 
+  # dependency where some transitive dependency gets excluded (jruby comes
+  # with joda-time already bundled and this can cause classloader conflicts.
+  # better just use the version of joda-time from jruby and hope it is
+  # compatible)
+  s.requirements << 'jar io.dropwizard:dropwizard-logging, 0.8.0-rc5, :exclusions=> [ joda-time:joda-time ]'
+
+  # a jar dependency with a classifier
+  s.requirements << 'jar com.google.protobuf:protobuf-java, 2.2.0, :classifier => lite'
+
   # needed for the tests
-  s.requirements << "jar org.slf4j:slf4j-simple, 1.7.7, :scope => :test"
+  s.requirements << 'jar junit:junit:4.12, :scope => :test'
+  # this is part of the test and assumed to be provided during runtime
+  s.requirements << "jar org.slf4j:slf4j-simple, 1.7.7, :scope => :provided"
 
   s.add_development_dependency 'rspec', '~> 2.14'
   s.add_development_dependency 'rake', '~> 10.3'
