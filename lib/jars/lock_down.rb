@@ -49,17 +49,22 @@ module Jars
         # if gemspec is local then include all dependencies
         maven.attach_jars( spec, cwd == spec.full_gem_path )
       end
-    rescue Gem::LoadError => e
-      # not sure why to reraise the exception
-      raise e
-    rescue LoadError => e
-      if Jars.verbose?
-        warn e.message
-        warn "no bundler found - ignore Gemfile if exists"
+    rescue Exception => e
+      case e.class.to_s
+      when 'LoadError'
+        if Jars.verbose?
+          warn e.message
+          warn "no bundler found - ignore Gemfile if exists"
+        end
+      when 'Bundler::GemfileNotFound'
+        # do nothing then as we have bundler but no Gemfile
+      when 'Bundler::GemNotFound'
+        warn "can not setup bundler with #{Bundler.default_lockfile}"
+        raise e
+      else
+        # reraise exception so user sees it
+        raise e
       end
-    rescue Bundler::GemNotFound => e
-      warn "can not setup bundler with #{Bundler.default_lockfile}"
-      raise e
     ensure
       $LOAD_PATH.replace( load_path )
     end
