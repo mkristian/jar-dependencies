@@ -148,6 +148,26 @@ the gemspec files and just load the bundle jars into jruby
 classloader, can easily create problems as the jackson and
 xalan/xerces libraries used by those gems are popular ones in the java world.
 
+# trouble shooting #
+
+since maven is used under the hood it is possible to get more insight
+what maven is doing. show the regualr maven output:
+
+
+    JARS_VERBOSE=true bundle install
+    JARS_VERBOSE=true gem install some_gem
+
+or with maven debug enabled
+
+    JARS_DEBUG=true bundle install
+    JARS_DEBUG=true gem install some_gem
+
+the maven command line which gets printed needs maven-3.3.x and the
+ruby DSL extension for maven:
+[https://github.com/takari/polyglot-maven#configuration](polyglot-maven
+configuration) where ```${maven.multiModuleProjectDirectory}``` is
+your current directory.
+
 # configuration #
 
 <table border='1'>
