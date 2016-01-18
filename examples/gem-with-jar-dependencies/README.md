@@ -18,7 +18,7 @@ lock_jars
 ## pack gem
 
 ```
-rake package
+gem build mygem.gemspec
 ```
 
 ## just run the code

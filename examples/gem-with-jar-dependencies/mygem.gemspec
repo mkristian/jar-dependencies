@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir[ 'lib/**/*.rb' ]
   s.files += Dir[ 'lib/*.jar' ]
-  s.files += Dir[ '*.file' ]
+  s.files += Dir[ '*file' ]
   s.files += Dir[ '*.gemspec' ]
 
   s.requirements << "jar org.slf4j, slf4j-api, 1.7.7"
