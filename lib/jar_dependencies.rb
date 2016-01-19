@@ -51,6 +51,10 @@ module Jars
       Jars::LockDown.new( debug, verbose ).lock_down( options )
     end
 
+    def vendor( dir = 'lib' )
+      lock_down( false, false, :vendor_dir => dir )
+    end
+
     if defined? JRUBY_VERSION
       def to_prop( key )
         key = key.gsub( '_', '.' )
