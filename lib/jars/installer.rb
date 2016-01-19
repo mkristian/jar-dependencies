@@ -155,9 +155,7 @@ module Jars
       when 'false'
         do_vendor = false
       else
-        # if the spec_file does not exists this means it is a local gem
-        # coming via bundle :path or :git
-        do_vendor = File.exists?( spec.spec_file )
+        do_vendor = true
       end
       do_install( do_vendor, write_require_file )
     end

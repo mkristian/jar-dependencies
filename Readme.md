@@ -23,9 +23,9 @@ in such cases **jbundler** can always **overwrite** any such version.
 
 add following to your *Rakefile*:
 
-    require 'jar_installer'
+    require 'jars/installer'
     task :install_jars do
-      Jars::JarInstaller.vendor_jars
+      Jars::Installer.new.vendor_jars
     end
 
 which will install (download) the dependent jars into **JARS_HOME** and create a

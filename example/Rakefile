@@ -5,6 +5,12 @@ require 'jars/classpath'
 require 'rake/javaextensiontask'
 
 
+require 'jars/installer'
+task :install_jars do
+  Jars::JarInstaller.new.vendor_jars
+  #Jars::JarInstaller.new.install_jars
+end
+
 desc 'Compiles extension and run specs'
 task :default => [ :compile, :spec ]
 
@@ -21,7 +27,7 @@ end
 require 'rubygems/package_task'
 Gem::PackageTask.new( spec ) do
   desc 'Pack gem'
-  task :package => [:compile]
+  task :package => [:install_jars, :compile]
 end
 
 desc 'Run specs'
