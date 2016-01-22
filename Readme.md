@@ -25,7 +25,7 @@ add following to your *Rakefile*:
 
     require 'jars/installer'
     task :install_jars do
-      Jars::Installer.new.vendor_jars
+      Jars::Installer.vendor_jars!
     end
 
 which will install (download) the dependent jars into **JARS_HOME** and create a

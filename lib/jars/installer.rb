@@ -149,6 +149,14 @@ module Jars
 
     def vendor_jars( write_require_file = true )
       return unless has_jars?
+      vendor_jars!( write_require_file )
+    end
+
+    def self.vendor_jars!
+      new.vendor_jars!
+    end
+
+    def vendor_jars!( write_require_file = true )
       case Jars.to_prop( Jars::VENDOR )
       when 'true'
         do_vendor = true
