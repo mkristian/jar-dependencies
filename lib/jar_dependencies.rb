@@ -224,7 +224,7 @@ module Jars
         while done != urls do
           urls.each do |url|
             unless done.member?( url )
-              Jars.debug { "--- load jars from #{url}" }
+              Jars.debug { "--- load jars from uri #{url}" }
               classpath = Jars::Classpath.new( nil, "uri:#{url}" )
               classpath.require( scope )
               done << url
@@ -355,10 +355,18 @@ module Jars
 
     def do_require( *args )
       jar = to_jar( *args )
+      local = File.join( Dir.pwd, 'jars', jar )
+      vendor = File.join( Dir.pwd, 'vendor', 'jars', jar )
       file = File.join( home, jar )
       # use jar from local repository if exists
       if File.exists?( file )
         require file
+      # use jar from PWD/jars if exists
+      elsif File.exists?( local )
+        require local
+      # use jar from PWD/vendor/jars if exists
+      elsif File.exists?( vendor )
+        require vendor
       else
         # otherwise try to find it on the load path
         require jar

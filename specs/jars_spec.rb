@@ -245,4 +245,23 @@ describe Jars do
 
     $stderr = STDERR
   end
+
+  it 'requires jars from various default places' do
+    pwd = File.expand_path('..', __FILE__ )
+    $LOAD_PATH << pwd
+    
+    $stderr = StringIO.new
+    Dir.chdir( pwd ) do
+      require_jar 'example', 'example', '1'
+      require_jar 'example', 'example', '2'
+      require_jar 'example', 'example', '3'
+    end
+
+    $stderr.string.wont_match /omit version 1/
+    $stderr.string.must_match /omit version 2/
+    $stderr.string.must_match /omit version 3/
+                                            
+    $stderr = STDERR
+  
+  end
 end
