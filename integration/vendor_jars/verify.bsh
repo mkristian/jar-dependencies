@@ -1,0 +1,23 @@
+import java.io.*;
+import org.codehaus.plexus.util.FileUtils;
+
+
+String log = FileUtils.fileRead( new File( basedir, "build.log" ) );
+
+String expected = "exclusions: joda-time:joda-time";
+if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
+
+File f = new File(basedir, "lib/example_jars.rb");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );
+
+f = new File(basedir, "lib/com/fasterxml/classmate/1.0.0/classmate-1.0.0.jar");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );
+
+f = new File(basedir, "lib/com/google/guava/guava/18.0/guava-18.0.jar");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );
+
+f = new File(basedir, "lib/org/glassfish/javax.el/3.0.0/javax.el-3.0.0.jar");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );
+
+f = new File(basedir, "lib/com/fasterxml/classmate/1.0.0/classmate-1.0.0.jar");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );
