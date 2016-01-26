@@ -1,0 +1,7 @@
+import java.io.*;
+
+new File(basedir, "repository/org/bouncycastle/bcpkix-jdk15on/1.54/bcpkix-jdk15on-1.54.jar").delete();
+new File(basedir, "repository/org/bouncycastle/bcpkix-jdk15on/1.54/bcpkix-jdk15on-1.54.pom").delete();
+new File(basedir, "repository/org/bouncycastle/bcprov-jdk15on/1.54/bcprov-jdk15on-1.54.jar").delete();
+new File(basedir, "repository/org/bouncycastle/bcprov-jdk15on/1.54/bcprov-jdk15on-1.54.pom").delete();
+true;

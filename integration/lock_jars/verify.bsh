@@ -1,0 +1,20 @@
+import java.io.*;
+import org.codehaus.plexus.util.FileUtils;
+
+
+String log = FileUtils.fileRead( new File( basedir, "build.log" ) );
+
+String expected = "Jars.lock is up to date";
+if ( !log.contains( expected ) ) throw new RuntimeException( "log file does not contain '" + expected + "'" );
+
+File f = new File(basedir, "repository/org/bouncycastle/bcpkix-jdk15on/1.54/bcpkix-jdk15on-1.54.jar");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );
+
+f = new File(basedir, "repository/org/bouncycastle/bcpkix-jdk15on/1.54/bcpkix-jdk15on-1.54.pom");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );
+
+f = new File(basedir, "repository/org/bouncycastle/bcprov-jdk15on/1.54/bcprov-jdk15on-1.54.jar");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );
+
+f = new File(basedir, "repository/org/bouncycastle/bcprov-jdk15on/1.54/bcprov-jdk15on-1.54.pom");
+if (!f.exists()) throw new RuntimeException( "file " + f + " does not exists" );

@@ -1,0 +1,36 @@
+#-*- mode: ruby -*-
+
+extension 'org.torquebox.mojo:mavengem-wagon:0.2.0'
+
+repository :id => :mavengems, :url => 'mavengem:https://rubygems.org'
+
+phase :test do
+  plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
+          :executable => :java,
+          :environmentVariables => { 'JARS_LOCAL_MAVEN_REPO' => '${basedir}/repository',
+                                     'GEM_HOME' => '${gem.home}',
+                                     'GEM_PATH' => '${gem.home}',
+                                     'JARS_VERBOSE' => true } ) do
+    execute_goal( :exec,
+                  :id => 'jruby -S lock_jars',
+                  :arguments => ['-classpath',
+                                 xml('<classpath/>'),
+                                 'org.jruby.Main',
+                                 '${gem.home}/bin/lock_jars', '--tree' ] )
+                  
+  end
+end
+
+properties( 'gem.home' => '${project.basedir}/../rubygems',
+            'gem.path' => '${gem.home}' )
+
+jar 'org.jruby:jruby-complete', '${jruby.old-version}'
+
+gem 'jar-dependencies', '${jar-dependencies.version}'
+gem 'ruby-maven', '${ruby-maven.version}'
+
+jruby_plugin :gem, '${jruby.plugins.version}' do
+  execute_goal :initialize
+end
+
+# vim: syntax=Ruby

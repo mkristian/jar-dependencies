@@ -82,6 +82,7 @@ describe Jars do
     home = Jars.home
     home.must_equal( File.join( ENV[ 'HOME' ], '.m2', 'repository' ) )
 
+    ENV['JARS_LOCAL_MAVEN_REPO'] = nil
     ENV['JARS_MAVEN_SETTINGS'] = File.join( 'specs', 'settings.xml' )
     Jars.reset
     Jars.home.wont_equal home
@@ -99,10 +100,12 @@ describe Jars do
   end
 
   it "determines JARS_HOME (from global settings.xml)" do
+    ENV['JARS_LOCAL_MAVEN_REPO'] = nil
     ENV[ 'HOME' ] = "/tmp/oul'bollocks!"
     ENV[ 'M2_HOME' ] = File.expand_path(File.dirname(__FILE__))
     ENV_JAVA[ 'repo.path' ] = 'specs'
     Jars.home.must_equal( 'specs/repository' )
+    ENV['JARS_LOCAL_MAVEN_REPO'] = nil
   end
 
   it 'raises RuntimeError on requires of unknown jar' do
@@ -248,20 +251,22 @@ describe Jars do
 
   it 'requires jars from various default places' do
     pwd = File.expand_path('..', __FILE__ )
-    $LOAD_PATH << pwd
+    $LOAD_PATH << File.join(pwd, 'path')
     
     $stderr = StringIO.new
     Dir.chdir( pwd ) do
-      require_jar 'example', 'example', '1'
-      require_jar 'example', 'example', '2'
-      require_jar 'example', 'example', '3'
+      require_jar 'more', 'sample', '4'
+      require_jar 'more', 'sample', '2'
+      require_jar 'more', 'sample', '3'
     end
 
     $stderr.string.wont_match /omit version 1/
     $stderr.string.must_match /omit version 2/
     $stderr.string.must_match /omit version 3/
+    $stderr.string.wont_match /omit version 4/
                                             
     $stderr = STDERR
-  
+
+    $LOAD_PATH.delete( File.join(pwd, 'path') )
   end
 end

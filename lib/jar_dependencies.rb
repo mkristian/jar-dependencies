@@ -28,6 +28,8 @@ module Jars
     HOME = 'JARS_HOME'.freeze
     # skip the gem post install hook
     SKIP = 'JARS_SKIP'.freeze
+    # skip Jars.lock mainly to run lock_jars
+    SKIP_LOCK = 'JARS_SKIP_LOCK'.freeze
     # do not require any jars if set to false
     REQUIRE = 'JARS_REQUIRE'.freeze
     # @private
@@ -47,8 +49,11 @@ module Jars
   class << self
 
     def lock_down( debug = false, verbose = false, options = {} )
+      ENV[ SKIP_LOCK ] = 'true'
       require 'jars/lock_down' # do this lazy to keep things clean
       Jars::LockDown.new( debug, verbose ).lock_down( options )
+    ensure
+      ENV[ SKIP_LOCK ] = nil
     end
 
     if defined? JRUBY_VERSION
@@ -117,6 +122,10 @@ module Jars
       self.require = false
     end
 
+    def skip_lock?
+      to_prop( SKIP_LOCK ) || false
+    end
+
     def lock
       to_prop( LOCK ) || 'Jars.lock'
     end
@@ -138,10 +147,6 @@ module Jars
         return file if File.exists?( file )
       end
       nil
-    end
-
-    def local_maven_repo
-      to_prop( LOCAL_MAVEN_REPO ) || home
     end
 
     def reset
@@ -203,7 +208,8 @@ module Jars
     end
 
     def local_maven_repo
-      @_local_maven_repo ||= detect_local_repository(maven_local_settings) ||
+      @_local_maven_repo ||= absolute(to_prop(LOCAL_MAVEN_REPO)) ||
+                             detect_local_repository(maven_local_settings) ||
                              detect_local_repository(maven_user_settings) ||
                              detect_local_repository(maven_global_settings) ||
                              File.join( user_home, '.m2', 'repository' )
@@ -277,7 +283,7 @@ module Jars
     end
 
     def require_jar( group_id, artifact_id, *classifier_version )
-      require_jars_lock
+      require_jars_lock unless skip_lock?
       require_jar_with_block( group_id, artifact_id, *classifier_version ) do |gid, aid, version, classifier|
         do_require( gid, aid, version, classifier )
       end
