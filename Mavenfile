@@ -2,10 +2,6 @@
 
 gemfile
 
-# TODO should be setup whenever a plugin uses gems by the pom-ruby-dsl
-repository :id => :mavengems, :url => 'mavengem:http://rubygems.org'
-extension 'de.saumya.mojo:mavengem-wagon:0.1.0'
-
 jruby_plugin( :minitest, :minispecDirectory => "specs/*_spec.rb" ) do
   execute_goals(:spec)
   gem 'ruby-maven', '${ruby-maven.version}'
@@ -19,13 +15,13 @@ ruby_maven = gemfile_profile.dependencies.detect do |d|
   d.artifact_id == 'ruby-maven'
 end
 
-properties( 'jruby.versions' => ['1.7.12', '1.7.23', '${jruby.version}'
+properties( 'jruby.versions' => ['1.7.12', '1.7.24', '${jruby.version}'
                                 ].join(','),
             'jruby.modes' => ['1.9', '2.0', '2.2'].join(','),
             # just lock the version
             'bundler.version' => '1.10.6',
             'ruby-maven.version' => ruby_maven.version,
-            'jruby.version' => '9.0.4.0',
+            'jruby.version' => '9.0.5.0',
             'jruby.plugins.version' => '1.1.3',
             'push.skip' => true  )
 
@@ -44,9 +40,7 @@ plugin :invoker, '1.8' do
                    'jruby.version' => '${jruby.version}',
                    'jruby.plugins.version' => '${jruby.plugins.version}',
                    'bundler.version' => '${bundler.version}',
-                   'ruby-maven.version' => '${ruby-maven.version}',
-                   # dump pom for the time being - for travis
-                   'polyglot.dump.pom' => 'pom.xml'})
+                   'ruby-maven.version' => '${ruby-maven.version}' })
 end
 
 distribution_management do
