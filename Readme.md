@@ -128,6 +128,12 @@ since jar-dependencies does not declare ruby-maven as runtime dependency
 setup the project it is needed) it is advicable to have it as
 development dependency in you Gemfile.
 
+# proxy and mirror setup
+
+proxied and mirrors can be setup by the usual configuration of maven itself: [settings.xml](https://maven.apache.org/settings.html) - see the mirrors and proxy sections.
+
+you also can add such a settings.xml to your project which jar-dependencies will use instad of the default maven locations. this allows to have a per project configuration and also removes the need to users of your ruby project to dive into maven in case your have company policy to use a local mirror for gem and jar artifacts.
+
 # gradle, maven, etc
 
 for dependency management frameworks like gradle (via
