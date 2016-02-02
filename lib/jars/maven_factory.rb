@@ -69,15 +69,6 @@ module Jars
       end
       maven[ 'verbose' ] = (@debug || @verbose) == true
 
-      # TODO what todo with https proxy ?
-      # FIX this proxy settings seems not to work
-      if (proxy = Gem.configuration[ :http_proxy ]).is_a?( String )
-        require 'uri'; uri = URI.parse( proxy )
-        maven['proxySet'] = 'true'
-        maven['proxyHost'] = "#{uri.host}"
-        maven['proxyPort'] = "#{uri.port}"
-      end
-
       if Jars.maven_settings
         maven.options[ '-s' ] = Jars.maven_settings
       end
