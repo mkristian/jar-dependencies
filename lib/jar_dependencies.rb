@@ -393,5 +393,6 @@ def require_jar( *args )
     Jars.debug { "    try to load from #{caller.join("\n\t")}" }
     return false
   end
+  Jars.debug { "    register #{args.inspect} - #{result == true}" }
   result
 end
