@@ -1,0 +1,62 @@
+<!--
+    this settings can be bypassed by an environment variable
+
+JARS_MAVEN_SETTINGS=/path/to/settings.xml
+
+    or via a java system property
+
+jars.maven.settings=/path/to/settings.xml
+
+-->
+<settings>
+  <mirrors>
+    <mirror>
+      <id>maven-central-mirror</id>
+      <!-- mirror maven central -->
+      <mirrorOf>central</mirrorOf>
+      <url>https://artifactory.example.com/artifactory/all</url>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+      <id>mavencentral</id>
+      <!--
+	  
+	  http://books.sonatype.com/nexus-book/reference/config-maven.html
+
+          mvn has a hardcoded “central” repo, and unless you reconfigure it to
+	  something unrelsolvable it will still attempt to use that vs. your
+	  mirror
+
+      -->
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>mavencentral</activeProfile>
+  </activeProfiles>
+</settings>

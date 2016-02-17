@@ -132,6 +132,8 @@ development dependency in you Gemfile.
 
 proxied and mirrors can be setup by the usual configuration of maven itself: [settings.xml](https://maven.apache.org/settings.html) - see the mirrors and proxy sections.
 
+as jar-dependencies does only deal with jar and all jars need to come from maven central, it is only neccessary to mirror maven-central. an example of such a [settings-example.xml](setting.xml is here).
+
 you also can add such a settings.xml to your project which jar-dependencies will use instad of the default maven locations. this allows to have a per project configuration and also removes the need to users of your ruby project to dive into maven in case your have company policy to use a local mirror for gem and jar artifacts.
 
 jar-dependencies itself uses maven **only** for the jars and all gems are managed by rubygems or bundler or your favourit management tool. so any proxy/mirror settings which should affect gems need to be done in those tools.
