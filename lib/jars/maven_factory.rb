@@ -22,6 +22,7 @@ module Jars
               jndex = 0
               a.exclusions.each do |ex|
                 self[ "jars.#{@index}.exclusions.#{jndex}" ] = ex.to_s
+                jndex += 1
               end
             end
             self[ "jars.#{@index}.scope" ] = a.scope if a.scope
