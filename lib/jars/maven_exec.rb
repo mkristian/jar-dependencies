@@ -36,7 +36,7 @@ module Jars
         @specfile = File.expand_path( spec )
         @basedir = File.dirname( @specfile )
         Dir.chdir( @basedir ) do
-          spec = eval( File.read( @specfile ) )
+          spec = eval( File.read( @specfile ), TOPLEVEL_BINDING, @specfile )
         end
       when Gem::Specification
         if File.exists?( spec.spec_file )
