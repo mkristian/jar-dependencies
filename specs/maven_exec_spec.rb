@@ -8,9 +8,22 @@ describe Jars::MavenExec do
   let( :pwd ) { File.dirname( File.expand_path( __FILE__ ) ) }
 
   let( :example_spec ) { File.join( pwd, '..', 'example', 'example.gemspec' ) }
+  let( :spec_with_require_relative ) { File.join( pwd, 'example', 'gem_with_require_relative', 'gem_with_require_relative.gemspec' ) }
 
   after do
     Jars.reset
+  end
+
+  it 'should not warn if gemspec contains require_relative' do
+    Dir.chdir ( File.dirname ( spec_with_require_relative ) ) do
+      begin
+        $stderr = StringIO.new
+        jar = Jars::MavenExec.new( )
+        $stderr.string.must_equal ''
+      ensure
+        $stderr = STDERR
+      end
+    end
   end
 
   it 'finds the gemspec file when the Gem::Specifiacation.spec_file is wrong' do
