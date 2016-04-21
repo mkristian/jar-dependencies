@@ -100,12 +100,16 @@ module Jars
       print_require_jar( file, dep )
     end
 
-    def self.print_require_jar( file, dep )
+    def self.print_require_jar( file, dep, fallback = false )
       return if dep.type != :jar || dep.scope != :runtime
       if dep.system?
         file.puts( "require( '#{dep.file}' )" ) if file
       elsif dep.scope == :runtime
-        file.puts( "require_jar( '#{dep.gav.gsub( ':', "', '" )}' )" ) if file
+        if fallback
+          file.puts( "  require '#{dep.path}'" ) if file
+        else
+          file.puts( "  require_jar( '#{dep.gav.gsub( ':', "', '" )}' )" ) if file
+        end
       end
     end
 
@@ -125,11 +129,20 @@ module Jars
         FileUtils.mkdir_p( File.dirname( require_filename ) )
         File.open( require_filename, 'w' ) do |f|
           f.puts COMMENT
-          f.puts "require 'jar_dependencies'"
+          f.puts "begin"
+          f.puts "  require 'jar_dependencies'"
+          f.puts "rescue LoadError"
+          deps.each do |dep|
+             # do not use require_jar method
+            print_require_jar( f, dep, true )
+          end
+          f.puts "end"
           f.puts
+          f.puts "if defined? Jars"
           deps.each do |dep|
             print_require_jar( f, dep )
           end
+          f.puts "end"
           yield f if block_given?
         end
       end
