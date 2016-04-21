@@ -1,7 +1,7 @@
 #-*- mode: ruby -*-
 
 # use the version from the main project
-require "#{File.dirname File.expand_path(__FILE__)}/../../lib/jars/version"
+require "#{File.dirname File.expand_path(__FILE__)}/../../../lib/jars/version"
 
 Gem::Specification.new do |s|
   s.name = File.basename( File.dirname( File.expand_path( __FILE__ ) ) )
