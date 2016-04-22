@@ -2,6 +2,7 @@ require File.expand_path('setup', File.dirname(__FILE__))
 
 require 'jars/maven_exec'
 require 'fileutils'
+require 'stringio'
 
 describe Jars::MavenExec do
 
