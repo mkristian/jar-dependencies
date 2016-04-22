@@ -42,7 +42,7 @@ describe Jars::Installer do
     Jars::Installer.install_deps( deps, dir, jars, false )
     File.read( jars ).each_line do |line|
       if line.size > 30 && !line.match( /^#/ )
-        line.match( /^require_jar\(/ ).wont_be_nil
+        line.match( /^  require(_jar\(| )/ ).wont_be_nil
       end
     end
     Dir[ File.join( dir, '**' ) ].size.must_equal 1
@@ -53,7 +53,7 @@ describe Jars::Installer do
     Jars::Installer.install_deps( deps, dir, jars, true )
     File.read( jars ).each_line do |line|
       if line.size > 30 && !line.match( /^#/ )
-        line.match( /^require_jar\(/ ).wont_be_nil
+        line.match( /^  require(_jar\(| )/ ).wont_be_nil
       end
     end
     Dir[ File.join( dir, '**', '*.jar' ) ].size.must_equal 45
@@ -86,19 +86,19 @@ describe Jars::Installer do
     jar = Jars::Installer.new( example_spec )
     jar.install_jars
     # vendor method is a mocked method
-    jar.vendor.must_equal false
+    jar.vendor.must_equal nil
     ENV[ 'JARS_VENDOR' ] = 'false'
     jar.vendor_jars
     # vendor method is a mocked method
-    jar.vendor.must_equal false
+    jar.vendor.must_equal nil
     ENV[ 'JARS_VENDOR' ] = 'true'
     jar.vendor_jars
     # vendor method is a mocked method
-    jar.vendor.must_equal true
+    jar.vendor.must_equal 'lib'
     java.lang.System.set_property( 'jars.vendor', 'false' )
     jar.vendor_jars
     # vendor method is a mocked method
-    jar.vendor.must_equal false
+    jar.vendor.must_equal nil
   end
 
   it 'installs dependencies ' do

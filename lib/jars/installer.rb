@@ -160,30 +160,28 @@ module Jars
 
     def spec; @mvn.spec end
 
-    def vendor_jars( write_require_file = true )
+    def vendor_jars( write_require_file = true, vendor_dir = nil )
       return unless has_jars?
-      vendor_jars!( write_require_file )
-    end
-
-    def self.vendor_jars!
-      new.vendor_jars!
-    end
-
-    def vendor_jars!( write_require_file = true )
-      case Jars.to_prop( Jars::VENDOR )
-      when 'true'
-        do_vendor = true
-      when 'false'
-        do_vendor = false
+      if Jars.to_prop( Jars::VENDOR ) == 'false'
+        vendor_dir = nil
       else
-        do_vendor = true
+        vendor_dir ||= spec.require_path
       end
-      do_install( do_vendor, write_require_file )
+      do_install( vendor_dir, write_require_file )
+    end
+
+    def self.vendor_jars!(vendor_dir = nil)
+      new.vendor_jars!(true, vendor_dir)
+    end
+
+    def vendor_jars!( write_require_file = true, vendor_dir = nil )
+      vendor_dir ||= spec.require_path
+      do_install( vendor_dir, write_require_file )
     end
 
     def install_jars( write_require_file = true )
       return unless has_jars?
-      do_install( false, write_require_file )
+      do_install( nil, write_require_file )
     end
 
     def ruby_maven_install_options=( options )
@@ -207,8 +205,11 @@ module Jars
 
     private
 
-    def do_install( vendor, write_require_file )
-      target_dir = File.join( @mvn.basedir, spec.require_path )
+    def do_install( vendor_dir, write_require_file )
+      if !spec.require_paths.include?(vendor_dir)
+        raise "vendor dir #{vendor_dir} not in require_paths of gemspec #{spec.require_paths}"
+      end
+      target_dir = File.join( @mvn.basedir, vendor_dir || spec.require_path )
       jars_file = File.join( target_dir, "#{spec.name}_jars.rb" )
 
       # write out new jars_file it write_require_file is true or
@@ -222,7 +223,7 @@ module Jars
       end
       deps = install_dependencies()
       self.class.write_require_jars( deps, jars_file )
-      if vendor
+      if vendor_dir
         self.class.vendor_jars( deps, target_dir )
       end
     end
