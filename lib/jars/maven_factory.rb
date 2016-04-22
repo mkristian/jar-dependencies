@@ -113,7 +113,8 @@ module Jars
       unless spec
         raise "failed to resolve gem '#{name}' if you're using Bundler add it as a dependency"
       end
-      $LOAD_PATH << File.join( spec.full_gem_path, spec.require_path )
+      path = File.join( spec.full_gem_path, spec.require_path )
+      $LOAD_PATH << path unless $LOAD_PATH.include?( path )
     end
 
     def requirement( name )
