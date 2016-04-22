@@ -2,7 +2,9 @@
 
 repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
 
-gemfile
+#gemfile
+
+gem 'leafy-metrics', '0.6.1'
 
 gem! 'bundler', '${bundler.version}'
 
