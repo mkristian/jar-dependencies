@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '~> 5.3'
   s.add_development_dependency 'rake', '~> 10.2'
-  RUBY_MAVEN_VERSION = '~> 3.3.3'
+  RUBY_MAVEN_VERSION = '~> 3.3.11'
   s.add_development_dependency 'ruby-maven', RUBY_MAVEN_VERSION
 
   s.post_install_message = <<EOF

@@ -15,7 +15,7 @@ ruby_maven = gemfile_profile.dependencies.detect do |d|
   d.artifact_id == 'ruby-maven'
 end
 
-properties( 'jruby.versions' => ['1.7.12', '1.7.24', '${jruby.version}'
+properties( 'jruby.versions' => ['1.7.12', '1.7.25', '${jruby.version}'
                                 ].join(','),
             'jruby.modes' => ['1.9', '2.0', '2.2'].join(','),
             # just lock the version
