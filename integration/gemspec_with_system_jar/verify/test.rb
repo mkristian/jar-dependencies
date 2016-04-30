@@ -9,7 +9,7 @@ end
 gem 'jar-dependencies', spec.version
 require 'jar-dependencies'
 
-Gem.install( File.expand_path( "../../gem/pkg/first-1.1.1.gem", __FILE__ ) )
+Gem.install( File.expand_path( "../../gem/pkg/with-system-jar-1.1.1.gem", __FILE__ ) )
 
 require "first"
 

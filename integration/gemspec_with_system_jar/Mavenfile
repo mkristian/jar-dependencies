@@ -8,7 +8,7 @@ name 'aggregator'
 
 modules ['gem', 'verify']
 
-properties( 'gem.home' => '${project.basedir}/pkg/rubygems',
+properties( 'gem.home' => '${project.basedir}/../rubygems',
             'gem.path' => '${gem.home}' )
 
 jruby_plugin :gem, '${jruby.plugins.version}' do

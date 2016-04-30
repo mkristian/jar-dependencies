@@ -14,7 +14,7 @@ model.dependencies.each do |d|
   end
 end
 
-properties( 'gem.home' => '${project.basedir}/../pkg/rubygems',
+properties( 'gem.home' => '${project.basedir}/../../rubygems',
             'gem.path' => '${gem.home}' )
 
 # vim: syntax=Ruby

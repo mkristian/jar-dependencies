@@ -6,16 +6,14 @@ spec = Dir.chdir( File.dirname( file ) ) do
 end
 
 Gem::Specification.new do |s|
-  s.name = 'first'
+  s.name = 'with-system-jar'
   s.version = '1.1.1'
   s.author = 'example person'
   s.email = [ 'mail@example.com' ]
   s.summary = 'first gem with jars vendored during installation'
 
   s.platform = 'java'
-  s.files << Dir[ 'lib/**/*.rb' ]
-  s.files << Dir[ '*file' ]
-  s.files << 'first.gemspec'
+  s.files = Dir[ 'lib/**/*.rb' ] + Dir[ '*.gemspec' ]
 
   s.add_runtime_dependency 'jar-dependencies', spec.version
 
