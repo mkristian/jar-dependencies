@@ -13,6 +13,6 @@ Gem.install( File.expand_path( "../../gem/pkg/with-system-jar-1.1.1.gem", __FILE
 
 require "first"
 
-raise "missing tools.jar" unless $CLASSPATH.detect { |c| c =~ /tools.jar/ }
+raise "missing tools.jar, not found in #{$CLASSPATH.inspect}" unless $CLASSPATH.detect { |c| c =~ /tools.jar/ }
 
 # vim: syntax=Ruby
