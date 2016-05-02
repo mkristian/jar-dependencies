@@ -2,6 +2,8 @@
 
 gemfile
 
+plugin_repository :id => :maven_gems, :url => 'mavengem:https://rubygems.org'
+
 jruby_plugin( :minitest, :minispecDirectory => "specs/*_spec.rb" ) do
   execute_goals(:spec)
   gem 'ruby-maven', '${ruby-maven.version}'
