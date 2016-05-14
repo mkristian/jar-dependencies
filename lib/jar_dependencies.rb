@@ -19,7 +19,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 module Jars
-  unless defined? Jars::MAVEN_SETTINGS
+  unless defined? Jars::SKIP_LOCK
     MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
     LOCAL_MAVEN_REPO = 'JARS_LOCAL_MAVEN_REPO'.freeze
     # lock file to use
