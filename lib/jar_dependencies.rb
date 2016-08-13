@@ -353,7 +353,7 @@ module Jars
     end
 
     def to_jar( group_id, artifact_id, version, classifier = nil )
-      file = "#{group_id.gsub( '.', '/' )}/#{artifact_id}/#{version}/#{artifact_id}-#{version}"
+      file = String.new("#{group_id.gsub( '.', '/' )}/#{artifact_id}/#{version}/#{artifact_id}-#{version}")
       file << "-#{classifier}" if classifier
       file << '.jar'
       file
