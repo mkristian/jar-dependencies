@@ -79,6 +79,8 @@ module Jars
       maven.property( 'jars.lock', File.expand_path( Jars.lock ) )
       maven.property( 'jars.force', options[ :force ] == true )
       maven.property( 'jars.update', options[ :update ] ) if options[ :update ]
+      # tell not to use Jars.lock as part of POM when running mvn
+      maven.property( 'jars.skip.lock', true )
 
       args = [ 'gem:jars-lock' ]
       if options[ :tree ]
