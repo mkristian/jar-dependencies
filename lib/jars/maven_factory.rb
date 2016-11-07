@@ -71,7 +71,7 @@ module Jars
       maven[ 'verbose' ] = (@debug || @verbose) == true
 
       if Jars.maven_settings
-        maven.options[ '-s' ] = Jars.maven_settings
+        maven.options[ '-s' ] = Jars::MavenSettings.effective_settings
       end
 
       maven[ 'maven.repo.local' ] = "#{java.io.File.new( Jars.local_maven_repo ).absolute_path}"

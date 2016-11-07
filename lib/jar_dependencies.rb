@@ -18,6 +18,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+require 'jars/maven_settings'
 module Jars
   unless defined? Jars::SKIP_LOCK
     MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
@@ -151,60 +152,24 @@ module Jars
 
     def reset
       instance_variables.each { |var| instance_variable_set(var, nil) }
+      Jars::MavenSettings.reset
       ( @@jars ||= {} ).clear
     end
 
     def maven_local_settings
-      unless instance_variable_defined?(:@_jars_maven_local_settings_)
-        @_jars_maven_local_settings_ = nil
-      end
-      if @_jars_maven_local_settings_.nil?
-        if settings = absolute( 'settings.xml' )
-          if File.exists?(settings)
-            @_jars_maven_local_settings_ = settings
-          end
-        end
-      end
-      @_jars_maven_local_settings_ || nil
+      Jars::MavenSettings.local_settings
     end
 
     def maven_user_settings
-      unless instance_variable_defined?(:@_jars_maven_user_settings_)
-        @_jars_maven_user_settings_ = nil
-      end
-      if @_jars_maven_user_settings_.nil?
-        if settings = absolute( to_prop( MAVEN_SETTINGS ) )
-          unless File.exists?(settings)
-            Jars.warn { "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found" }
-            settings = false
-          end
-        else # use maven default (user) settings
-          settings = File.join( user_home, '.m2', 'settings.xml' )
-          settings = false unless File.exists?(settings)
-        end
-        @_jars_maven_user_settings_ = settings
-      end
-      @_jars_maven_user_settings_ || nil
+      Jars::MavenSettings.user_settings
     end
 
     def maven_settings
-      maven_local_settings || maven_user_settings
+      Jars::MavenSettings.settings
     end
 
     def maven_global_settings
-      unless instance_variable_defined?(:@_jars_maven_global_settings_)
-        @_jars_maven_global_settings_ = nil
-      end
-      if @_jars_maven_global_settings_.nil?
-          if mvn_home = ENV[ 'M2_HOME' ] || ENV[ 'MAVEN_HOME' ]
-            settings = File.join( mvn_home, 'conf/settings.xml' )
-            settings = false unless File.exists?(settings)
-          else
-            settings = false
-          end
-          @_jars_maven_global_settings_ = settings
-      end
-      @_jars_maven_global_settings_ || nil
+      Jars::MavenSettings.global_settings
     end
 
     def local_maven_repo
@@ -297,6 +262,20 @@ module Jars
       Kernel.warn(msg || block.call) if verbose?
     end
 
+    def absolute( file )
+      File.expand_path( file ) if file
+    end
+
+    def user_home
+      ENV[ 'HOME' ] || begin
+        user_home = Dir.home if Dir.respond_to?(:home)
+        unless user_home
+          user_home = ENV_JAVA[ 'user.home' ] if Object.const_defined?(:ENV_JAVA)
+        end
+        user_home
+      end
+    end
+
     private
 
     def require_jar_with_block( group_id, artifact_id, *classifier_version )
@@ -316,20 +295,6 @@ module Jars
         yield group_id, artifact_id, version, classifier
         @@jars[ coordinate ] = version
         return true
-      end
-    end
-
-    def absolute( file )
-      File.expand_path( file ) if file
-    end
-
-    def user_home
-      ENV[ 'HOME' ] || begin
-        user_home = Dir.home if Dir.respond_to?(:home)
-        unless user_home
-          user_home = ENV_JAVA[ 'user.home' ] if Object.const_defined?(:ENV_JAVA)
-        end
-        user_home
       end
     end
 
