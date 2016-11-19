@@ -36,6 +36,8 @@ module Jars
       end
       private :setup_scope
 
+      REG = /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:|:system:/
+
       def initialize( line )
         setup_type( line )
 
@@ -46,15 +48,15 @@ module Jars
         parts = group_id.split( '.' )
         parts << artifact_id
         parts << second.split( ':' )[ -1 ]
-        parts << File.basename( line.sub( /.:/, empty ) )
+        @file = line.slice(@coord.length, line.length).sub(REG, empty).strip
+        last = @file.reverse.index /\\|\//
+        parts << line[-last..-1]
         @path = File.join( parts ).strip
 
         setup_scope( line )
 
-        reg = /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:|:system:/
-        @file = line.slice(@coord.length, line.length).sub(reg, empty).strip
         @system = line.index(':system:') != nil
-        @gav = @coord.sub(reg, ':')
+        @gav = @coord.sub(REG, ':')
       end
 
       def system?
