@@ -37,18 +37,18 @@ module Jars
       private :setup_scope
 
       REG = /:jar:|:pom:|:test:|:compile:|:runtime:|:provided:|:system:/
-
+      EMPTY = ''
       def initialize( line )
         setup_type( line )
 
-        line.sub!( /^\s+/, empty = '' )
-        @coord = line.sub( /:[^:]+:([A-Z]:\\)?[^:]+$/, empty )
+        line.strip!
+        @coord = line.sub( /:[^:]+:([A-Z]:\\)?[^:]+$/, EMPTY )
         first, second = @coord.split( /:#{type}:/ )
         group_id, artifact_id = first.split( /:/ )
         parts = group_id.split( '.' )
         parts << artifact_id
         parts << second.split( ':' )[ -1 ]
-        @file = line.slice(@coord.length, line.length).sub(REG, empty).strip
+        @file = line.slice(@coord.length, line.length).sub(REG, EMPTY).strip
         last = @file.reverse.index /\\|\//
         parts << line[-last..-1]
         @path = File.join( parts ).strip
