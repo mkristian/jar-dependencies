@@ -4,8 +4,8 @@ require 'rubygems/uri_formatter'
 module Jars
   class MavenSettings
 
-    LINE_SEPARATOR = java.lang.System.line_separator
-    
+    LINE_SEPARATOR = ENV_JAVA['line.separator']
+
     class << self
 
       def local_settings
