@@ -46,8 +46,12 @@ module Jars
           @_jars_effective_maven_settings_ = nil
         end
         if @_jars_effective_maven_settings_.nil?
-          http = Gem::Request.proxy_uri(Gem.configuration[:http_proxy] || Gem::Request.get_proxy_from_env('http'))
-          https = Gem::Request.proxy_uri(Gem.configuration[:https_proxy] || Gem::Request.get_proxy_from_env('https'))
+          begin
+            http = Gem::Request.proxy_uri(Gem.configuration[:http_proxy] || Gem::Request.get_proxy_from_env('http'))
+            https = Gem::Request.proxy_uri(Gem.configuration[:https_proxy] || Gem::Request.get_proxy_from_env('https'))
+          rescue NoMethodError
+            Jars.debug('ignore rubygems proxy configuration as rubygems is too old')
+          end
           if http.nil? && https.nil?
             @_jars_effective_maven_settings_ = settings
           else
