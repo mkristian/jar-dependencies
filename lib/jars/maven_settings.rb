@@ -108,7 +108,7 @@ module Jars
         else
           raw = File.read(settings)
           if raw.include?('<proxy>')
-            Jars.info("can not interpolated proxy info for #{settings}")
+            Jars.warn("can not interpolated proxy info for #{settings}")
             return
           else
             raw.sub!("<settings>", "<settings>#{LINE_SEPARATOR}#{proxy}")
