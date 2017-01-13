@@ -18,7 +18,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-require 'jars/maven_settings'
+
 module Jars
   unless defined? Jars::SKIP_LOCK
     MAVEN_SETTINGS = 'JARS_MAVEN_SETTINGS'.freeze
@@ -46,6 +46,8 @@ module Jars
     # vendor jars inside gem when installing gem
     VENDOR = 'JARS_VENDOR'.freeze
   end
+
+  autoload :MavenSettings, 'jars/maven_settings'
 
   class << self
 
