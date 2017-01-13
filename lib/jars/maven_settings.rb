@@ -1,4 +1,3 @@
-require 'jar_dependencies'
 require 'rubygems/request'
 require 'rubygems/uri_formatter'
 module Jars
@@ -127,7 +126,7 @@ module Jars
           raw.sub!('__HTTP_SERVER__', http.host)
           raw.sub!('__HTTP_PORT__', http.port.to_s)
         else
-          raw.sub!('__HTTP_ACTIVE__', 'false')    
+          raw.sub!('__HTTP_ACTIVE__', 'false')
         end
         if https
           raw.sub!('__HTTPS_ACTIVE__', 'true')
