@@ -208,7 +208,7 @@ module Jars
     private
 
     def do_install( vendor_dir, write_require_file )
-      if !spec.require_paths.include?(vendor_dir)
+      if !spec.require_paths.include?(vendor_dir) && vendor_dir
         raise "vendor dir #{vendor_dir} not in require_paths of gemspec #{spec.require_paths}"
       end
       target_dir = File.join( @mvn.basedir, vendor_dir || spec.require_path )
