@@ -183,7 +183,7 @@ module Jars
     end
 
     def home
-      @_jars_home_ ||= absolute(to_prop(HOME)) || local_maven_repo
+      absolute(to_prop(HOME)) || local_maven_repo
     end
 
     def require_jars_lock!( scope = :runtime )
