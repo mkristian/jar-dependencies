@@ -1,4 +1,3 @@
-require 'rubygems/request'
 require 'rubygems/uri_formatter'
 module Jars
   class MavenSettings
@@ -46,9 +45,11 @@ module Jars
         end
         if @_jars_effective_maven_settings_.nil?
           begin
+            require 'rubygems/request'
+
             http = Gem::Request.proxy_uri(Gem.configuration[:http_proxy] || Gem::Request.get_proxy_from_env('http'))
             https = Gem::Request.proxy_uri(Gem.configuration[:https_proxy] || Gem::Request.get_proxy_from_env('https'))
-          rescue NoMethodError
+          rescue
             Jars.debug('ignore rubygems proxy configuration as rubygems is too old')
           end
           if http.nil? && https.nil?
