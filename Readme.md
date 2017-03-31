@@ -1,7 +1,7 @@
 # jar-dependencies #
 
-* [![Build Status](https://secure.travis-ci.org/mkristian/jar-dependencies.png)](http://travis-ci.org/mkristian/jar-dependencies)
-* [![Code Climate](https://codeclimate.com/github/mkristian/jar-dependencies.png)](https://codeclimate.com/github/mkristian/jar-dependencies)
+* [![Build Status](https://secure.travis-ci.org/mkristian/jar-dependencies.svg)](http://travis-ci.org/mkristian/jar-dependencies)
+* [![Code Climate](https://codeclimate.com/github/mkristian/jar-dependencies.svg)](https://codeclimate.com/github/mkristian/jar-dependencies)
 
 add gem dependencies for jar files to ruby gems.
 
@@ -185,22 +185,22 @@ your current directory.
 <td>ENV</td><td>java system property</td><td>default</td><td>description</td>
 </tr>
 <tr>
-<td>`JARS_DEBUG`</td><td>jars.debug</td><td>false</td><td>if set to true it will produce lots of debug out (maven -X switch)</td>
+<td><tt>JARS_DEBUG</tt></td><td>jars.debug</td><td>false</td><td>if set to true it will produce lots of debug out (maven -X switch)</td>
 </tr>
 <tr>
-<td>`JARS_VERBOSE`</td><td>jars.verbose</td><td>false</td><td>if set to true it will produce some extra output</td>
+<td><tt>JARS_VERBOSE</tt></td><td>jars.verbose</td><td>false</td><td>if set to true it will produce some extra output</td>
 </tr>
 <tr>
-<td>`JARS_HOME`</td><td>jars.home</td><td>$HOME/.m2/repository</td><td>filesystem location where to store the jar files and some metadata</td>
+<td><tt>JARS_HOME</tt></td><td>jars.home</td><td>$HOME/.m2/repository</td><td>filesystem location where to store the jar files and some metadata</td>
 </tr>
 <tr>
-<td>`JARS_MAVEN_SETTINGS`</td><td>jars.maven.settings</td><td>$HOME/.m2/settings.xml</td><td>setting.xml for maven to use</td>
+<td><tt>JARS_MAVEN_SETTINGS</tt></td><td>jars.maven.settings</td><td>$HOME/.m2/settings.xml</td><td>setting.xml for maven to use</td>
 </tr>
 <tr>
-<td>`JARS_VENDOR`</td><td>jars.vendor</td><td>true</td><td>set to true means that the jars will be stored in JARS_HOME only</td>
+<td><tt>JARS_VENDOR</tt></td><td>jars.vendor</td><td>true</td><td>set to true means that the jars will be stored in JARS_HOME only</td>
 </tr>
 <tr>
-<td>`JARS_SKIP`</td><td>jars.skip</td><td>true</td><td>do **NOT** install jar dependencies at all</td>
+<td><tt>JARS_SKIP</tt></td><td>jars.skip</td><td>true</td><td>do **NOT** install jar dependencies at all</td>
 </tr>
 </table>
 
