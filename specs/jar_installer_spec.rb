@@ -113,4 +113,8 @@ describe Jars::Installer do
     end
     ENV[ 'JARS_HOME' ] = nil
   end
+
+  it 'tests default vendor_jars task' do
+    Jars::JarInstaller.vendor_jars
+  end
 end
