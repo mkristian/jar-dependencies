@@ -67,7 +67,7 @@ module Jars
     def self.install_jars( write_require_file = false )
       new.install_jars( write_require_file )
     end
-    
+
     def self.load_from_maven( file )
       result = []
       File.read( file ).each_line do |line|
@@ -105,12 +105,12 @@ module Jars
     def self.print_require_jar( file, dep, fallback = false )
       return if dep.type != :jar || dep.scope != :runtime
       if dep.system?
-        file.puts( "require( '#{dep.file}' )" ) if file
+        file.puts("require '#{dep.file}'") if file
       elsif dep.scope == :runtime
         if fallback
-          file.puts( "  require '#{dep.path}'" ) if file
+          file.puts("  require '#{dep.path}'") if file
         else
-          file.puts( "  require_jar( '#{dep.gav.gsub( ':', "', '" )}' )" ) if file
+          file.puts("  require_jar '#{dep.gav.gsub( ':', "', '" )}'") if file
         end
       end
     end

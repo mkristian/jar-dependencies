@@ -42,7 +42,7 @@ describe Jars::Installer do
     Jars::Installer.install_deps( deps, dir, jars, false )
     File.read( jars ).each_line do |line|
       if line.size > 30 && !line.match( /^#/ )
-        line.match( /^  require(_jar\(| )/ ).wont_be_nil
+        line.must_match /^\s{2}require(_jar)?\s'.+'$/
       end
     end
     Dir[ File.join( dir, '**' ) ].size.must_equal 1
@@ -53,7 +53,7 @@ describe Jars::Installer do
     Jars::Installer.install_deps( deps, dir, jars, true )
     File.read( jars ).each_line do |line|
       if line.size > 30 && !line.match( /^#/ )
-        line.match( /^  require(_jar\(| )/ ).wont_be_nil
+        line.must_match /^\s{2}require(_jar)?\s'.+'$/
       end
     end
     Dir[ File.join( dir, '**', '*.jar' ) ].size.must_equal 45
