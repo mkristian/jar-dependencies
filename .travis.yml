@@ -9,7 +9,7 @@ env:
   - GOAL='verify -Dmaven.test.skip -Dinvoker.test=*,!install*,!gemspecs'
 jdk:
   - openjdk7
-  - oraclejdk7
+  - openjdk8
   - oraclejdk8
 install: ./mvnw initialize
 script: ./mvnw $GOAL
