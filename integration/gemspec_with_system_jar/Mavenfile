@@ -6,10 +6,10 @@ packaging 'pom'
 
 name 'aggregator'
 
-modules ['gem', 'verify']
+modules %w[gem verify]
 
-properties( 'gem.home' => '${project.basedir}/../rubygems',
-            'gem.path' => '${gem.home}' )
+properties('gem.home' => '${project.basedir}/../rubygems',
+           'gem.path' => '${gem.home}')
 
 jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize

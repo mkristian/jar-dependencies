@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'simplelib', :path => '../simplelib'
+gem 'simplelib', path: '../simplelib'
 
 gemspec
 

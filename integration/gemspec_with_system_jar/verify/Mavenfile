@@ -1,7 +1,7 @@
 #-*- mode: ruby -*-
 
 inherit 'jar-dependencies:gemspec_with_system_jar:0' do
-  # TODO should not be needed with ruby-maven
+  # TODO: should not be needed with ruby-maven
   relative_path '../Mavenfile'
 end
 
@@ -15,18 +15,18 @@ end
 
 pom 'org.jruby:jruby', '${jruby.old-version}'
 
-plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
-        :executable => :java,
-        :environmentVariables => { 'GEM_HOME' => '${gem.home}',
-          'GEM_PATH' => '${gem.home}' } ) do
-  execute_goal( :exec, :phase => :test,
-                :arguments => ['-classpath',
-                               xml('<classpath/>'),
-                               'org.jruby.Main',
-                               'test.rb' ] )
+plugin('org.codehaus.mojo:exec-maven-plugin', '1.2',
+       executable: :java,
+       environmentVariables: { 'GEM_HOME' => '${gem.home}',
+                               'GEM_PATH' => '${gem.home}' }) do
+  execute_goal(:exec, phase: :test,
+                      arguments: ['-classpath',
+                                  xml('<classpath/>'),
+                                  'org.jruby.Main',
+                                  'test.rb'])
 end
 
-properties( 'gem.home' => '${project.basedir}/../../rubygems',
-            'gem.path' => '${gem.home}' )
+properties('gem.home' => '${project.basedir}/../../rubygems',
+           'gem.path' => '${gem.home}')
 
 # vim: syntax=Ruby
