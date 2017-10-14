@@ -4,14 +4,14 @@ Gem::Specification.new do |s|
   s.name = 'biglib'
   s.version = '1'
   s.author = 'christian meier'
-  s.email = [ 'm.kristian@web.de' ]
+  s.email = ['m.kristian@web.de']
 
   s.platform = 'java'
   s.license = 'MIT'
-  s.summary = %q(biglib)
+  s.summary = 'biglib'
   s.homepage = 'https://example.com'
-  s.description = %q(more examples)
-  
+  s.description = 'more examples'
+
   s.requirements << 'jar io.dropwizard.metrics:metrics-json, 3.1.0'
   s.requirements << 'jar io.dropwizard.metrics:metrics-jvm, 3.1.0'
 

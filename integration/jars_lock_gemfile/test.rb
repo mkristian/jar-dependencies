@@ -4,4 +4,3 @@ unless defined? Jars
 end
 
 raise "wrong number of entries in classpath #{$CLASSPATH}" if $CLASSPATH.size != 5
-

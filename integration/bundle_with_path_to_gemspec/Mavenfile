@@ -1,11 +1,11 @@
 #-*- mode: ruby -*-
 
-plugin_repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
+plugin_repository id: 'rubygems-releases', url: 'http://rubygems-proxy.torquebox.org/releases'
 
-properties( 'gem.home' => '${project.basedir}/../../pkg/rubygems',
-            'gem.path' => '${gem.home}' )
+properties('gem.home' => '${project.basedir}/../../pkg/rubygems',
+           'gem.path' => '${gem.home}')
 
-jruby_plugin :gem, :filename => 'bundle', :args => 'install' do
+jruby_plugin :gem, filename: 'bundle', args: 'install' do
   execute_goal :exec
   gem 'bundler', '${bundler.version}'
   gem 'jar-dependencies', '${jar-dependencies.version}'

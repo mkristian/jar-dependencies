@@ -4,10 +4,10 @@ Gem::Specification.new do |s|
   s.name = 'first'
   s.version = '1.1.1'
   s.author = 'example person'
-  s.email = [ 'mail@example.com' ]
+  s.email = ['mail@example.com']
   s.summary = 'first gem with jars vendored during installation'
 
-  s.files << Dir[ '*file' ]
+  s.files << Dir['*file']
   s.files << 'first.gemspec'
 
   s.platform = 'java'

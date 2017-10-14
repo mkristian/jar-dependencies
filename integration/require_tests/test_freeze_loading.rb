@@ -11,11 +11,9 @@ if $CLASSPATH.detect { |c| c =~ /bouncycastle/ }
 end
 
 begin
-
   require 'openssl'
 
   raise 'expected LoadError'
-
 rescue LoadError
 end
 

@@ -1,20 +1,16 @@
 require 'rubygems/uri_formatter'
 module Jars
   class MavenSettings
-
     LINE_SEPARATOR = ENV_JAVA['line.separator']
 
     class << self
-
       def local_settings
         unless instance_variable_defined?(:@_jars_maven_local_settings_)
           @_jars_maven_local_settings_ = nil
         end
         if @_jars_maven_local_settings_.nil?
-          if settings = Jars.absolute( 'settings.xml' )
-            if File.exists?(settings)
-              @_jars_maven_local_settings_ = settings
-            end
+          if settings = Jars.absolute('settings.xml')
+            @_jars_maven_local_settings_ = settings if File.exist?(settings)
           end
         end
         @_jars_maven_local_settings_ || nil
@@ -25,14 +21,14 @@ module Jars
           @_jars_maven_user_settings_ = nil
         end
         if @_jars_maven_user_settings_.nil?
-          if settings = Jars.absolute( Jars.to_prop( MAVEN_SETTINGS ) )
-            unless File.exists?(settings)
+          if settings = Jars.absolute(Jars.to_prop(MAVEN_SETTINGS))
+            unless File.exist?(settings)
               Jars.warn { "configured ENV['#{MAVEN_SETTINGS}'] = '#{settings}' not found" }
               settings = false
             end
           else # use maven default (user) settings
-            settings = File.join( Jars.user_home, '.m2', 'settings.xml' )
-            settings = false unless File.exists?(settings)
+            settings = File.join(Jars.user_home, '.m2', 'settings.xml')
+            settings = false unless File.exist?(settings)
           end
           @_jars_maven_user_settings_ = settings
         end
@@ -63,9 +59,7 @@ module Jars
       end
 
       def cleanup
-        if effective_settings != settings
-          File.unlink(effective_settings)
-        end
+        File.unlink(effective_settings) if effective_settings != settings
       ensure
         reset
       end
@@ -78,9 +72,7 @@ module Jars
         unless instance_variable_defined?(:@_jars_maven_settings_)
           @_jars_maven_settings_ = nil
         end
-        if @_jars_maven_settings_.nil?
-          local_settings || user_settings
-        end
+        local_settings || user_settings if @_jars_maven_settings_.nil?
       end
 
       def global_settings
@@ -88,9 +80,9 @@ module Jars
           @_jars_maven_global_settings_ = nil
         end
         if @_jars_maven_global_settings_.nil?
-          if mvn_home = ENV[ 'M2_HOME' ] || ENV[ 'MAVEN_HOME' ]
-            settings = File.join( mvn_home, 'conf/settings.xml' )
-            settings = false unless File.exists?(settings)
+          if mvn_home = ENV['M2_HOME'] || ENV['MAVEN_HOME']
+            settings = File.join(mvn_home, 'conf/settings.xml')
+            settings = false unless File.exist?(settings)
           else
             settings = false
           end
@@ -111,7 +103,7 @@ module Jars
             Jars.warn("can not interpolated proxy info for #{settings}")
             return
           else
-            raw.sub!("<settings>", "<settings>#{LINE_SEPARATOR}#{proxy}")
+            raw.sub!('<settings>', "<settings>#{LINE_SEPARATOR}#{proxy}")
           end
         end
         tempfile = java.io.File.create_temp_file('settings', '.xml')

@@ -20,9 +20,7 @@ $stderr = StringIO.new
 
 require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
 
-unless $stderr.string.empty?
-  raise 'no warning on jar conflics after freeze'
-end
+raise 'no warning on jar conflics after freeze' unless $stderr.string.empty?
 
 $stderr = STDERR
 

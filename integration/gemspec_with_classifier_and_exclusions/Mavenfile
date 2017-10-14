@@ -1,35 +1,35 @@
 #-*- mode: ruby -*-
 
-repository :id => 'rubygems-releases', :url => 'http://rubygems-proxy.torquebox.org/releases'
+repository id: 'rubygems-releases', url: 'http://rubygems-proxy.torquebox.org/releases'
 
-plugin( 'org.codehaus.mojo:exec-maven-plugin', '1.2', 
-        :executable => :java,
-        :environmentVariables => { 'GEM_HOME' => '${gem.home}',
-          'GEM_PATH' => '${gem.home}',
-          'JARS_VERBOSE' => true } ) do
-  execute_goal( :exec,
-                :id => 'Jars::Classpath.require',
-                :phase => :compile,
-                :arguments => ['-classpath',
-                               xml('<classpath/>'),
-                               'org.jruby.Main',
-                               '-rjars/classpath',
-                               '-e',
-                               'Jars::Classpath.require(:test);$CLASSPATH.each { |c| p c }' ] )
-  execute_goal( :exec,
-                :id => 'lock_jars --tree',
-                :phase => :compile,
-                :arguments => ['-classpath',
-                               xml('<classpath/>'),
-                               'org.jruby.Main',
-                               '${gem.home}/bin/lock_jars',
-                               '--tree' ] )
+plugin('org.codehaus.mojo:exec-maven-plugin', '1.2',
+       executable: :java,
+       environmentVariables: { 'GEM_HOME' => '${gem.home}',
+                               'GEM_PATH' => '${gem.home}',
+                               'JARS_VERBOSE' => true }) do
+  execute_goal(:exec,
+               id: 'Jars::Classpath.require',
+               phase: :compile,
+               arguments: ['-classpath',
+                           xml('<classpath/>'),
+                           'org.jruby.Main',
+                           '-rjars/classpath',
+                           '-e',
+                           'Jars::Classpath.require(:test);$CLASSPATH.each { |c| p c }'])
+  execute_goal(:exec,
+               id: 'lock_jars --tree',
+               phase: :compile,
+               arguments: ['-classpath',
+                           xml('<classpath/>'),
+                           'org.jruby.Main',
+                           '${gem.home}/bin/lock_jars',
+                           '--tree'])
 
-  # TODO more tests on Jars::Classpath.require(:test) etc
+  # TODO: more tests on Jars::Classpath.require(:test) etc
 end
 
-properties( 'gem.home' => '${project.basedir}/../rubygems',
-            'gem.path' => '${gem.home}' )
+properties('gem.home' => '${project.basedir}/../rubygems',
+           'gem.path' => '${gem.home}')
 
 jar 'org.jruby:jruby-complete', '${jruby.old-version}'
 

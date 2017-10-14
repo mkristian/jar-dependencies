@@ -4,6 +4,6 @@ id 'jar-dependencies:install-ruby-maven:0'
 
 packaging 'pom'
 
-modules ['gem', 'verify']
+modules %w[gem verify]
 
 # vim: syntax=Ruby
