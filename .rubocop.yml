@@ -1,0 +1,18 @@
+AllCops:
+  TargetRubyVersion: 2.4
+  Exclude:
+    - '*.gemspec'
+    - 'Gemfile'
+    - 'Gemfile.lock'
+
+Style/Copyright:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
