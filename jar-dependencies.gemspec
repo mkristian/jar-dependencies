@@ -30,12 +30,17 @@ Gem::Specification.new do |s|
   RUBY_MAVEN_VERSION = '~> 3.3.11'.freeze
   s.add_development_dependency 'ruby-maven', RUBY_MAVEN_VERSION
 
-  s.post_install_message = <<~EOF
-    if you want to use the executable #{LOCK_JARS} then install ruby-maven gem before using #{LOCK_JARS}
-      $ gem install ruby-maven -v '#{RUBY_MAVEN_VERSION}'
-    or add it as a development dependency to your Gemfile
-      gem 'ruby-maven', '#{RUBY_MAVEN_VERSION}'
-    EOF
+  s.post_install_message = <<EOF
+
+if you want to use the executable #{LOCK_JARS} then install ruby-maven gem before using #{LOCK_JARS}
+
+  $ gem install ruby-maven -v '#{RUBY_MAVEN_VERSION}'
+
+or add it as a development dependency to your Gemfile
+
+   gem 'ruby-maven', '#{RUBY_MAVEN_VERSION}'
+
+EOF
 end
 
 # vim: syntax=Ruby
