@@ -11,7 +11,7 @@ task :install_jars do
 end
 
 desc 'Compiles extension and run specs'
-task default: %i[compile spec]
+task default: [:compile, :spec]
 
 spec = eval File.read('example.gemspec')
 
@@ -26,7 +26,7 @@ end
 require 'rubygems/package_task'
 Gem::PackageTask.new(spec) do
   desc 'Pack gem'
-  task package: %i[install_jars compile]
+  task package: [:install_jars, :compile]
 end
 
 desc 'Run specs'
