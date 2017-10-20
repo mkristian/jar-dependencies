@@ -57,7 +57,7 @@ describe Jars do
 
   it 'extract maven settings' do
     settings = Jars.maven_settings
-    settings&.sub(/.*\.m2./, '')&.must_equal 'settings.xml'
+    settings.sub(/.*\.m2./, '').must_equal 'settings.xml' if settings
 
     ENV['JARS_MAVEN_SETTINGS'] = 'specs/settings.xml'
     Jars.reset

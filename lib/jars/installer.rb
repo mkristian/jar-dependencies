@@ -68,7 +68,7 @@ module Jars
       result = []
       File.read(file).each_line do |line|
         dep = Dependency.new(line)
-        result << dep if dep&.scope == :runtime
+        result << dep if dep && dep.scope == :runtime
       end
       result
     end
@@ -101,12 +101,12 @@ module Jars
     def self.print_require_jar(file, dep, fallback = false)
       return if dep.type != :jar || dep.scope != :runtime
       if dep.system?
-        file&.puts("require '#{dep.file}'")
+        file.puts("require '#{dep.file}'") if file
       elsif dep.scope == :runtime
         if fallback
-          file&.puts("  require '#{dep.path}'")
+          file.puts("  require '#{dep.path}'") if file
         else
-          file&.puts("  require_jar '#{dep.gav.gsub(':', "', '")}'")
+          file.puts("  require_jar '#{dep.gav.gsub(':', "', '")}'") if file
         end
       end
     end
