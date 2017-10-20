@@ -187,7 +187,7 @@ module Jars
 
     def require_jars_lock!(scope = :runtime)
       urls = jars_lock_from_class_loader
-      if !urls&.empty?
+      if urls && !urls.empty?
         @@jars_lock = true
         # funny error during spec where it tries to load it again
         # and finds it as gem instead of the LOAD_PATH
