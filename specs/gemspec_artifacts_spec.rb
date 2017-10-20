@@ -59,7 +59,7 @@ describe Jars::GemspecArtifacts::Artifact do
     Jars::GemspecArtifacts::Artifact.new('bla bla bla').must_be_nil
   end
 
-  %i[jar pom].each do |type|
+  [:jar, :pom].each do |type|
     it "parse and to_s of simple GAV #{type}" do
       expected = "#{type} g:a, 1"
       a = Jars::GemspecArtifacts::Artifact.new(expected)
