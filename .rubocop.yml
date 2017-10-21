@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.1
   Exclude:
     - 'Gemfile.lock'
     - pkg/**/*
@@ -17,6 +17,9 @@ Style/SymbolArray:
   EnforcedStyle: brackets
 
 Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Dir:
   Enabled: false
 
 Layout/IndentHeredoc:
