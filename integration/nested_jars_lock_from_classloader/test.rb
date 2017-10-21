@@ -3,7 +3,7 @@
 require 'jar-dependencies'
 require 'minitest/autorun'
 
-basedir = ENV_JAVA['jars.home'] = __dir__
+basedir = ENV_JAVA['jars.home'] = File.expand_path(File.dirname(__FILE__))
 
 describe Jars do
   it 'requires Jars.lock from required jars' do

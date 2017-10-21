@@ -100,7 +100,7 @@ describe Jars do
   it 'determines JARS_HOME (from global settings.xml)' do
     ENV['JARS_LOCAL_MAVEN_REPO'] = nil
     ENV['HOME'] = "/tmp/oul'bollocks!"
-    ENV['M2_HOME'] = __dir__
+    ENV['M2_HOME'] = File.expand_path(File.dirname(__FILE__))
     ENV_JAVA['repo.path'] = 'specs'
     Jars.home.must_equal('specs/repository')
     ENV['JARS_LOCAL_MAVEN_REPO'] = nil
