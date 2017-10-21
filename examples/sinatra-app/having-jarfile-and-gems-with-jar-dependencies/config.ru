@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift(__dir__)
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 
 require 'bundler/setup'
 
