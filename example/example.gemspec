@@ -43,8 +43,8 @@ Gem::Specification.new do |s|
   # this is part of the test and assumed to be provided during runtime
   s.requirements << 'jar org.slf4j:slf4j-simple, 1.7.7, :scope => :provided'
 
-  s.add_development_dependency 'rspec', '~> 2.14'
   s.add_development_dependency 'rake', '~> 10.3'
+  s.add_development_dependency 'rspec', '~> 2.14'
 
   # needed to compile src/main/java/** into lib/example.jar
   s.add_development_dependency 'rake-compiler', '~> 0.9'
