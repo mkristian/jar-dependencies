@@ -17,15 +17,14 @@ ruby_maven = gemfile_profile.dependencies.detect do |d|
   d.artifact_id == 'ruby-maven'
 end
 
-properties( 'jruby.versions' => ['1.7.12', '1.7.27', '9.0.5.0', '${jruby.version}'
-                                ].join(','),
-            'jruby.modes' => ['1.9', '2.0', '2.2'].join(','),
-            # just lock the version
-            'bundler.version' => '1.10.6',
-            'ruby-maven.version' => ruby_maven.version,
-            'jruby.version' => '9.1.14.0',
-            'jruby.plugins.version' => '1.1.3',
-            'push.skip' => true  )
+properties('jruby.versions' => ['1.7.12', '1.7.25', '${jruby.version}'].join(','),
+           'jruby.modes' => ['1.9', '2.0', '2.2'].join(','),
+           # just lock the version
+           'bundler.version' => '1.10.6',
+           'ruby-maven.version' => ruby_maven.version,
+           'jruby.version' => '9.0.5.0',
+           'jruby.plugins.version' => '1.1.3',
+           'push.skip' => true)
 
 plugin :invoker, '1.8' do
   execute_goals(:install, :run,
