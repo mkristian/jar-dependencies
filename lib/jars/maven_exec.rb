@@ -51,7 +51,8 @@ module Jars
         end
       when NilClass
       else
-        raise 'spec must be either String or Gem::Specification'
+        Jars.debug('spec must be either String or Gem::Specification. ' +
+                   'File an issue on github if you need it.')
       end
       @spec = spec
     end
