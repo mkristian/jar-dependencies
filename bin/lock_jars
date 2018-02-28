@@ -6,11 +6,6 @@ optparse = OptionParser.new do |opts|
   opts.banner = "Usage: #{File.basename(__FILE__)} [options]"
 
   opts.separator ''
-  opts.separator 'THIS IS A EXPERIMETAL FEATURE !!!'
-  opts.separator ''
-  opts.separator '* load jars "Jars.lock" from current working directory: `Jars.require_jars_lock!`'
-  opts.separator '* classpath features: see `Jars::Classpath'
-  opts.separator ''
   opts.separator 'Options:'
   opts.separator ''
 
@@ -42,6 +37,12 @@ optparse = OptionParser.new do |opts|
     puts opts
     exit
   end
+
+  opts.separator ''
+  opts.separator 'THIS IS A EXPERIMETAL FEATURE !!!'
+  opts.separator ''
+  opts.separator '* load jars "Jars.lock" from current working directory: `Jars.require_jars_lock!`'
+  opts.separator '* classpath features: see `Jars::Classpath'
 end
 optparse.parse!
 

@@ -1,7 +1,7 @@
 ## setup
 
 ```
-bundle install
+vendor_jars
 ```
 
 which is important since it will create a file lib/gem-name_jars.rb
@@ -9,7 +9,7 @@ and installs the jar dependencies into a local cache (local maven repository)
 
 ## lock down version of jar dependencies
 
-lock down may or may not be needed. in case you want to lock down your versions for the jars execute:
+lock down is optional. in case you want or need to lock down your versions for the jars then execute:
 
 ```
 lock_jars
@@ -25,5 +25,5 @@ gem build mygem.gemspec
 
 make sure you use jruby (via rbenv, rvm, etc)
 ```
-jruby test.rb
+ruby test.rb
 ```
