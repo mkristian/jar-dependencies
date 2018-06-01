@@ -136,7 +136,11 @@ module Jars
 
     def jars_lock_from_class_loader
       if to_prop(LOCK).nil? && defined?(JRUBY_VERSION)
-        JRuby.runtime.jruby_class_loader.get_resources('Jars.lock').collect(&:to_s)
+        if JRuby::Util.respond_to?(:class_loader_resources)
+          JRuby::Util.class_loader_resources('Jars.lock')
+        else; require 'jruby'
+          JRuby.runtime.jruby_class_loader.get_resources('Jars.lock').collect(&:to_s)
+        end
       end
     end
 
