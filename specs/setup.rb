@@ -12,3 +12,5 @@ begin
 rescue LoadError
 end
 require 'minitest/autorun'
+
+require 'pry'
