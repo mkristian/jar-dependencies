@@ -45,6 +45,8 @@ module Jars
     DEBUG = 'JARS_DEBUG'.freeze
     # vendor jars inside gem when installing gem
     VENDOR = 'JARS_VENDOR'.freeze
+    # string used when the version is unknown
+    UNKNOWN = 'unknown'
   end
 
   autoload :MavenSettings, 'jars/maven_settings'
@@ -251,8 +253,14 @@ module Jars
       end
     end
 
-    def require_jar(group_id, artifact_id, *classifier_version)
+    def require_jar(group_id, artifact_id, *classifier_version, &block)
       require_jars_lock unless skip_lock?
+      if classifier_version.empty? && block_given?
+        classifier_version = [block.call].compact
+        if classifier_version.empty?
+          return mark_as_required(group_id, artifact_id, UNKNOWN) || false
+        end
+      end
       require_jar_with_block(group_id, artifact_id, *classifier_version) do |gid, aid, version, classifier|
         do_require(gid, aid, version, classifier)
       end
@@ -350,10 +358,11 @@ module Jars
   end # class << self
 end
 
-def require_jar(*args)
+def require_jar(*args, &block)
   return nil unless Jars.require?
-  result = Jars.require_jar(*args)
+  result = Jars.require_jar(*args, &block)
   if result.is_a? String
+    args << (block.call || Jars::UNKNOWN) if args.size == 2 && block_given?
     Jars.warn { "--- jar coordinate #{args[0..-2].join(':')} already loaded with version #{result} - omit version #{args[-1]}" }
     Jars.debug { "    try to load from #{caller.join("\n\t")}" }
     return false

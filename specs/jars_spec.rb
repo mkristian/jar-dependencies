@@ -106,8 +106,26 @@ describe Jars do
     ENV['JARS_LOCAL_MAVEN_REPO'] = nil
   end
 
-  it 'raises RuntimeError on requires of unknown jar' do
+  it 'raises RuntimeError on requires of unknown group-id' do
     -> { require_jar('org.something', 'slf4j-simple', '1.6.6') }.must_raise RuntimeError
+  end
+
+  it 'does not require jar but sets version to unknown' do
+    ENV['JARS_HOME'] = File.join('specs', 'repo')
+    Jars.reset
+
+    begin
+      require_jar('org.slf4j', 'slf4j-simple') { nil }.must_equal true
+
+      $stderr = StringIO.new
+      require_jar('org.slf4j', 'slf4j-simple'){ '1.6.6' }.must_equal false
+
+      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version unknown - omit version 1.6.6\n"
+
+    ensure
+      $stderr = STDERR
+      ENV['JARS_HOME'] = nil
+    end
   end
 
   it 'warn on version conflict' do
@@ -117,9 +135,21 @@ describe Jars do
     begin
       require_jar('org.slf4j', 'slf4j-simple', '1.6.6').must_equal true
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple', '1.6.4').must_equal false
+      require_jar('org.slf4j', 'slf4j-simple'){ '1.6.6' }.must_equal false
+      $stderr.string.must_equal ''
 
+      $stderr = StringIO.new
+      require_jar('org.slf4j', 'slf4j-simple', '1.6.4').must_equal false
       $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version 1.6.4\n"
+
+      $stderr = StringIO.new
+      require_jar('org.slf4j', 'slf4j-simple') { '1.6.4' }.must_equal false
+      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version 1.6.4\n"
+
+      $stderr = StringIO.new
+      require_jar('org.slf4j', 'slf4j-simple') { nil }.must_equal false
+      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version unknown\n"
+
     ensure
       $stderr = STDERR
       ENV['JARS_HOME'] = nil
