@@ -45,7 +45,7 @@ module Jars
         parts << artifact_id
         parts << second.split(':')[-1]
         @file = line.slice(@coord.length, line.length).sub(REG, EMPTY).strip
-        last = @file.reverse.index /\\|\//
+        last = @file.reverse.index(/\\|\//)
         parts << line[-last..-1]
         @path = File.join(parts).strip
 
