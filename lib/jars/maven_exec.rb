@@ -38,9 +38,9 @@ module Jars
           spec = eval(File.read(@specfile), TOPLEVEL_BINDING, @specfile)
         end
       when Gem::Specification
-        if File.exist?(spec.spec_file)
+        if File.exist?(spec.loaded_from)
           @basedir = spec.gem_dir
-          @specfile = spec.spec_file
+          @specfile = spec.loaded_from
         else
           # this happens with bundle and local gems
           # there the spec_file is "not installed" but inside
