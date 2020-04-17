@@ -8,8 +8,8 @@ env:
   # gemspecs was and is very fragile - probably remove it completely as it is doing too much in one go
   - GOAL='verify -Dmaven.test.skip -Dinvoker.test=*,!install*,!gemspecs'
 jdk:
-  - openjdk7
-  - openjdk8
-  - oraclejdk8
+  - openjdk9
+  - openjdk10
+  - oraclejdk10
 install: ./mvnw initialize
 script: ./mvnw $GOAL
