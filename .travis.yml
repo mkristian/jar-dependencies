@@ -10,6 +10,6 @@ env:
 jdk:
   - openjdk9
   - openjdk10
-  - oraclejdk10
+  - openjdk11
 install: ./mvnw initialize
 script: ./mvnw $GOAL
