@@ -15,7 +15,7 @@ describe Jars::MavenExec do
   end
 
   it 'should not warn if gemspec contains require_relative' do
-    Dir.chdir ( File.dirname spec_with_require_relative) do
+    Dir.chdir File.dirname(spec_with_require_relative) do
       begin
         $stderr = StringIO.new
         jar = Jars::MavenExec.new
@@ -26,11 +26,12 @@ describe Jars::MavenExec do
     end
   end
 
-  it 'finds the gemspec file when the Gem::Specifiacation.spec_file is wrong' do
+  it 'finds the gemspec file when the Gem::Specification.spec_file is wrong' do
     spec = Dir.chdir(File.dirname(example_spec)) do
       eval(File.read(example_spec))
     end
 
+    spec.loaded_from = spec.spec_file
     # mimic bundler case
     FileUtils.rm_f(spec.spec_file)
     def spec.gem_dir=(d)
