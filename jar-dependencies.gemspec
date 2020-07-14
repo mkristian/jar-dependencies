@@ -12,8 +12,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/mkristian/jar-dependencies'
 
   s.bindir = 'bin'
-  LOCK_JARS = 'lock_jars'.freeze
-  s.executables = [LOCK_JARS]
+  s.executables = [lock_jars = 'lock_jars'.freeze]
 
   s.license = 'MIT'
 
@@ -27,18 +26,17 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '~> 5.10.0'
   s.add_development_dependency 'rake', '~> 10.2'
-  RUBY_MAVEN_VERSION = '~> 3.3.11'.freeze
-  s.add_development_dependency 'ruby-maven', RUBY_MAVEN_VERSION
+  s.add_development_dependency 'ruby-maven', ruby_maven_version = '~> 3.3.11'.freeze
 
   s.post_install_message = <<EOF
 
-if you want to use the executable #{LOCK_JARS} then install ruby-maven gem before using #{LOCK_JARS}
+if you want to use the executable #{lock_jars} then install ruby-maven gem before using #{lock_jars}
 
-  $ gem install ruby-maven -v '#{RUBY_MAVEN_VERSION}'
+  $ gem install ruby-maven -v '#{ruby_maven_version}'
 
 or add it as a development dependency to your Gemfile
 
-   gem 'ruby-maven', '#{RUBY_MAVEN_VERSION}'
+   gem 'ruby-maven', '#{ruby_maven_version}'
 
 EOF
 end
