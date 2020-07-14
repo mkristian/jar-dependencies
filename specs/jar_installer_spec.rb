@@ -84,11 +84,11 @@ describe Jars::Installer do
     jar = Jars::Installer.new(example_spec)
     jar.install_jars
     # vendor method is a mocked method
-    jar.vendor.must_equal nil
+    assert_nil jar.vendor
     ENV['JARS_VENDOR'] = 'false'
     jar.vendor_jars
     # vendor method is a mocked method
-    jar.vendor.must_equal nil
+    assert_nil jar.vendor
     ENV['JARS_VENDOR'] = 'true'
     jar.vendor_jars
     # vendor method is a mocked method
@@ -96,7 +96,7 @@ describe Jars::Installer do
     java.lang.System.set_property('jars.vendor', 'false')
     jar.vendor_jars
     # vendor method is a mocked method
-    jar.vendor.must_equal nil
+    assert_nil jar.vendor
   end
 
   it 'installs dependencies ' do

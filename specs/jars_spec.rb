@@ -24,7 +24,7 @@ describe Jars do
   end
 
   it 'extract boolean property' do
-    Jars.to_boolean('JARS_SOMETHING').must_equal nil
+    assert_nil Jars.to_boolean('JARS_SOMETHING')
 
     ENV['JARS_SOMETHING'] = 'falsy'
     Jars.to_boolean('JARS_SOMETHING').must_equal false
