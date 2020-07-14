@@ -1,4 +1,5 @@
 language: java
+dist: xenial
 sudo: false
 before_script:
   - export MAVEN_SKIP_RC=true
@@ -8,8 +9,18 @@ env:
   # gemspecs was and is very fragile - probably remove it completely as it is doing too much in one go
   - GOAL='verify -Dmaven.test.skip -Dinvoker.test=*,!install*,!gemspecs'
 jdk:
-  - openjdk7
   - openjdk8
-  - oraclejdk8
+  - openjdk11
 install: ./mvnw initialize
 script: ./mvnw $GOAL
+matrix:
+  include:
+    - dist: precise
+      jdk: openjdk7
+      env: GOAL=test
+    - dist: trusty
+      jdk: oraclejdk8
+      env: GOAL=test
+    - dist: trusty
+      jdk: oraclejdk8
+      env: GOAL='verify -Dmaven.test.skip -Dinvoker.test=*,!install*,!gemspecs'
