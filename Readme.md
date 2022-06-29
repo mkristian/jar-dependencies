@@ -47,7 +47,7 @@ during installation.
 
 If you do not want to vendor jars into a gem then **jar-dependency** gem can vendor
 them when you install the gem. In that case do not use
-`Jars::JarInstaller.install_jars` from the above rake tasks.
+`Jars::Installer.install_jars` from the above rake tasks.
 
 **NOTE**: Recent JRuby comes with **jar-dependencies** as default gem, for older
 versions for the feature to work you need to gem install **jar-dependencies** first

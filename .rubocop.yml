@@ -1,32 +1,34 @@
-AllCops:
-  TargetRubyVersion: 2.1
-  Exclude:
-    - 'Gemfile.lock'
-    - pkg/**/*
+require:
+  - rubocop-rake
+  - rubocop-performance
 
-Style/Copyright:
+AllCops:
+  TargetRubyVersion: 2.6
+  NewCops: enable
+
+Metrics:
   Enabled: false
 
+Naming/FileName:
+  Exclude:
+    - lib/jar-dependencies.rb
+
+Performance/Casecmp:
+  AutoCorrect: false
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+Style/BlockDelimiters:
+  IgnoredMethods: []
 Style/Documentation:
   Enabled: false
-
-Style/SafeNavigation:
+Style/EnvHome:
   Enabled: false
-
-Style/SymbolArray:
-  EnforcedStyle: brackets
-
-Style/FrozenStringLiteralComment:
+Style/FetchEnvVar:
   Enabled: false
-
-Style/Dir:
-  Enabled: false
-
-Layout/IndentHeredoc:
-  Enabled: false
-
-Layout/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
-
-Performance/RegexpMatch:
-  Enabled: false
+Style/HashSyntax:
+  EnforcedStyle: ruby19_no_mixed_keys
+Style/RescueStandardError:
+  EnforcedStyle: implicit
+Style/TernaryParentheses:
+  EnforcedStyle: require_parentheses_when_complex

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # setup env
 $LOAD_PATH << 'lib'
 
@@ -11,4 +13,4 @@ require_jar 'org.slf4j', 'slf4j-simple', '1.7.7'
 logger = org.slf4j.LoggerFactory.get_logger('root')
 logger.info('hello')
 
-logger.info("used classpath:\n\t" + $CLASSPATH.collect(&:to_s).join("\n\t"))
+logger.info("used classpath:\n\t#{$CLASSPATH.collect(&:to_s).join("\n\t")}")

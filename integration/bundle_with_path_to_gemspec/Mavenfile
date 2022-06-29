@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 plugin_repository id: 'rubygems-releases', url: 'http://rubygems-proxy.torquebox.org/releases'
 
@@ -10,5 +10,3 @@ jruby_plugin :gem, filename: 'bundle', args: 'install' do
   gem 'bundler', '${bundler.version}'
   gem 'jar-dependencies', '${jar-dependencies.version}'
 end
-
-# vim: syntax=Ruby

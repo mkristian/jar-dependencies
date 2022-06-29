@@ -1,13 +1,17 @@
+# frozen_string_literal: true
+
 # this file is maven DSL
 
 (0..10_000).each do |i|
   coord = ENV_JAVA["jars.#{i}"]
   break unless coord
+
   artifact = Maven::Tools::Artifact.from_coordinate(coord)
   exclusions = []
   (0..10_000).each do |j|
     exclusion = ENV_JAVA["jars.#{i}.exclusions.#{j}"]
     break unless exclusion
+
     exclusions << exclusion
   end
   scope = ENV_JAVA["jars.#{i}.scope"]

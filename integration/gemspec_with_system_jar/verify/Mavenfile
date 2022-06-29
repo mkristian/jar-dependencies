@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 inherit 'jar-dependencies:gemspec_with_system_jar:0' do
   # TODO: should not be needed with ruby-maven
@@ -28,5 +28,3 @@ end
 
 properties('gem.home' => '${project.basedir}/../../rubygems',
            'gem.path' => '${gem.home}')
-
-# vim: syntax=Ruby

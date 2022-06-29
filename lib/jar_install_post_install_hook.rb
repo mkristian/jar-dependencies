@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Copyright (C) 2014 Christian Meier
 #
@@ -21,7 +23,7 @@
 
 if defined?(JRUBY_VERSION) && Gem.post_install_hooks.empty?
   Gem.post_install do |gem_installer|
-    require "jars/post_install_hook"
+    require 'jars/post_install_hook'
     Jars.post_install_hook(gem_installer)
   end
 end

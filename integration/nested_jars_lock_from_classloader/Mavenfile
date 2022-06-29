@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 packaging 'jar'
 
@@ -23,5 +23,3 @@ end
 
 properties('gem.home' => '${project.basedir}/pkg/rubygems',
            'gem.path' => '${gem.home}')
-
-# vim: syntax=Ruby

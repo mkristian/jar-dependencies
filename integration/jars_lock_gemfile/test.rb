@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 unless defined? Jars
   # trigger to require of Jars.lock
   require 'leafy-metrics'

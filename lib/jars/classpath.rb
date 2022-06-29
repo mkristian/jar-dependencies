@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jars/maven_exec'
 require 'jars/lock'
 require 'fileutils'
@@ -38,15 +40,11 @@ module Jars
         deps = Jars.lock_path(mvn.basedir)
         @deps = deps if deps && File.exist?(deps)
       end
-      if @deps
-        @deps
-      else
-        resolve_dependencies
-      end
+      @deps || resolve_dependencies
     end
     private :dependencies_list
 
-    DEPENDENCY_LIST = 'dependencies.list'.freeze
+    DEPENDENCY_LIST = 'dependencies.list'
     def resolve_dependencies
       basedir = workdir('pkg') || workdir('target') || workdir('')
       deps = File.join(basedir, DEPENDENCY_LIST)
@@ -63,10 +61,10 @@ module Jars
           require_jar(*jar.gacv)
         end
       end
-      if scope.nil? || scope == :runtime
-        process(:provided) do |jar|
-          Jars.mark_as_required(*jar.gacv)
-        end
+      return unless scope.nil? || scope == :runtime
+
+      process(:provided) do |jar|
+        Jars.mark_as_required(*jar.gacv)
       end
     end
 

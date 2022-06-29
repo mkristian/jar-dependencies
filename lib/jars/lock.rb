@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jars/maven_exec'
 
 module Jars
@@ -38,7 +40,7 @@ module Jars
           ENV_JAVA[a[2..-2]] || a
         end
       else
-        File.join(Jars.home, group_id.gsub(/[.]/, '/'), artifact_id, version, gacv[1..-1].join('-') + '.jar')
+        File.join(Jars.home, group_id.gsub(/[.]/, '/'), artifact_id, version, "#{gacv[1..].join('-')}.jar")
       end
     end
   end
@@ -51,10 +53,11 @@ module Jars
     def process(scope)
       scope ||= :runtime
       File.read(@file).each_line do |line|
-        next if line !~ /:.+:/
-        jar = JarDetails.new(line.strip.sub(/:jar:/, ':').sub(/:$/, ': ').split(/:/))
+        next unless /:.+:/.match?(line)
+
+        jar = JarDetails.new(line.strip.sub(/:jar:/, ':').sub(/:$/, ': ').split(':'))
         case scope
-        when :all
+        when :all, :test
           yield jar
         when :compile
           # jar.scope is maven scope
@@ -65,8 +68,6 @@ module Jars
         when :runtime
           # jar.scope is maven scope
           yield jar if (jar.scope != :test) && (jar.scope != :provided)
-        when :test
-          yield jar
         end
       end
     end

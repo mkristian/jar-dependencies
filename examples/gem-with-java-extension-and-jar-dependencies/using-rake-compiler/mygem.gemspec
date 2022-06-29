@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 # use the version from the main project
 require "#{File.dirname File.expand_path(__FILE__)}/../../../lib/jars/version"
@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
   s.files += Dir['*.file']
   s.files += Dir['*.gemspec']
 
+  s.required_ruby_version = '>= 2.6'
+
   s.requirements << 'jar org.slf4j, slf4j-api, 1.7.7'
   s.requirements << 'jar org.slf4j, slf4j-simple, 1.7.7, :scope => :test'
 
@@ -27,6 +29,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake', '~> 10.3'
   # needed to compile ext/** and create jar file
   s.add_development_dependency 'rake-compiler', '~> 0.9'
+  s.metadata['rubygems_mfa_required'] = 'true'
 end
-
-# vim: syntax=Ruby

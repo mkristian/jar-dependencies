@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'jar_dependencies'
 require 'optparse'
 options = {}
@@ -25,11 +27,14 @@ optparse = OptionParser.new do |opts|
     options[:tree] = t
   end
 
-  opts.on('-u', '--update JAR_COORDINATE', 'Resolves given dependency and use  latest version. JAR_COORDINATE is either artifact_id or group_id:artifact_id') do |u|
+  opts.on('-u', '--update JAR_COORDINATE',
+          'Resolves given dependency and use latest version. ' \
+          'JAR_COORDINATE is either artifact_id or group_id:artifact_id') do |u|
     options[:update] = u
   end
 
-  opts.on('--vendor-dir DIRECTORY', 'Vendor directory where to copy the installed jars.', 'add this directory to $LOAD_PATH or set JARS_HOME respectively.') do |dir|
+  opts.on('--vendor-dir DIRECTORY', 'Vendor directory where to copy the installed jars.' \
+                                    'add this directory to $LOAD_PATH or set JARS_HOME respectively.') do |dir|
     options[:vendor_dir] = dir
   end
 

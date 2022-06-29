@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 source 'https://rubygems.org'
 
@@ -10,5 +10,3 @@ group :development do
   gem 'jar-dependencies', '0.3.0'
   gem 'ruby-maven', '~> 3.3', '>= 3.3.8'
 end
-
-# vim: syntax=Ruby

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # setup env
 $LOAD_PATH << 'lib'
 

@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 properties('gem.home' => '${basedir}/../pkg',
            'gem.path' => '${gem.home}')
@@ -27,5 +27,3 @@ plugin('org.codehaus.mojo:exec-maven-plugin', '1.2',
                                   'org.jruby.Main',
                                   '-S', 'bundle', 'install'])
 end
-
-# vim: syntax=Ruby

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # setup env
 $LOAD_PATH << 'lib'
 
@@ -5,4 +7,4 @@ $LOAD_PATH << 'lib'
 require 'mygem'
 
 # use it
-puts Java::App.hello('world'))
+puts Java::App.hello('world')

@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 require 'rspec/core/rake_task'
 require 'jars/classpath'
@@ -6,14 +6,13 @@ require 'rake/javaextensiontask'
 
 require 'jars/installer'
 task :install_jars do
-  Jars::JarInstaller.new.vendor_jars
-  # Jars::JarInstaller.new.install_jars
+  Jars::Installer.new.vendor_jars
 end
 
 desc 'Compiles extension and run specs'
-task default: [:compile, :spec]
+task default: %i[compile spec]
 
-spec = eval File.read('example.gemspec')
+spec = eval File.read('example.gemspec') # rubocop:disable Security/Eval
 
 desc 'compile src/main/java/** into lib/example.jar'
 Rake::JavaExtensionTask.new('example', spec) do |ext|
@@ -26,10 +25,8 @@ end
 require 'rubygems/package_task'
 Gem::PackageTask.new(spec) do
   desc 'Pack gem'
-  task package: [:install_jars, :compile]
+  task package: %i[install_jars compile]
 end
 
 desc 'Run specs'
 RSpec::Core::RakeTask.new
-
-# vim: syntax=Ruby

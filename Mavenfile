@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 gemfile
 
@@ -59,5 +59,3 @@ profile id: :release do
     default_goal :deploy
   end
 end
-
-# vim: syntax=Ruby

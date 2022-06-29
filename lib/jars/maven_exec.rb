@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jar_dependencies'
 require 'jars/maven_factory'
 
@@ -23,11 +25,11 @@ module Jars
       setup(spec)
     rescue StandardError, LoadError => e
       # If spec load fails, skip looking for jar-dependencies
-      warn 'jar-dependencies: ' + e.to_s
+      warn "jar-dependencies: #{e}"
       warn e.backtrace.join("\n") if Jars.verbose?
     end
 
-    def setup(spec = nil, allow_no_file = false)
+    def setup(spec = nil, allow_no_file: false)
       spec ||= find_spec(allow_no_file)
 
       case spec
@@ -35,7 +37,7 @@ module Jars
         @specfile = File.expand_path(spec)
         @basedir = File.dirname(@specfile)
         Dir.chdir(@basedir) do
-          spec = eval(File.read(@specfile), TOPLEVEL_BINDING, @specfile)
+          spec = eval(File.read(@specfile), TOPLEVEL_BINDING, @specfile) # rubocop:disable Security/Eval
         end
       when Gem::Specification
         if File.exist?(spec.loaded_from)
@@ -46,12 +48,13 @@ module Jars
           # there the spec_file is "not installed" but inside
           # the gem_dir directory
           Dir.chdir(spec.gem_dir) do
-            setup(nil, true)
+            setup(nil, allow_no_file: true)
           end
         end
-      when NilClass
+      when nil
+        # ignore
       else
-        Jars.debug('spec must be either String or Gem::Specification. ' +
+        Jars.debug('spec must be either String or Gem::Specification. ' \
                    'File an issue on github if you need it.')
       end
       @spec = spec
@@ -63,10 +66,10 @@ module Jars
 
     def resolve_dependencies_list(file)
       factory = MavenFactory.new(@options)
-      maven = factory.maven_new(File.expand_path('../gemspec_pom.rb', __FILE__))
+      maven = factory.maven_new(File.expand_path('gemspec_pom.rb', __dir__))
 
       is_local_file = File.expand_path(File.dirname(@specfile)) == File.expand_path(Dir.pwd)
-      maven.attach_jars(@spec, is_local_file)
+      maven.attach_jars(@spec, all_dependencies: is_local_file)
 
       maven['jars.specfile'] = @specfile.to_s
       maven['outputAbsoluteArtifactFilename'] = 'true'

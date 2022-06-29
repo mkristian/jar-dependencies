@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 inherit 'jar-dependencies:install-ruby-maven:0' do
   # TODO: should not be needed with ruby-maven
@@ -9,12 +9,8 @@ gemspec
 
 # use the current jar dependencies gem
 model.dependencies.each do |d|
-  if d.artifact_id == 'jar-dependencies'
-    d.version = '${jar-dependencies.version}'
-  end
+  d.version = '${jar-dependencies.version}' if d.artifact_id == 'jar-dependencies'
 end
 
 properties('gem.home' => '${project.basedir}/../../rubygems',
            'gem.path' => '${gem.home}')
-
-# vim: syntax=Ruby

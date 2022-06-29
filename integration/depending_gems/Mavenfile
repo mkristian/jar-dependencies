@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 group_id 'jar-dependencies'
 
@@ -11,11 +11,11 @@ properties('gem.home' => '${project.basedir}/pkg/rubygems',
 
 phase :test do
   execute 'verify' do |ctx|
-    log = File.read(ctx.basedir.to_pathname + '/build.log')
+    log = File.read("#{ctx.basedir.to_pathname}/build.log")
     ['io.dropwizard.metrics:metrics-json:3.1.0',
      'io.dropwizard.metrics:metrics-jvm:3.1.0',
      'io.dropwizard.metrics:metrics-core:3.1.0'].each do |expected|
-      raise "log does not contain '#{expected}'" unless log =~ /#{expected}/
+      raise "log does not contain '#{expected}'" unless /#{expected}/.match?(log)
 
       puts "log contains '#{expected}'"
     end

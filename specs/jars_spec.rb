@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 require File.expand_path('setup', File.dirname(__FILE__))
 
 require 'stringio'
 describe Jars do
-  @@_env_ = ENV.dup
-
   before do
+    @env = ENV.dup
     # helpful when debugging
     Jars.reset
   end
 
   after do
     Jars.reset
-    ENV.clear; ENV.replace @@_env_ # restore ENV
+    ENV.clear
+    ENV.replace @env # restore ENV
   end
 
   it 'extract property' do
@@ -57,7 +59,7 @@ describe Jars do
 
   it 'extract maven settings' do
     settings = Jars.maven_settings
-    settings.sub(/.*\.m2./, '').must_equal 'settings.xml' if settings
+    settings&.sub(/.*\.m2./, '')&.must_equal 'settings.xml'
 
     ENV['JARS_MAVEN_SETTINGS'] = 'specs/settings.xml'
     Jars.reset
@@ -91,7 +93,8 @@ describe Jars do
 
   it "determines JARS_HOME (when no ENV['HOME'] present)" do
     ENV['M2_HOME'] = ENV['MAVEN_HOME'] = '' # so that it won't interfere
-    env_home = ENV['HOME']; ENV.delete('HOME')
+    env_home = ENV['HOME']
+    ENV.delete('HOME')
     ENV['JARS_QUIET'] = true.to_s
     ENV['JARS_MAVEN_SETTINGS'] = 'does-not-exist/settings.xml'
     Jars.home.must_equal(File.join(env_home, '.m2', 'repository'))
@@ -100,7 +103,7 @@ describe Jars do
   it 'determines JARS_HOME (from global settings.xml)' do
     ENV['JARS_LOCAL_MAVEN_REPO'] = nil
     ENV['HOME'] = "/tmp/oul'bollocks!"
-    ENV['M2_HOME'] = File.expand_path(File.dirname(__FILE__))
+    ENV['M2_HOME'] = __dir__
     ENV_JAVA['repo.path'] = 'specs'
     Jars.home.must_equal('specs/repository')
     ENV['JARS_LOCAL_MAVEN_REPO'] = nil
@@ -110,6 +113,7 @@ describe Jars do
     -> { require_jar('org.something', 'slf4j-simple', '1.6.6') }.must_raise RuntimeError
   end
 
+  # rubocop:disable Layout/LineLength
   it 'does not require jar but sets version to unknown' do
     ENV['JARS_HOME'] = File.join('specs', 'repo')
     Jars.reset
@@ -118,10 +122,9 @@ describe Jars do
       require_jar('org.slf4j', 'slf4j-simple') { nil }.must_equal true
 
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple'){ '1.6.6' }.must_equal false
+      require_jar('org.slf4j', 'slf4j-simple') { '1.6.6' }.must_equal false
 
       $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version unknown - omit version 1.6.6\n"
-
     ensure
       $stderr = STDERR
       ENV['JARS_HOME'] = nil
@@ -135,7 +138,7 @@ describe Jars do
     begin
       require_jar('org.slf4j', 'slf4j-simple', '1.6.6').must_equal true
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple'){ '1.6.6' }.must_equal false
+      require_jar('org.slf4j', 'slf4j-simple') { '1.6.6' }.must_equal false
       $stderr.string.must_equal ''
 
       $stderr = StringIO.new
@@ -149,7 +152,6 @@ describe Jars do
       $stderr = StringIO.new
       require_jar('org.slf4j', 'slf4j-simple') { nil }.must_equal false
       $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version unknown\n"
-
     ensure
       $stderr = STDERR
       ENV['JARS_HOME'] = nil
@@ -179,89 +181,73 @@ describe Jars do
       ENV['JARS_HOME'] = nil
     end
   end
+  # rubocop:enable Layout/LineLength
 
   it 'freezes jar loading unless jar is not loaded yet' do
-    begin
-      size = $CLASSPATH.length
+    size = $CLASSPATH.length
 
-      Jars.freeze_loading
+    Jars.freeze_loading
 
-      require 'jopenssl/version'
+    require 'jopenssl/version'
 
-      require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
+    require_jar 'org.bouncycastle', 'bcpkix-jdk15on', JOpenSSL::BOUNCY_CASTLE_VERSION
 
-      $CLASSPATH.length.must_equal size
+    $CLASSPATH.length.must_equal size
 
-      $stderr = StringIO.new
+    $stderr = StringIO.new
 
-      require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
+    require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
 
-      $stderr.string.must_equal ''
-    rescue LoadError => e
-      p e
-      skip 'assume we have an old jruby'
-    rescue NameError => e
-      p e
-      skip 'assume we have an old jruby'
-    ensure
-      $stderr = STDERR
-    end
+    $stderr.string.must_equal ''
+  rescue LoadError, NameError => e
+    p e
+    skip 'assume we have an old jruby'
+  ensure
+    $stderr = STDERR
   end
 
   it 'allows to programatically disable require_jar' do
-    begin
-      require 'jopenssl/version'
+    require 'jopenssl/version'
 
-      size = $CLASSPATH.length
+    size = $CLASSPATH.length
 
-      Jars.require = false
+    Jars.require = false
 
-      out = require_jar 'org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION
-      assert_nil out
+    out = require_jar 'org.bouncycastle', 'bcpkix-jdk15on', JOpenSSL::BOUNCY_CASTLE_VERSION
+    assert_nil out
 
-      out = require_jar 'org.jruby', 'jruby-rack', '1.1.16'
-      assert_nil out
+    out = require_jar 'org.jruby', 'jruby-rack', '1.1.16'
+    assert_nil out
 
-      $CLASSPATH.length.must_equal size
-    rescue LoadError => e
-      p e
-      skip 'assume we have an old jruby'
-    rescue NameError => e
-      p e
-      skip 'assume we have an old jruby'
-    end
+    $CLASSPATH.length.must_equal size
+  rescue LoadError, NameError => e
+    p e
+    skip 'assume we have an old jruby'
   end
 
   it 'does not warn on conflicts after turning into silent mode' do
-    begin
-      size = $CLASSPATH.length
-      # TODO: use jline instead to avoid this skip
-      if $CLASSPATH.detect { |a| a =~ /bcpkix-jdk15on/ } != nil
-        skip('$CLASSPATH is not clean - need to skip spec')
-      end
+    size = $CLASSPATH.length
+    # TODO: use jline instead to avoid this skip
+    skip('$CLASSPATH is not clean - need to skip spec') if $CLASSPATH.detect { |a| a.include?('bcpkix-jdk15on') }
 
-      Jars.no_more_warnings
+    Jars.no_more_warnings
 
-      require 'jopenssl/version'
+    require 'jopenssl/version'
 
-      if require_jar('org.bouncycastle', 'bcpkix-jdk15on', Jopenssl::Version::BOUNCY_CASTLE_VERSION)
-        $CLASSPATH.length.must_equal (size + 1)
-      end
-
-      $stderr = StringIO.new
-
-      require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
-
-      $stderr.string.must_equal ''
-
-      $stderr = STDERR
-    rescue LoadError => e
-      p e
-      skip 'assume we have an old jruby'
-    rescue NameError => e
-      p e
-      skip 'assume we have an old jruby'
+    if require_jar('org.bouncycastle', 'bcpkix-jdk15on', JOpenSSL::BOUNCY_CASTLE_VERSION)
+      $CLASSPATH.length.must_equal(size + 1)
     end
+
+    $stderr = StringIO.new
+
+    require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
+
+    $stderr.string.must_equal ''
+
+    $stderr = STDERR
+  rescue LoadError, NameError => e
+    p e
+    skip 'assume we have an old jruby'
   end
 
   it 'no warnings on reload' do
@@ -275,20 +261,21 @@ describe Jars do
   end
 
   it 'requires jars from various default places' do
-    pwd = File.expand_path('..', __FILE__)
+    pwd = File.expand_path(__dir__)
     $LOAD_PATH << File.join(pwd, 'path')
 
     $stderr = StringIO.new
+    Jars.require_jars_lock # make sure we locked with no lock file
     Dir.chdir(pwd) do
       require_jar 'more', 'sample', '4'
       require_jar 'more', 'sample', '2'
       require_jar 'more', 'sample', '3'
     end
 
-    $stderr.string.wont_match /omit version 1/
-    $stderr.string.must_match /omit version 2/
-    $stderr.string.must_match /omit version 3/
-    $stderr.string.wont_match /omit version 4/
+    $stderr.string.wont_match(/omit version 1/)
+    $stderr.string.must_match(/omit version 2/)
+    $stderr.string.must_match(/omit version 3/)
+    $stderr.string.wont_match(/omit version 4/)
 
     $stderr = STDERR
 
