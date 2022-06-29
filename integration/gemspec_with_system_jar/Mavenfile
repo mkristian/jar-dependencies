@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 id 'jar-dependencies:gemspec_with_system_jar:0'
 
@@ -14,5 +14,3 @@ properties('gem.home' => '${project.basedir}/../rubygems',
 jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
 end
-
-# vim: syntax=Ruby

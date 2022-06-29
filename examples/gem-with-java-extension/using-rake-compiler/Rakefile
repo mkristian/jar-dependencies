@@ -1,9 +1,9 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 require 'jars/classpath'
 require 'rake/javaextensiontask'
 
-spec = eval File.read('mygem.gemspec')
+spec = eval File.read('mygem.gemspec') # rubocop:disable Security/Eval
 Rake::JavaExtensionTask.new('mygem', spec) do |ext|
   ext.ext_dir = 'ext'
 end
@@ -15,5 +15,3 @@ Gem::PackageTask.new(spec) do
   desc 'Pack gem'
   task package: [:compile]
 end
-
-# vim: syntax=Ruby

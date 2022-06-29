@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'fileutils'
 require 'jar_dependencies'
 require 'jars/version'
@@ -15,7 +17,7 @@ module Jars
 
     def maven_new
       factory = MavenFactory.new({}, @debug, @verbose)
-      pom = File.expand_path('../lock_down_pom.rb', __FILE__)
+      pom = File.expand_path('lock_down_pom.rb', __dir__)
       m = factory.maven_new(pom)
       m['jruby.plugins.version'] = Jars::JRUBY_PLUGINS_VERSION
       m['dependency.plugin.version'] = Jars::DEPENDENCY_PLUGIN_VERSION
@@ -41,50 +43,40 @@ module Jars
       # TODO: make this group a commandline option
       Bundler.setup('default')
       maven.property('jars.bundler', true)
-      done = []
-      index = 0
       cwd = File.expand_path('.')
       Gem.loaded_specs.each do |_name, spec|
         # if gemspec is local then include all dependencies
-        maven.attach_jars(spec, cwd == spec.full_gem_path)
+        maven.attach_jars(spec, all_dependencies: cwd == spec.full_gem_path)
       end
-    rescue Exception => e
-      case e.class.to_s
-      when 'LoadError'
-        if Jars.verbose?
-          warn e.message
-          warn 'no bundler found - ignore Gemfile if exists'
-        end
-      when 'Bundler::GemfileNotFound'
-        # do nothing then as we have bundler but no Gemfile
-      when 'Bundler::GemNotFound'
-        warn "can not setup bundler with #{Bundler.default_lockfile}"
-        raise e
-      else
-        # reraise exception so user sees it
-        raise e
+    rescue LoadError => e
+      if Jars.verbose?
+        warn e.message
+        warn 'no bundler found - ignore Gemfile if exists'
       end
+    rescue Bundler::GemfileNotFound
+    # do nothing then as we have bundler but no Gemfile
+    rescue Bundler::GemNotFound
+      warn "can not setup bundler with #{Bundler.default_lockfile}"
+      raise
     ensure
       $LOAD_PATH.replace(load_path)
     end
 
-    def lock_down(options = {})
-      vendor_dir = File.expand_path(options[:vendor_dir]) if options[:vendor_dir]
+    def lock_down(vendor_dir = nil, force: false, update: false, tree: nil)
       out = File.expand_path('.jars.output')
-      tree = File.expand_path('.jars.tree')
+      tree_provided = tree
+      tree ||= File.expand_path('.jars.tree')
       maven.property('jars.outputFile', out)
       maven.property('maven.repo.local', Jars.local_maven_repo)
-      maven.property('jars.home', vendor_dir) if vendor_dir
+      maven.property('jars.home', File.expand_path(vendor_dir)) if vendor_dir
       maven.property('jars.lock', File.expand_path(Jars.lock))
-      maven.property('jars.force', options[:force] == true)
-      maven.property('jars.update', options[:update]) if options[:update]
+      maven.property('jars.force', force)
+      maven.property('jars.update', update) if update
       # tell not to use Jars.lock as part of POM when running mvn
       maven.property('jars.skip.lock', true)
 
       args = ['gem:jars-lock']
-      if options[:tree]
-        args += ['dependency:tree', '-P -gemfile.lock', '-DoutputFile=' + tree]
-      end
+      args += ['dependency:tree', '-P -gemfile.lock', "-DoutputFile=#{tree}"] if tree_provided
 
       puts
       puts '-- jar root dependencies --'
@@ -99,7 +91,7 @@ module Jars
         puts
       end
       puts
-      puts File.read(out).gsub(/#{File.dirname(out)}\//, '')
+      puts File.read(out).gsub("#{File.dirname(out)}/", '')
       puts
     ensure
       FileUtils.rm_f out

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sinatra'
 require 'json'
 require 'ostruct'
@@ -8,9 +10,8 @@ require 'leafy/instrumented/collected_instrumented'
 require 'leafy/rack/admin'
 require 'leafy/rack/instrumented'
 
-data = OpenStruct.new
-data.surname = 'meier'
-data.firstname = 'christian'
+Data = Struct.new(:surname, :firstname)
+data = Data.new('meier', 'christian')
 
 configure do
   metrics = Leafy::Metrics::Registry.new
@@ -29,9 +30,7 @@ configure do
   end
 
   health.register('app.health') do
-    if data.surname.length + data.firstname.length < 4
-      'stored names are too short'
-    end
+    'stored names are too short' if data.surname.length + data.firstname.length < 4
   end
 
   set :histogram, metrics.register_histogram('app.name_length')

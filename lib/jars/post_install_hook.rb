@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Copyright (C) 2014 Christian Meier
 #
@@ -21,9 +23,9 @@
 
 module Jars
   def self.post_install_hook(gem_installer)
-    return if (ENV["JARS_SKIP"] || ENV_JAVA["jars.skip"]) == "true"
+    return if (ENV['JARS_SKIP'] || ENV_JAVA['jars.skip']) == 'true'
 
-    require "jars/installer"
+    require 'jars/installer'
     jars = Jars::Installer.new(gem_installer.spec)
     jars.ruby_maven_install_options = gem_installer.options || {}
     jars.vendor_jars

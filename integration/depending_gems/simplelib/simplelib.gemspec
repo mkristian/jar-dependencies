@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 Gem::Specification.new do |s|
   s.name = 'simplelib'
@@ -12,9 +12,10 @@ Gem::Specification.new do |s|
   s.homepage = 'https://example.com'
   s.description = 'more examples'
 
+  s.required_ruby_version = '>= 2.6'
+
   s.requirements << 'jar io.dropwizard.metrics:metrics-core, 3.1.0'
 
   s.add_runtime_dependency 'jar-dependencies'
+  s.metadata['rubygems_mfa_required'] = 'true'
 end
-
-# vim: syntax=Ruby

@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 Gem::Specification.new do |s|
   s.name = File.basename(File.dirname(File.expand_path(__FILE__)))
@@ -16,8 +16,9 @@ Gem::Specification.new do |s|
   s.files += Dir['*file']
   s.files += Dir['*.gemspec']
 
+  s.required_ruby_version = '>= 2.6'
+
   s.requirements << 'jar org.slf4j, slf4j-api, 1.7.7'
   s.requirements << 'jar org.slf4j, slf4j-simple, 1.7.7, :scope => :test'
+  s.metadata['rubygems_mfa_required'] = 'true'
 end
-
-# vim: syntax=Ruby

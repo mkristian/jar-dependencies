@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # loads all dependent jars and exmaple.jar
 require 'example'
 

@@ -1,6 +1,4 @@
 pkg
-# no Gemfile.lock
-Gemfile.lock
 .ruby-version
 *.gem
 target

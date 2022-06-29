@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path('setup', File.dirname(__FILE__))
 
 require 'jars/gemspec_artifacts'
@@ -15,7 +17,7 @@ describe Jars::GemspecArtifacts::Exclusion do
     ex = Jars::GemspecArtifacts::Exclusion.new(line)
     ex.to_s.must_equal expected
     line = ' group:artifact '
-    ex = Jars::GemspecArtifacts::Exclusion.new(line + ' :extra:asd')
+    ex = Jars::GemspecArtifacts::Exclusion.new("#{line} :extra:asd")
     ex.to_s.must_equal expected
   end
 end
@@ -59,7 +61,7 @@ describe Jars::GemspecArtifacts::Artifact do
     Jars::GemspecArtifacts::Artifact.new('bla bla bla').must_be_nil
   end
 
-  [:jar, :pom].each do |type|
+  %i[jar pom].each do |type|
     it "parse and to_s of simple GAV #{type}" do
       expected = "#{type} g:a, 1"
       a = Jars::GemspecArtifacts::Artifact.new(expected)
@@ -102,6 +104,7 @@ describe Jars::GemspecArtifacts::Artifact do
       a.to_s.must_equal expected
       line = "#{type} 'g:a', '1', '[a:b]'"
       a = Jars::GemspecArtifacts::Artifact.new(line)
+      a.to_s.must_equal expected
       line = "#{type} 'g:a', '1', ['a:b']"
       a = Jars::GemspecArtifacts::Artifact.new(line)
       a.to_s.must_equal expected
@@ -199,7 +202,7 @@ describe Jars::GemspecArtifacts do
 
   it 'retrieves artifacts from gemspec' do
     spec = Dir.chdir(File.dirname(example_spec)) do
-      eval(File.read(example_spec))
+      eval(File.read(example_spec)) # rubocop:disable Security/Eval
     end
     artifacts = Jars::GemspecArtifacts.new(spec)
     artifacts[0].to_s.must_equal('jar org.bouncycastle:bcpkix-jdk15on, 1.49')

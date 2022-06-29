@@ -1,9 +1,7 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 source 'https://rubygems.org'
 
 gem 'simplelib', path: '../simplelib'
 
 gemspec
-
-# vim: syntax=Ruby

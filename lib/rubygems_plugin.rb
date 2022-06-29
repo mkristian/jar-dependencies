@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Copyright (C) 2014 Christian Meier
 #
@@ -19,4 +21,4 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-require "jar_install_post_install_hook"
+require 'jar_install_post_install_hook'

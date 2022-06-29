@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'jar_dependencies'
 require 'jars/gemspec_artifacts'
 
 module Jars
   class MavenFactory
     module AttachJars
-      def attach_jars(spec, all_dependencies = false)
+      def attach_jars(spec, all_dependencies: false)
         @index ||= 0
         @done ||= []
 
@@ -63,16 +65,12 @@ module Jars
       end
       maven['verbose'] = (@debug || @verbose) == true
 
-      if Jars.maven_settings
-        maven.options['-s'] = Jars::MavenSettings.effective_settings
-      end
+      maven.options['-s'] = Jars::MavenSettings.effective_settings if Jars.maven_settings
 
       maven['maven.repo.local'] = java.io.File.new(Jars.local_maven_repo).absolute_path.to_s
 
       maven
     end
-
-    private
 
     def lazy_load_maven
       add_gem_to_load_path('ruby-maven')
@@ -97,15 +95,15 @@ module Jars
     def add_gem_to_load_path(name)
       # if the gem is already activated => good
       return if Gem.loaded_specs[name]
+
       # just install gem if needed and add it to the load_path
       # and leave activated gems as they are
       req = requirement(name)
-      unless spec = find_spec_via_rubygems(name, req)
+      unless (spec = find_spec_via_rubygems(name, req))
         spec = install_gem(name, req)
       end
-      unless spec
-        raise "failed to resolve gem '#{name}' if you're using Bundler add it as a dependency"
-      end
+      raise "failed to resolve gem '#{name}' if you're using Bundler add it as a dependency" unless spec
+
       path = File.join(spec.full_gem_path, spec.require_path)
       $LOAD_PATH << path unless $LOAD_PATH.include?(path)
     end
@@ -127,7 +125,8 @@ module Jars
         warn e.inspect.to_s
         warn e.backtrace.join("\n")
       end
-      raise "there was an error installing '#{name} (#{req})' #{@options[:domain]}. please install it manually: #{e.inspect}"
+      raise "there was an error installing '#{name} (#{req})' " \
+            "#{@options[:domain]}. please install it manually: #{e.inspect}"
     end
   end
 end

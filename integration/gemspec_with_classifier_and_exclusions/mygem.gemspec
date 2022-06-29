@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 Gem::Specification.new do |s|
   s.name = 'mygem'
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.requirements << 'jar org.slf4j:slf4j-simple:1.7.7, :scope => :provided'
   s.requirements << 'jar junit:junit:4.12, :scope => :test'
   s.platform = 'java'
+  s.required_ruby_version = '>= 2.6'
   s.add_runtime_dependency 'jar-dependencies'
+  s.metadata['rubygems_mfa_required'] = 'true'
 end
-
-# vim: syntax=Ruby

@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 Gem::Specification.new do |s|
   # this is only needed to retrieve the latest version of jar-dependencies
@@ -20,6 +20,8 @@ Gem::Specification.new do |s|
   s.files << 'lib/example.jar'
   s.files << Dir['*file']
   s.files << 'example.gemspec'
+
+  s.required_ruby_version = '>= 2.6'
 
   # constrain the version of jar-dependencies itself
   s.add_runtime_dependency 'jar-dependencies', "~> #{version}"
@@ -51,6 +53,5 @@ Gem::Specification.new do |s|
 
   # avoids to install it on the fly when jar-dependencies needs it
   s.add_development_dependency 'ruby-maven', '~> 3.3', '>= 3.3.8'
+  s.metadata['rubygems_mfa_required'] = 'true'
 end
-
-# vim: syntax=Ruby

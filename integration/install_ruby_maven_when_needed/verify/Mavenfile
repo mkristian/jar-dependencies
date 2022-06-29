@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 inherit 'jar-dependencies:install-ruby-maven:0' do
   # TODO: should not be needed with ruby-maven
@@ -37,5 +37,3 @@ gem 'bundler', '${bundler.version}'
 jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
 end
-
-# vim: syntax=Ruby

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # single spec setup
 $LOAD_PATH.unshift File.join(File.dirname(File.expand_path(__FILE__)), '../lib')
 
@@ -10,7 +12,6 @@ Jars.reset
 begin
   require 'minitest'
 rescue LoadError
+  # ignore
 end
 require 'minitest/autorun'
-
-require 'pry'

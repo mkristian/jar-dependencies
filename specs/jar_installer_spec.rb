@@ -1,17 +1,20 @@
+# frozen_string_literal: true
+
 require File.expand_path('setup', File.dirname(__FILE__))
 
 require 'jar_installer'
 require 'fileutils'
 require 'rubygems/specification'
 
-class Jars::Installer
-  def do_install(vendor, write)
-    @vendor = vendor
-    @write = write
-  end
+module Jars
+  class Installer
+    def do_install(vendor, write)
+      @vendor = vendor
+      @write = write
+    end
 
-  attr_reader :vendor
-  attr_reader :write
+    attr_reader :vendor, :write
+  end
 end
 describe Jars::Installer do
   let(:file) { File.join(pwd, 'deps.txt') }
@@ -37,22 +40,19 @@ describe Jars::Installer do
 
   it 'generates non-vendored require-file' do
     deps = Jars::Installer.load_from_maven(file)
-    Jars::Installer.install_deps(deps, dir, jars, false)
+    Jars::Installer.write_require_jars(deps, jars)
     File.read(jars).each_line do |line|
-      if line.size > 30 && !line.match(/^#/)
-        line.must_match /^\s{2}require(_jar)?\s'.+'$/
-      end
+      line.must_match(/^\s{2}require(_jar)?\s'.+'$/) if line.size > 30 && !line.match(/^#/)
     end
     Dir[File.join(dir, '**')].size.must_equal 1
   end
 
   it 'generates vendored require-file' do
     deps = Jars::Installer.load_from_maven(file)
-    Jars::Installer.install_deps(deps, dir, jars, true)
+    Jars::Installer.write_require_jars(deps, jars)
+    Jars::Installer.vendor_jars(deps, dir)
     File.read(jars).each_line do |line|
-      if line.size > 30 && !line.match(/^#/)
-        line.must_match /^\s{2}require(_jar)?\s'.+'$/
-      end
+      line.must_match(/^\s{2}require(_jar)?\s'.+'$/) if line.size > 30 && !line.match(/^#/)
     end
     Dir[File.join(dir, '**', '*.jar')].size.must_equal 45
   end

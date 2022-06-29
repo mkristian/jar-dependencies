@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 repository id: 'rubygems-releases', url: 'http://rubygems-proxy.torquebox.org/releases'
 
@@ -8,7 +8,6 @@ phase :test do
          environmentVariables: { 'GEM_HOME' => '${gem.home}',
                                  'GEM_PATH' => '${gem.home}',
                                  'JARS_VERBOSE' => true }) do
-
     # need to uninstall bundler otherwise it finds the Gemfile from the project
     # root. bundler does descend the directory until it finds a Gemfile.
     execute_goal(:exec,
@@ -49,5 +48,3 @@ gem 'ruby-maven', '${ruby-maven.version}'
 jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
 end
-
-# vim: syntax=Ruby

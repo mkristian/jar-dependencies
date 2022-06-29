@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 extension 'org.torquebox.mojo:mavengem-wagon:0.2.0'
 
@@ -30,5 +30,3 @@ gem 'ruby-maven', '${ruby-maven.version}'
 jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
 end
-
-# vim: syntax=Ruby

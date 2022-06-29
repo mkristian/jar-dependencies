@@ -1,4 +1,4 @@
-#-*- mode: ruby -*-
+# frozen_string_literal: true
 
 packaging 'pom'
 
@@ -34,5 +34,3 @@ end
 
 properties('gem.home' => '${project.basedir}/pkg/rubygems',
            'gem.path' => '${gem.home}')
-
-# vim: syntax=Ruby
