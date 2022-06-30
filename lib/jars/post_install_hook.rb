@@ -19,13 +19,13 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-if defined?(JRUBY_VERSION) && Gem.post_install_hooks.empty?
-  Gem.post_install do |gem_installer|
-    unless (ENV['JARS_SKIP'] || ENV_JAVA['jars.skip']) == 'true'
-      require 'jars/installer'
-      jars = Jars::Installer.new(gem_installer.spec)
-      jars.ruby_maven_install_options = gem_installer.options || {}
-      jars.vendor_jars
-    end
+module Jars
+  def self.post_install_hook(gem_installer)
+    return if (ENV["JARS_SKIP"] || ENV_JAVA["jars.skip"]) == "true"
+
+    require "jars/installer"
+    jars = Jars::Installer.new(gem_installer.spec)
+    jars.ruby_maven_install_options = gem_installer.options || {}
+    jars.vendor_jars
   end
 end
