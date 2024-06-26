@@ -20,10 +20,4 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-
-if defined?(JRUBY_VERSION) && Gem.post_install_hooks.empty?
-  Gem.post_install do |gem_installer|
-    require 'jars/post_install_hook'
-    Jars.post_install_hook(gem_installer)
-  end
-end
+require 'jars/post_install_hook'
