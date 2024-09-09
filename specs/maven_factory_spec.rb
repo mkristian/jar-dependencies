@@ -17,36 +17,36 @@ describe Jars::MavenFactory do
     ENV['JARS_DEBUG'] = nil
     Jars.reset
     maven = Jars::MavenFactory.new.maven_new('pom')
-    maven.options.key?('--quiet').must_equal true
-    maven.options.key?('-X').must_equal false
-    maven.options['-Dverbose'].must_equal false
+    _(maven.options.key?('--quiet')).must_equal true
+    _(maven.options.key?('-X')).must_equal false
+    _(maven.options['-Dverbose']).must_equal false
 
     ENV['JARS_VERBOSE'] = 'true'
     ENV['JARS_DEBUG'] = nil
     Jars.reset
     maven = Jars::MavenFactory.new.maven_new('pom')
-    maven.options.key?('--quiet').must_equal false
-    maven.options.key?('-e').must_equal true
-    maven.options.key?('-X').must_equal false
-    maven.options['-Dverbose'].must_equal true
+    _(maven.options.key?('--quiet')).must_equal false
+    _(maven.options.key?('-e')).must_equal true
+    _(maven.options.key?('-X')).must_equal false
+    _(maven.options['-Dverbose']).must_equal true
 
     ENV['JARS_VERBOSE'] = nil
     ENV['JARS_DEBUG'] = 'true'
     Jars.reset
     maven = Jars::MavenFactory.new.maven_new('pom')
-    maven.options.key?('--quiet').must_equal false
-    maven.options.key?('-e').must_equal false
-    maven.options.key?('-X').must_equal true
-    maven.options['-Dverbose'].must_equal true
+    _(maven.options.key?('--quiet')).must_equal false
+    _(maven.options.key?('-e')).must_equal false
+    _(maven.options.key?('-X')).must_equal true
+    _(maven.options['-Dverbose']).must_equal true
 
     ENV['JARS_VERBOSE'] = 'true'
     ENV['JARS_DEBUG'] = 'true'
     Jars.reset
     maven = Jars::MavenFactory.new.maven_new('pom')
-    maven.options.key?('--quiet').must_equal false
-    maven.options.key?('-e').must_equal true
-    maven.options.key?('-X').must_equal true
-    maven.options['-Dverbose'].must_equal true
+    _(maven.options.key?('--quiet')).must_equal false
+    _(maven.options.key?('-e')).must_equal true
+    _(maven.options.key?('-X')).must_equal true
+    _(maven.options['-Dverbose']).must_equal true
   end
 
   it 'uses proxy settings from Gem.configuration' do
@@ -55,23 +55,23 @@ describe Jars::MavenFactory do
     Gem.configuration[:proxy] = 'https://localhost:3128'
     Jars.reset
     maven = Jars::MavenFactory.new.maven_new('pom')
-    maven.options.key?('-DproxySet=true').must_equal true
-    maven.options.key?('-DproxyHost=localhost').must_equal true
-    maven.options.key?('-DproxyPort=3128').must_equal true
+    _(maven.options.key?('-DproxySet=true')).must_equal true
+    _(maven.options.key?('-DproxyHost=localhost')).must_equal true
+    _(maven.options.key?('-DproxyPort=3128')).must_equal true
 
     Gem.configuration[:proxy] = :noproxy
     Jars.reset
     maven = Jars::MavenFactory.new.maven_new('pom')
-    maven.options.key?('-DproxySet=true').must_equal false
-    maven.options.key?('-DproxyHost=localhost').must_equal false
-    maven.options.key?('-DproxyPort=3128').must_equal false
+    _(maven.options.key?('-DproxySet=true')).must_equal false
+    _(maven.options.key?('-DproxyHost=localhost')).must_equal false
+    _(maven.options.key?('-DproxyPort=3128')).must_equal false
 
     ENV['JARS_MAVEN_SETTINGS'] = 'specs/settings.xml'
     Gem.configuration[:proxy] = 'https://localhost:3128'
     Jars.reset
     maven = Jars::MavenFactory.new.maven_new('pom')
-    maven.options.key?('-DproxySet=true').must_equal false
-    maven.options.key?('-DproxyHost=localhost').must_equal false
-    maven.options.key?('-DproxyPort=3128').must_equal false
+    _(maven.options.key?('-DproxySet=true')).must_equal false
+    _(maven.options.key?('-DproxyHost=localhost')).must_equal false
+    _(maven.options.key?('-DproxyPort=3128')).must_equal false
   end
 end

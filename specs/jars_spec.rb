@@ -18,10 +18,10 @@ describe Jars do
 
   it 'extract property' do
     ENV['SOME_JARS_HOME'] = 'bla'
-    Jars.to_prop('some_jars_home').must_equal 'bla'
+    _(Jars.to_prop('some_jars_home')).must_equal 'bla'
     if defined? JRUBY_VERSION
       java.lang.System.set_property('some.jars.home', 'blabla')
-      Jars.to_prop('some_jars_home').must_equal 'blabla'
+      _(Jars.to_prop('some_jars_home')).must_equal 'blabla'
     end
   end
 
@@ -29,12 +29,12 @@ describe Jars do
     assert_nil Jars.to_boolean('JARS_SOMETHING')
 
     ENV['JARS_SOMETHING'] = 'falsy'
-    Jars.to_boolean('JARS_SOMETHING').must_equal false
+    _(Jars.to_boolean('JARS_SOMETHING')).must_equal false
 
     ENV[jars_verbose = 'JARS_VERBOSE'] = 'true'
-    Jars.to_boolean(jars_verbose).must_equal true
-    Jars.verbose?.must_equal true
-    jars_verbose.must_equal 'JARS_VERBOSE' # no mod
+    _(Jars.to_boolean(jars_verbose)).must_equal true
+    _(Jars.verbose?).must_equal true
+    _(jars_verbose).must_equal 'JARS_VERBOSE' # no mod
 
     if defined? JRUBY_VERSION
       jars_skip = 'JARS_SKIP'
@@ -43,12 +43,12 @@ describe Jars do
         java.lang.System.set_property('jars.quiet', 'false')
         java.lang.System.set_property('jars.debug', '')
 
-        Jars.to_boolean(jars_skip).must_equal true
-        Jars.skip?.must_equal true
-        jars_skip.must_equal 'JARS_SKIP' # no mod
+        _(Jars.to_boolean(jars_skip)).must_equal true
+        _(Jars.skip?).must_equal true
+        _(jars_skip).must_equal 'JARS_SKIP' # no mod
 
-        Jars.to_boolean('JARS_DEBUG').must_equal true
-        Jars.to_boolean('jars.quiet').must_equal false
+        _(Jars.to_boolean('JARS_DEBUG')).must_equal true
+        _(Jars.to_boolean('jars.quiet')).must_equal false
       ensure
         java.lang.System.clear_property('jars.skip')
         java.lang.System.clear_property('jars.quiet')
@@ -59,19 +59,19 @@ describe Jars do
 
   it 'extract maven settings' do
     settings = Jars.maven_settings
-    settings&.sub(/.*\.m2./, '')&.must_equal 'settings.xml'
+    _(settings&.sub(/.*\.m2./, '')).must_equal 'settings.xml'
 
     ENV['JARS_MAVEN_SETTINGS'] = 'specs/settings.xml'
     Jars.reset
-    settings.wont_equal Jars.maven_settings
-    Jars.maven_settings.must_equal File.expand_path('specs/settings.xml')
+    _(settings).wont_equal Jars.maven_settings
+    _(Jars.maven_settings).must_equal File.expand_path('specs/settings.xml')
 
     ENV['JARS_MAVEN_SETTINGS'] = nil
 
     Jars.reset
     Dir.chdir(File.dirname(__FILE__)) do
-      settings.wont_equal Jars.maven_settings
-      Jars.maven_settings.must_equal File.expand_path('settings.xml')
+      _(settings).wont_equal Jars.maven_settings
+      _(Jars.maven_settings).must_equal File.expand_path('settings.xml')
     end
   end
 
@@ -80,13 +80,13 @@ describe Jars do
     ENV['JARS_QUIET'] = 'true'
     ENV['JARS_MAVEN_SETTINGS'] = 'does-not-exist/settings.xml'
     home = Jars.home
-    home.must_equal(File.join(ENV['HOME'], '.m2', 'repository'))
+    _(home).must_equal(File.join(ENV['HOME'], '.m2', 'repository'))
 
     ENV['JARS_LOCAL_MAVEN_REPO'] = nil
     ENV['JARS_MAVEN_SETTINGS'] = File.join('specs', 'settings.xml')
     Jars.reset
-    Jars.home.wont_equal home
-    Jars.home.must_equal 'specs'
+    _(Jars.home).wont_equal home
+    _(Jars.home).must_equal 'specs'
 
     ENV['JARS_MAVEN_SETTINGS'] = nil
   end
@@ -97,7 +97,7 @@ describe Jars do
     ENV.delete('HOME')
     ENV['JARS_QUIET'] = true.to_s
     ENV['JARS_MAVEN_SETTINGS'] = 'does-not-exist/settings.xml'
-    Jars.home.must_equal(File.join(env_home, '.m2', 'repository'))
+    _(Jars.home).must_equal(File.join(env_home, '.m2', 'repository'))
   end
 
   it 'determines JARS_HOME (from global settings.xml)' do
@@ -105,12 +105,12 @@ describe Jars do
     ENV['HOME'] = "/tmp/oul'bollocks!"
     ENV['M2_HOME'] = __dir__
     ENV_JAVA['repo.path'] = 'specs'
-    Jars.home.must_equal('specs/repository')
+    _(Jars.home).must_equal('specs/repository')
     ENV['JARS_LOCAL_MAVEN_REPO'] = nil
   end
 
   it 'raises RuntimeError on requires of unknown group-id' do
-    -> { require_jar('org.something', 'slf4j-simple', '1.6.6') }.must_raise RuntimeError
+    _ { require_jar('org.something', 'slf4j-simple', '1.6.6') }.must_raise RuntimeError
   end
 
   # rubocop:disable Layout/LineLength
@@ -119,12 +119,12 @@ describe Jars do
     Jars.reset
 
     begin
-      require_jar('org.slf4j', 'slf4j-simple') { nil }.must_equal true
+      _(require_jar('org.slf4j', 'slf4j-simple') { nil }).must_equal true
 
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple') { '1.6.6' }.must_equal false
+      _(require_jar('org.slf4j', 'slf4j-simple') { '1.6.6' }).must_equal false
 
-      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version unknown - omit version 1.6.6\n"
+      _($stderr.string).must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version unknown - omit version 1.6.6\n"
     ensure
       $stderr = STDERR
       ENV['JARS_HOME'] = nil
@@ -136,22 +136,22 @@ describe Jars do
     Jars.reset
 
     begin
-      require_jar('org.slf4j', 'slf4j-simple', '1.6.6').must_equal true
+      _(require_jar('org.slf4j', 'slf4j-simple', '1.6.6')).must_equal true
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple') { '1.6.6' }.must_equal false
-      $stderr.string.must_equal ''
+      _(require_jar('org.slf4j', 'slf4j-simple') { '1.6.6' }).must_equal false
+      _($stderr.string).must_equal ''
 
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple', '1.6.4').must_equal false
-      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version 1.6.4\n"
+      _(require_jar('org.slf4j', 'slf4j-simple', '1.6.4')).must_equal false
+      _($stderr.string).must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version 1.6.4\n"
 
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple') { '1.6.4' }.must_equal false
-      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version 1.6.4\n"
+      _(require_jar('org.slf4j', 'slf4j-simple') { '1.6.4' }).must_equal false
+      _($stderr.string).must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version 1.6.4\n"
 
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple') { nil }.must_equal false
-      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version unknown\n"
+      _(require_jar('org.slf4j', 'slf4j-simple') { nil }).must_equal false
+      _($stderr.string).must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.6 - omit version unknown\n"
     ensure
       $stderr = STDERR
       ENV['JARS_HOME'] = nil
@@ -171,11 +171,11 @@ describe Jars do
       $stderr.flush
 
       $stderr = StringIO.new
-      require_jar('org.slf4j', 'slf4j-simple', '1.6.4').must_equal true
+      _(require_jar('org.slf4j', 'slf4j-simple', '1.6.4')).must_equal true
 
-      require_jar('org.slf4j', 'slf4j-simple', '1.6.6').must_equal false
+      _(require_jar('org.slf4j', 'slf4j-simple', '1.6.6')).must_equal false
 
-      $stderr.string.must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.4 - omit version 1.6.6\n"
+      _($stderr.string).must_equal "--- jar coordinate org.slf4j:slf4j-simple already loaded with version 1.6.4 - omit version 1.6.6\n"
     ensure
       $stderr = STDERR
       ENV['JARS_HOME'] = nil
@@ -192,13 +192,13 @@ describe Jars do
 
     require_jar 'org.bouncycastle', 'bcpkix-jdk15on', JOpenSSL::BOUNCY_CASTLE_VERSION
 
-    $CLASSPATH.length.must_equal size
+    _($CLASSPATH.length).must_equal size
 
     $stderr = StringIO.new
 
     require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
 
-    $stderr.string.must_equal ''
+    _($stderr.string).must_equal ''
   rescue LoadError, NameError => e
     p e
     skip 'assume we have an old jruby'
@@ -219,7 +219,7 @@ describe Jars do
     out = require_jar 'org.jruby', 'jruby-rack', '1.1.16'
     assert_nil out
 
-    $CLASSPATH.length.must_equal size
+    _($CLASSPATH.length).must_equal size
   rescue LoadError, NameError => e
     p e
     skip 'assume we have an old jruby'
@@ -242,7 +242,7 @@ describe Jars do
 
     require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
 
-    $stderr.string.must_equal ''
+    _($stderr.string).must_equal ''
 
     $stderr = STDERR
   rescue LoadError, NameError => e
@@ -255,7 +255,7 @@ describe Jars do
 
     load File.expand_path('lib/jar_dependencies.rb')
 
-    $stderr.string.must_equal ''
+    _($stderr.string).must_equal ''
 
     $stderr = STDERR
   end
@@ -272,10 +272,10 @@ describe Jars do
       require_jar 'more', 'sample', '3'
     end
 
-    $stderr.string.wont_match(/omit version 1/)
-    $stderr.string.must_match(/omit version 2/)
-    $stderr.string.must_match(/omit version 3/)
-    $stderr.string.wont_match(/omit version 4/)
+    _($stderr.string).wont_match(/omit version 1/)
+    _($stderr.string).must_match(/omit version 2/)
+    _($stderr.string).must_match(/omit version 3/)
+    _($stderr.string).wont_match(/omit version 4/)
 
     $stderr = STDERR
 

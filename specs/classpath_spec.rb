@@ -123,40 +123,40 @@ describe Jars::Classpath do
   it 'resolves classpath from gemspec' do
     ENV_JAVA['jars.quiet'] = 'true'
     Dir.chdir(File.dirname(example_spec)) do
-      Helper.prepare(subject.classpath).must_equal Helper.prepare(example_expected)
+      _(Helper.prepare(subject.classpath)).must_equal Helper.prepare(example_expected)
 
-      Helper.prepare(subject.classpath(:compile)).must_equal Helper.prepare(
+      _(Helper.prepare(subject.classpath(:compile))).must_equal Helper.prepare(
         expected_with_bc + ['org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar']
       )
 
-      Helper.prepare(subject.classpath(:test)).must_equal Helper.prepare(expected_with_bc + [
+      _(Helper.prepare(subject.classpath(:test))).must_equal Helper.prepare(expected_with_bc + [
         'junit/junit/4.12/junit-4.12.jar',
         'org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar',
         'org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar'
       ])
 
-      Helper.prepare(subject.classpath(:runtime)).must_equal Helper.prepare(example_expected)
+      _(Helper.prepare(subject.classpath(:runtime))).must_equal Helper.prepare(example_expected)
     end
   end
 
   it 'resolves classpath_string from gemspec' do
     ENV_JAVA['jars.quiet'] = 'true'
     Dir.chdir(File.dirname(example_spec)) do
-      Helper.prepare(subject.classpath_string.split(File::PATH_SEPARATOR)).must_equal Helper.prepare(example_expected)
+      _(Helper.prepare(subject.classpath_string.split(File::PATH_SEPARATOR))).must_equal Helper.prepare(example_expected)
 
-      Helper.prepare(subject.classpath_string(:compile).split(File::PATH_SEPARATOR))
+      _(Helper.prepare(subject.classpath_string(:compile).split(File::PATH_SEPARATOR)))
             .must_equal Helper.prepare(
               expected_with_bc + ['org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar']
             )
 
-      Helper.prepare(subject.classpath_string(:test).split(File::PATH_SEPARATOR))
+      _(Helper.prepare(subject.classpath_string(:test).split(File::PATH_SEPARATOR)))
             .must_equal Helper.prepare(expected_with_bc + [
               'junit/junit/4.12/junit-4.12.jar',
               'org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar',
               'org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar'
             ])
 
-      Helper.prepare(subject.classpath_string(:runtime).split(File::PATH_SEPARATOR))
+      _(Helper.prepare(subject.classpath_string(:runtime).split(File::PATH_SEPARATOR)))
             .must_equal Helper.prepare(example_expected)
     end
   end
@@ -165,8 +165,6 @@ describe Jars::Classpath do
     # TODO: see not to require compile scope for 9k
 
     skip('TODO just use some empty jars for this spec')
-
-    skip('jruby-9.0.0.x can not require jruby core jars') if JRUBY_VERSION.match?(/9.0.0.0/)
 
     old = $CLASSPATH.to_a
 
@@ -186,26 +184,26 @@ describe Jars::Classpath do
 
     subject.require(:runtime)
 
-    Helper.reduce($CLASSPATH.to_a, old).must_equal Helper.prepare(expected)
+    _(Helper.reduce($CLASSPATH.to_a, old)).must_equal Helper.prepare(expected)
 
     expected += example_expected
     subject.require(:compile)
-    Helper.reduce($CLASSPATH.to_a, old).must_equal Helper.prepare(expected)
+    _(Helper.reduce($CLASSPATH.to_a, old)).must_equal Helper.prepare(expected)
 
     expected << 'junit/junit/4.1/junit-4.1.jar'
     subject.require(:test)
-    Helper.reduce($CLASSPATH.to_a, old).must_equal Helper.prepare(expected)
+    _(Helper.reduce($CLASSPATH.to_a, old)).must_equal Helper.prepare(expected)
   end
 
   it 'processes Jars.lock if exists' do
     subject.instance_variable_set(:@deps, jars_lock)
 
-    Helper.prepare(subject.classpath).must_equal Helper.prepare(lock_expected_runtime)
-    Helper.prepare(subject.classpath(:compile)).must_equal Helper.prepare(lock_expected)
+    _(Helper.prepare(subject.classpath)).must_equal Helper.prepare(lock_expected_runtime)
+    _(Helper.prepare(subject.classpath(:compile))).must_equal Helper.prepare(lock_expected)
 
-    Helper.prepare(subject.classpath(:test)).must_equal Helper.prepare(lock_expected_test)
+    _(Helper.prepare(subject.classpath(:test))).must_equal Helper.prepare(lock_expected_test)
 
-    Helper.prepare(subject.classpath(:runtime)).must_equal Helper.prepare(lock_expected_runtime)
+    _(Helper.prepare(subject.classpath(:runtime))).must_equal Helper.prepare(lock_expected_runtime)
   end
 
   it 'processes Jars.lock and block loading of jars' do
@@ -214,6 +212,6 @@ describe Jars::Classpath do
     subject.require
 
     require_jar 'example', 'example', '1'
-    $CLASSPATH.detect { |c| c.include?('example') }.must_be_nil
+    _($CLASSPATH.detect { |c| c.include?('example') }).must_be_nil
   end
 end

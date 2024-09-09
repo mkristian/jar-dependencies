@@ -22,7 +22,7 @@ describe Jars::MavenExec do
     Dir.chdir File.dirname(spec_with_require_relative) do
       $stderr = StringIO.new
       Jars::MavenExec.new
-      $stderr.string.must_equal ''
+      _($stderr.string).must_equal ''
     ensure
       $stderr = STDERR
     end
@@ -46,7 +46,7 @@ describe Jars::MavenExec do
     spec.gem_dir = File.dirname(example_spec)
     # now test finding the gemspec file
     jar = Jars::MavenExec.new(spec)
-    jar.instance_variable_get(:@basedir).must_equal File.expand_path(spec.gem_dir)
-    jar.instance_variable_get(:@specfile).must_equal File.expand_path(example_spec)
+    _(jar.instance_variable_get(:@basedir)).must_equal File.expand_path(spec.gem_dir)
+    _(jar.instance_variable_get(:@specfile)).must_equal File.expand_path(example_spec)
   end
 end
