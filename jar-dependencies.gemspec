@@ -29,12 +29,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 2.6'
 
-  s.add_development_dependency 'minitest', '~> 5.10.0'
-  s.add_development_dependency 'rake', '~> 13.0'
-  s.add_development_dependency 'rubocop', '~> 1.31'
-  s.add_development_dependency 'rubocop-performance', '~> 1.14'
-  s.add_development_dependency 'rubocop-rake', '~> 0.6'
-  s.add_development_dependency 'ruby-debug', '~> 0.11'
+  s.add_development_dependency 'minitest', '~> 5.10'
   s.add_development_dependency 'ruby-maven', ruby_maven_version = '~> 3.3'
 
   s.post_install_message = <<~TEXT
