@@ -198,7 +198,7 @@ module Jars
     end
 
     def home
-      absolute(to_prop(HOME)) || local_maven_repo
+      @home ||= absolute(to_prop(HOME)) || local_maven_repo
     end
 
     def require_jars_lock!(scope = :runtime)
@@ -242,7 +242,7 @@ module Jars
       when Symbol
         require_jars_lock!(options)
       when Hash
-        @jars_home = options[:jars_home]
+        @home = options[:jars_home]
         @jars_lock = options[:jars_lock]
         require_jars_lock!(options[:scope] || :runtime)
       else
