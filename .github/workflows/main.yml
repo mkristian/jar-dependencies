@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby-version: [jruby-9.3]
+        ruby-version: [jruby-9.3, jruby-9.4]
 
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +24,7 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install
-      - name: Run RuboCop
-        run: bundle exec rubocop
       - name: Run test
-        run: bundle exec rake specs
+        run: jruby -Ilib -rbundler/setup -S rake specs
+      - name: Run RuboCop
+        run: jruby -Ilib -rbundler/setup -S rubocop lib
