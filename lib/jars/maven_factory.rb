@@ -110,7 +110,7 @@ module Jars
 
     def requirement(name)
       jars = Gem.loaded_specs['jar-dependencies']
-      dep = jars.nil? ? nil : jars.dependencies.detect { |d| d.name == name }
+      dep = jars&.dependencies&.detect { |d| d.name == name }
       dep.nil? ? Gem::Requirement.create('>0') : dep.requirement
     end
 
