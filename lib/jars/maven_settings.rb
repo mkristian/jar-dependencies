@@ -9,11 +9,12 @@ module Jars
         @_jars_maven_local_settings_ = nil unless instance_variable_defined?(:@_jars_maven_local_settings_)
         if @_jars_maven_local_settings_.nil?
           settings = Jars.absolute('settings.xml')
-          if settings && File.exist?(settings)
-            @_jars_maven_local_settings_ = settings
-          else
-            @_jars_maven_local_settings_ = false
-          end
+          @_jars_maven_local_settings_ =
+            if settings && File.exist?(settings)
+              settings
+            else
+              false
+            end
         end
         @_jars_maven_local_settings_ || nil
       end

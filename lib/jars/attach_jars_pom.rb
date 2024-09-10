@@ -2,13 +2,13 @@
 
 # this file is maven DSL
 
-(0..10_000).each do |i|
+10_000.times do |i|
   coord = ENV_JAVA["jars.#{i}"]
   break unless coord
 
   artifact = Maven::Tools::Artifact.from_coordinate(coord)
   exclusions = []
-  (0..10_000).each do |j|
+  10_000.times do |j|
     exclusion = ENV_JAVA["jars.#{i}.exclusions.#{j}"]
     break unless exclusion
 

@@ -122,7 +122,7 @@ module Jars
       inst.install(name, req).first
     rescue => e
       if Jars.verbose?
-        warn e.inspect.to_s
+        warn e.inspect
         warn e.backtrace.join("\n")
       end
       raise "there was an error installing '#{name} (#{req})' " \

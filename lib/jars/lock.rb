@@ -26,7 +26,9 @@ module Jars
     end
 
     def classifier
-      size == 5 ? nil : self[2]
+      return nil if size == 5
+
+      self[2]
     end
 
     def gacv
