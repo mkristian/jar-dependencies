@@ -199,9 +199,6 @@ describe Jars do
     require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
 
     _($stderr.string).must_equal ''
-  rescue LoadError, NameError => e
-    p e
-    skip 'assume we have an old jruby'
   ensure
     $stderr = STDERR
   end
@@ -220,34 +217,28 @@ describe Jars do
     assert_nil out
 
     _($CLASSPATH.length).must_equal size
-  rescue LoadError, NameError => e
-    p e
-    skip 'assume we have an old jruby'
   end
 
   it 'does not warn on conflicts after turning into silent mode' do
+    skip('$CLASSPATH is not clean - need to skip spec') if $CLASSPATH.detect { |a| a.include?('bcpkix-jdk18on') }
+
     size = $CLASSPATH.length
-    # TODO: use jline instead to avoid this skip
-    skip('$CLASSPATH is not clean - need to skip spec') if $CLASSPATH.detect { |a| a.include?('bcpkix-jdk15on') }
 
     Jars.no_more_warnings
 
     require 'jopenssl/version'
 
-    if require_jar('org.bouncycastle', 'bcpkix-jdk15on', JOpenSSL::BOUNCY_CASTLE_VERSION)
-      $CLASSPATH.length.must_equal(size + 1)
+    if require_jar('org.bouncycastle', 'bcpkix-jdk18on', JOpenSSL::BOUNCY_CASTLE_VERSION)
+      _($CLASSPATH.length).must_equal(size + 1)
     end
 
     $stderr = StringIO.new
 
-    require_jar 'org.bouncycastle', 'bcpkix-jdk15on', '1.46'
+    require_jar 'org.bouncycastle', 'bcpkix-jdk18on', '1.70'
 
     _($stderr.string).must_equal ''
-
+  ensure
     $stderr = STDERR
-  rescue LoadError, NameError => e
-    p e
-    skip 'assume we have an old jruby'
   end
 
   it 'no warnings on reload' do
@@ -257,6 +248,7 @@ describe Jars do
 
     _($stderr.string).must_equal ''
 
+  ensure
     $stderr = STDERR
   end
 
@@ -277,6 +269,7 @@ describe Jars do
     _($stderr.string).must_match(/omit version 3/)
     _($stderr.string).wont_match(/omit version 4/)
 
+  ensure
     $stderr = STDERR
 
     $LOAD_PATH.delete(File.join(pwd, 'path'))
