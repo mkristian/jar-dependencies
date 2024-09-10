@@ -5,7 +5,7 @@ require File.expand_path('setup', File.dirname(__FILE__))
 require 'stringio'
 describe Jars do
   before do
-    @env = ENV.dup
+    @env = ENV.to_h
     # helpful when debugging
     Jars.reset
   end
