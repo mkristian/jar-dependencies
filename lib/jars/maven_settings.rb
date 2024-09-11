@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rubygems/uri_formatter'
 module Jars
   class MavenSettings
     LINE_SEPARATOR = ENV_JAVA['line.separator']
@@ -8,8 +7,14 @@ module Jars
     class << self
       def local_settings
         @_jars_maven_local_settings_ = nil unless instance_variable_defined?(:@_jars_maven_local_settings_)
-        if @_jars_maven_local_settings_.nil? && (settings = Jars.absolute('settings.xml')) && File.exist?(settings)
-          @_jars_maven_local_settings_ = settings
+        if @_jars_maven_local_settings_.nil?
+          settings = Jars.absolute('settings.xml')
+          @_jars_maven_local_settings_ =
+            if settings && File.exist?(settings)
+              settings
+            else
+              false
+            end
         end
         @_jars_maven_local_settings_ || nil
       end

@@ -91,7 +91,6 @@ module Jars
     end
 
     def require?
-      @require = nil unless instance_variable_defined?(:@require)
       if @require.nil?
         if (require = to_boolean(REQUIRE)).nil?
           no_require = to_boolean(NO_REQUIRE)
@@ -105,7 +104,12 @@ module Jars
     attr_writer :require
 
     def quiet?
-      (@silent ||= false) || to_boolean(QUIET)
+      @quiet = to_boolean(QUIET) if @quiet.nil?
+      @quiet
+    end
+
+    def no_more_warnings
+      @quiet = true
     end
 
     def jarfile
@@ -122,10 +126,6 @@ module Jars
 
     def vendor?
       to_boolean(VENDOR)
-    end
-
-    def no_more_warnings
-      @silent = true
     end
 
     def freeze_loading
@@ -198,7 +198,7 @@ module Jars
     end
 
     def home
-      absolute(to_prop(HOME)) || local_maven_repo
+      @home ||= absolute(to_prop(HOME)) || local_maven_repo
     end
 
     def require_jars_lock!(scope = :runtime)
@@ -242,7 +242,7 @@ module Jars
       when Symbol
         require_jars_lock!(options)
       when Hash
-        @jars_home = options[:jars_home]
+        @home = options[:jars_home]
         @jars_lock = options[:jars_lock]
         require_jars_lock!(options[:scope] || :runtime)
       else
@@ -341,18 +341,15 @@ module Jars
 
     def do_require(*args)
       jar = to_jar(*args)
-      local = File.join(Dir.pwd, 'jars', jar)
-      vendor = File.join(Dir.pwd, 'vendor', 'jars', jar)
-      file = File.join(home, jar)
-      # use jar from local repository if exists
-      if File.exist?(file)
-        require file
-      # use jar from PWD/jars if exists
-      elsif File.exist?(local)
-        require local
       # use jar from PWD/vendor/jars if exists
-      elsif File.exist?(vendor)
+      if File.exist?(vendor = File.join(Dir.pwd, 'vendor', 'jars', jar))
         require vendor
+      # use jar from PWD/jars if exists
+      elsif File.exist?(local = File.join(Dir.pwd, 'jars', jar))
+        require local
+      # use jar from local repository if exists
+      elsif File.exist?(file = File.join(home, jar))
+        require file
       else
         # otherwise try to find it on the load path
         require jar

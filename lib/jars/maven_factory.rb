@@ -110,7 +110,7 @@ module Jars
 
     def requirement(name)
       jars = Gem.loaded_specs['jar-dependencies']
-      dep = jars.nil? ? nil : jars.dependencies.detect { |d| d.name == name }
+      dep = jars&.dependencies&.detect { |d| d.name == name }
       dep.nil? ? Gem::Requirement.create('>0') : dep.requirement
     end
 
@@ -122,7 +122,7 @@ module Jars
       inst.install(name, req).first
     rescue => e
       if Jars.verbose?
-        warn e.inspect.to_s
+        warn e.inspect
         warn e.backtrace.join("\n")
       end
       raise "there was an error installing '#{name} (#{req})' " \

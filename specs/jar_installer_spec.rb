@@ -34,17 +34,17 @@ describe Jars::Installer do
 
   it 'loads dependencies from maven' do
     deps = Jars::Installer.load_from_maven(file)
-    deps.size.must_equal 45
-    deps.each { |d| d.must_be_kind_of Jars::Installer::Dependency }
+    _(deps.size).must_equal 45
+    deps.each { |d| _(d).must_be_kind_of(Jars::Installer::Dependency) }
   end
 
   it 'generates non-vendored require-file' do
     deps = Jars::Installer.load_from_maven(file)
     Jars::Installer.write_require_jars(deps, jars)
     File.read(jars).each_line do |line|
-      line.must_match(/^\s{2}require(_jar)?\s'.+'$/) if line.size > 30 && !line.match(/^#/)
+      _(line).must_match(/^\s{2}require(_jar)?\s'.+'$/) if line.size > 30 && !line.match(/^#/)
     end
-    Dir[File.join(dir, '**')].size.must_equal 1
+    _( Dir[File.join(dir, '**')].size ).must_equal 1
   end
 
   it 'generates vendored require-file' do
@@ -52,19 +52,19 @@ describe Jars::Installer do
     Jars::Installer.write_require_jars(deps, jars)
     Jars::Installer.vendor_jars(deps, dir)
     File.read(jars).each_line do |line|
-      line.must_match(/^\s{2}require(_jar)?\s'.+'$/) if line.size > 30 && !line.match(/^#/)
+      _(line).must_match(/^\s{2}require(_jar)?\s'.+'$/) if line.size > 30 && !line.match(/^#/)
     end
-    Dir[File.join(dir, '**', '*.jar')].size.must_equal 45
+    _( Dir[File.join(dir, '**', '*.jar')].size ).must_equal 45
   end
 
   it 'just skips install_jars and vendor_jars if there are no requirements' do
     jar = Jars::Installer.new
     jar.install_jars
     # vendor method is a mocked method
-    jar.vendor.must_be_nil
+    _(jar.vendor).must_be_nil
     jar.vendor_jars
     # vendor method is a mocked method
-    jar.vendor.must_be_nil
+    _(jar.vendor).must_be_nil
   end
 
   it 'just skips install_jars and vendor_jars if platform is not java' do
@@ -73,10 +73,10 @@ describe Jars::Installer do
     jar = Jars::Installer.new(spec)
     jar.install_jars
     # vendor method is a mocked method
-    jar.vendor.must_be_nil
+    _(jar.vendor).must_be_nil
     jar.vendor_jars
     # vendor method is a mocked method
-    jar.vendor.must_be_nil
+    _(jar.vendor).must_be_nil
   end
 
   it 'does install_jars and vendor_jars' do
@@ -92,7 +92,7 @@ describe Jars::Installer do
     ENV['JARS_VENDOR'] = 'true'
     jar.vendor_jars
     # vendor method is a mocked method
-    jar.vendor.must_equal 'lib'
+    _(jar.vendor).must_equal 'lib'
     java.lang.System.set_property('jars.vendor', 'false')
     jar.vendor_jars
     # vendor method is a mocked method
@@ -104,10 +104,10 @@ describe Jars::Installer do
     Jars.reset
     jar = Jars::Installer.new(example_spec)
     result = jar.send :install_dependencies
-    result.size.must_equal 30
+    _(result.size).must_equal 30
     result.each do |d|
-      d.type.must_equal :jar
-      d.scope.must_equal :runtime
+      _(d.type).must_equal :jar
+      _(d.scope).must_equal :runtime
     end
     ENV['JARS_HOME'] = nil
   end

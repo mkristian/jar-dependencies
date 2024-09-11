@@ -17,7 +17,7 @@ module Jars
         end
       end
 
-    private
+      private
 
       def convert(arg, low = nil, high = nil)
         if arg.include?('~>')
@@ -58,7 +58,7 @@ module Jars
           val
         end
       end
-  end
+    end
   end
 
   class GemspecArtifacts
@@ -83,7 +83,7 @@ module Jars
       def initialize(line)
         super()
         line.gsub(/'"|^\s*\[|\]\s*$/, '').split(/,\s*/).each do |exclusion|
-          self.<< Exclusion.new(exclusion)
+          self << Exclusion.new(exclusion)
         end
         freeze
       end
@@ -97,7 +97,7 @@ module Jars
       def initialize(options, *args)
         @type, @group_id, @artifact_id, @classifier, @version, @exclusions = *args
         options.each do |k, v|
-          instance_variable_set("@#{k}", v)
+          instance_variable_set(:"@#{k}", v)
         end
       end
 
