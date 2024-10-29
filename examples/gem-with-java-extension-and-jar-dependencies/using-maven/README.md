@@ -1,4 +1,4 @@
-# using maven-3.3.x to build jar and pack gem
+# using maven-3.9.x to build jar and pack gem
 
 the ruby DSL for maven is configured by .mvn/extensions.xml
 

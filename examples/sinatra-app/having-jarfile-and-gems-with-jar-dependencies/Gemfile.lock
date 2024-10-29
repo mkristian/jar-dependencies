@@ -19,26 +19,26 @@ GEM
       leafy-health (~> 0.6.2)
       leafy-logger (~> 0.6.2)
       leafy-metrics (~> 0.6.2)
-    rack (1.6.4)
-    rack-protection (1.5.3)
+    rack (1.6.13)
+    rack-protection (1.5.5)
       rack
-    ruby-maven (3.3.8)
-      ruby-maven-libs (~> 3.3.1)
-    ruby-maven-libs (3.3.3)
-    sinatra (1.4.6)
-      rack (~> 1.4)
+    ruby-maven (3.9.0)
+      ruby-maven-libs (~> 3.9.9)
+    ruby-maven-libs (3.9.9)
+    sinatra (1.4.8)
+      rack (~> 1.5)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
-    tilt (2.0.1)
+    tilt (2.4.0)
 
 PLATFORMS
-  java
+  universal-java-24
 
 DEPENDENCIES
   jar-dependencies (= 0.3.0)
   leafy-complete (= 0.6.2)
-  ruby-maven (~> 3.3, >= 3.3.8)
+  ruby-maven (~> 3.9, >= 3.9.0)
   sinatra (~> 1.4)
 
 BUNDLED WITH
-   1.10.6
+   2.5.11

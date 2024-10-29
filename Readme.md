@@ -172,7 +172,7 @@ Or, with maven debug enabled
     JARS_DEBUG=true bundle install
     JARS_DEBUG=true gem install some_gem
 
-The maven command line which gets printed needs maven-3.3.x and the
+The maven command line which gets printed needs maven-3.9.x and the
 ruby DSL extension for maven:
 [https://github.com/takari/polyglot-maven#configuration](polyglot-maven
 configuration) where ```${maven.multiModuleProjectDirectory}``` is

@@ -27,6 +27,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 10.3'
   # needed to compile src/main/java/** and create jar file
-  s.add_development_dependency 'ruby-maven', '~> 3.3'
+  s.add_development_dependency 'ruby-maven', '~> 3.9'
   s.metadata['rubygems_mfa_required'] = 'true'
 end

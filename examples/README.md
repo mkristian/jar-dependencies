@@ -68,7 +68,7 @@ extension. note that there is no jar-dependencies gem involved here.
 see project here:
 [gem with java extension using maven](https://github.com/mkristian/jar-dependencies/tree/master/examples/gem-with-java-extension/using-maven)
 
-you need maven 3.3.x installed to get it working and the project needs
+you need maven 3.9.x installed to get it working and the project needs
 to prepare maven to use the ruby DSL for maven. this is done by adding
 [](.mvn/extensions.xml) to your project. or use maven wrapper []()
 
