@@ -29,7 +29,7 @@ end
 properties('gem.home' => '${project.basedir}/../../rubygems',
            'gem.path' => '${gem.home}')
 
-repository id: 'rubygems-releases', url: 'mavengem:https://rubygems.org'
+repository id: 'mavengems', url: 'mavengem:https://rubygems.org'
 
 gem 'jar-dependencies', '${jar-dependencies.version}'
 gem 'bundler', '${bundler.version}'

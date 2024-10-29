@@ -2,7 +2,7 @@
 
 gemfile
 
-plugin_repository id: :maven_gems, url: 'mavengem:https://rubygems.org'
+plugin_repository id: :mavengems, url: 'mavengem:https://rubygems.org'
 
 jruby_plugin(:minitest, minispecDirectory: 'specs/*_spec.rb') do
   execute_goals(:spec)

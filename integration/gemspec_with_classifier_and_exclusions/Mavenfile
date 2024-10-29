@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-repository id: 'rubygems-releases', url: 'mavengem:https://rubygems.org'
+repository id: 'mavengems', url: 'mavengem:https://rubygems.org'
 
 plugin('org.codehaus.mojo:exec-maven-plugin', '3.5.0',
        executable: :java,

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-plugin_repository id: 'rubygems-releases', url: 'mavengem:https://rubygems.org'
+plugin_repository id: 'mavengems', url: 'mavengem:https://rubygems.org'
 
 properties('gem.home' => '${project.basedir}/../../pkg/rubygems',
            'gem.path' => '${gem.home}')
