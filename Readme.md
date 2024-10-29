@@ -216,3 +216,8 @@ Or a few days ago an issue for rake-compile [https://github.com/luislavena/rake-
 
 With JRuby 9000 it is the right time to get jar dependencies "right" - the current situation is like the time before bundler for gems.
 
+# Developing
+
+You must have the latest ruby-maven installed in your local JRuby.
+
+./mvnw install will build the gem and run integration tests
