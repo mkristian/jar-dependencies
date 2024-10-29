@@ -31,7 +31,7 @@ end
 properties('gem.home' => '${project.basedir}/../rubygems',
            'gem.path' => '${gem.home}')
 
-jar 'org.jruby:jruby-complete', '${jruby.old-version}'
+jar 'org.jruby:jruby-complete', '${jruby.version}'
 
 gem 'jar-dependencies', '${jar-dependencies.version}'
 gem 'bundler', '${bundler.version}'

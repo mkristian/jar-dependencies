@@ -5,7 +5,7 @@ properties('gem.home' => '${basedir}/../pkg',
 
 repository id: 'rubygems-releases', url: 'mavengem:https://rubygems.org'
 
-pom 'org.jruby:jruby', '${jruby.old-version}'
+pom 'org.jruby:jruby', '${jruby.version}'
 
 gem 'jar-dependencies', '${jar-dependencies.version}'
 gem 'bundler', '${bundler.version}'

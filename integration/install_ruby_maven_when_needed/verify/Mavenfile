@@ -7,7 +7,7 @@ end
 
 packaging 'pom'
 
-jar 'org.jruby:jruby-complete', '${jruby.old-version}'
+jar 'org.jruby:jruby-complete', '${jruby.version}'
 
 plugin('org.codehaus.mojo:exec-maven-plugin', '3.5.0',
        executable: :java,
