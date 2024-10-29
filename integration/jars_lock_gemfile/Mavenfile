@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-repository id: 'rubygems-releases', url: 'http://rubygems-proxy.torquebox.org/releases'
+repository id: 'rubygems-releases', url: 'mavengem:https://rubygems.org'
 
 # gemfile
 
@@ -9,7 +9,7 @@ gem 'leafy-metrics', '0.6.1'
 gem! 'bundler', '${bundler.version}'
 
 phase :test do
-  plugin('org.codehaus.mojo:exec-maven-plugin', '1.2',
+  plugin('org.codehaus.mojo:exec-maven-plugin', '3.5.0',
          executable: :java,
          environmentVariables: { 'GEM_HOME' => '${gem.home}',
                                  'GEM_PATH' => '${gem.home}',

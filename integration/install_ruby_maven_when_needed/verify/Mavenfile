@@ -9,7 +9,7 @@ packaging 'pom'
 
 jar 'org.jruby:jruby-complete', '${jruby.old-version}'
 
-plugin('org.codehaus.mojo:exec-maven-plugin', '1.2',
+plugin('org.codehaus.mojo:exec-maven-plugin', '3.5.0',
        executable: :java,
        environmentVariables: { 'GEM_HOME' => '${gem.home}',
                                'GEM_PATH' => '${gem.home}',
@@ -29,7 +29,7 @@ end
 properties('gem.home' => '${project.basedir}/../../rubygems',
            'gem.path' => '${gem.home}')
 
-repository id: 'rubygems-releases', url: 'http://rubygems-proxy.torquebox.org/releases'
+repository id: 'rubygems-releases', url: 'mavengem:https://rubygems.org'
 
 gem 'jar-dependencies', '${jar-dependencies.version}'
 gem 'bundler', '${bundler.version}'

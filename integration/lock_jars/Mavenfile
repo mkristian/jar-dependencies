@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-extension 'org.torquebox.mojo:mavengem-wagon:0.2.0'
+extension 'org.jruby.maven.mojo:mavengem-wagon:2.0.2'
 
 repository id: :mavengems, url: 'mavengem:https://rubygems.org'
 
 phase :test do
-  plugin('org.codehaus.mojo:exec-maven-plugin', '1.2',
+  plugin('org.codehaus.mojo:exec-maven-plugin', '3.5.0',
          executable: :java,
          environmentVariables: { 'JARS_LOCAL_MAVEN_REPO' => '${basedir}/repository',
                                  'GEM_HOME' => '${gem.home}',

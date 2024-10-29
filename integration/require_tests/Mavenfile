@@ -10,7 +10,7 @@ end
 
 pom 'org.jruby:jruby', '${jruby.old-version}'
 
-plugin('org.codehaus.mojo:exec-maven-plugin', '1.2',
+plugin('org.codehaus.mojo:exec-maven-plugin', '3.5.0',
        executable: :java,
        environmentVariables: { 'GEM_HOME' => '${gem.home}',
                                'GEM_PATH' => '${gem.home}' }) do

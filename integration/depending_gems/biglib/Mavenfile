@@ -3,7 +3,7 @@
 properties('gem.home' => '${basedir}/../pkg',
            'gem.path' => '${gem.home}')
 
-repository id: 'rubygems-releases', url: 'http://rubygems-proxy.torquebox.org/releases'
+repository id: 'rubygems-releases', url: 'mavengem:https://rubygems.org'
 
 pom 'org.jruby:jruby', '${jruby.old-version}'
 
@@ -16,7 +16,7 @@ jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
 end
 
-plugin('org.codehaus.mojo:exec-maven-plugin', '1.2',
+plugin('org.codehaus.mojo:exec-maven-plugin', '3.5.0',
        executable: :java,
        environmentVariables: { 'GEM_HOME' => '${gem.home}',
                                'GEM_PATH' => '${gem.home}',

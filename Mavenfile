@@ -17,13 +17,12 @@ ruby_maven = gemfile_profile.dependencies.detect do |d|
   d.artifact_id == 'ruby-maven'
 end
 
-properties('jruby.versions' => ['1.7.12', '1.7.25', '${jruby.version}'].join(','),
-           'jruby.modes' => ['1.9', '2.0', '2.2'].join(','),
+properties('jruby.versions' => ['${jruby.version}'].join(','),
            # just lock the version
-           'bundler.version' => '1.10.6',
+           'bundler.version' => '2.5.11',
            'ruby-maven.version' => ruby_maven.version,
-           'jruby.version' => '9.0.5.0',
-           'jruby.plugins.version' => '1.1.3',
+           'jruby.version' => '9.4.8.0',
+           'jruby.plugins.version' => '3.0.2',
            'push.skip' => true)
 
 plugin :invoker, '1.8' do
@@ -37,7 +36,6 @@ plugin :invoker, '1.8' do
                 cloneProjectsTo: '${project.build.directory}',
                 properties: { 'jar-dependencies.version' => '${project.version}',
                               # use an old jruby with old ruby-maven here
-                              'jruby.old-version' => '1.7.20',
                               'jruby.version' => '${jruby.version}',
                               'jruby.plugins.version' => '${jruby.plugins.version}',
                               'bundler.version' => '${bundler.version}',
