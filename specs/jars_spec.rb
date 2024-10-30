@@ -273,4 +273,13 @@ describe Jars do
 
     $LOAD_PATH.delete(File.join(pwd, 'path'))
   end
+
+  it 'lock is Jars.lock by default' do
+    _(Jars.lock).must_equal 'Jars.lock'
+  end
+
+  it 'lock gets set during setup' do
+    Jars.setup jars_lock: 'Jars_no_jline.lock'
+    _(Jars.lock).must_equal 'Jars_no_jline.lock'
+  end
 end

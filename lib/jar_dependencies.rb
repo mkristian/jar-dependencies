@@ -137,7 +137,7 @@ module Jars
     end
 
     def lock
-      to_prop(LOCK) || 'Jars.lock'
+      @lock ||= to_prop(LOCK) || 'Jars.lock'
     end
 
     def jars_lock_from_class_loader
@@ -152,8 +152,7 @@ module Jars
     end
 
     def lock_path(basedir = nil)
-      deps = lock
-      return deps if File.exist?(deps)
+      return lock if File.exist?(lock)
 
       basedir ||= '.'
       ['.', 'jars', 'vendor/jars'].each do |dir|
@@ -243,7 +242,7 @@ module Jars
         require_jars_lock!(options)
       when Hash
         @home = options[:jars_home]
-        @jars_lock = options[:jars_lock]
+        @lock = options[:jars_lock]
         require_jars_lock!(options[:scope] || :runtime)
       else
         require_jars_lock!
