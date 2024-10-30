@@ -52,6 +52,7 @@ module Jars
   end
 
   autoload :MavenSettings, 'jars/maven_settings'
+  autoload :Classpath, 'jars/classpath'
 
   @jars_lock = false
   @jars = {}
@@ -204,9 +205,7 @@ module Jars
       urls = jars_lock_from_class_loader
       if urls && !urls.empty?
         @jars_lock = true
-        # funny error during spec where it tries to load it again
-        # and finds it as gem instead of the LOAD_PATH
-        require 'jars/classpath' unless defined? Jars::Classpath
+
         done = []
         while done != urls
           urls.each do |url|
@@ -223,9 +222,7 @@ module Jars
       elsif (jars_lock = Jars.lock_path)
         Jars.debug { "--- load jars from #{jars_lock}" }
         @jars_lock = jars_lock
-        # funny error during spec where it tries to load it again
-        # and finds it as gem instead of the LOAD_PATH
-        require 'jars/classpath' unless defined? Jars::Classpath
+
         classpath = Jars::Classpath.new(nil, jars_lock)
         classpath.require(scope)
         no_more_warnings
