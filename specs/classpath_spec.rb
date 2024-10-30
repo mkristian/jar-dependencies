@@ -3,7 +3,6 @@
 require File.expand_path('setup', File.dirname(__FILE__))
 
 require 'yaml'
-require 'jars/classpath'
 
 module Helper
   def self.prepare!(array)
