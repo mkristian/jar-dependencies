@@ -271,11 +271,16 @@ module Jars
     end
 
     def warn(msg = nil)
-      Kernel.warn(msg || yield) unless quiet? && !verbose?
+      return if !verbose? || quiet?
+
+      Kernel.warn(msg || yield)
     end
 
     def debug(msg = nil)
-      Kernel.warn(msg || yield) if verbose?
+      return unless debug?
+
+      msg = "#{msg.inspect}\n\t#{(msg.backtrace || []).join("\n\t")}" if msg.is_a?(Exception)
+      Kernel.warn(msg || yield)
     end
 
     def absolute(file)
@@ -323,8 +328,9 @@ module Jars
       end
       local_repo = nil if local_repo.empty? || !File.exist?(local_repo)
       local_repo
-    rescue
-      Jars.warn { "error reading or parsing #{settings}" }
+    rescue => e
+      Jars.debug(e)
+      Jars.warn "error reading or parsing local settings from: #{settings}"
       nil
     end
 
