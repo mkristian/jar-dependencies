@@ -142,7 +142,7 @@ module Jars
     end
 
     def jars_lock_from_class_loader
-      return unless to_prop(LOCK).nil? && defined?(JRUBY_VERSION)
+      return unless defined?(JRUBY_VERSION)
 
       if JRuby::Util.respond_to?(:class_loader_resources)
         JRuby::Util.class_loader_resources('Jars.lock')
@@ -202,7 +202,7 @@ module Jars
     end
 
     def require_jars_lock!(scope = :runtime)
-      urls = jars_lock_from_class_loader
+      urls = jars_lock_from_class_loader if to_prop(LOCK).nil?
       if urls && !urls.empty?
         @jars_lock = true
 
@@ -216,7 +216,6 @@ module Jars
             classpath.require(scope)
             done << url
           end
-          urls = jars_lock_from_class_loader
         end
         no_more_warnings
       elsif (jars_lock = Jars.lock_path)
