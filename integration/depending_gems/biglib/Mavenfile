@@ -10,7 +10,7 @@ pom 'org.jruby:jruby', '${jruby.version}'
 gem 'jar-dependencies', '${jar-dependencies.version}'
 gem 'bundler', '${bundler.version}'
 gem 'ruby-maven', '${ruby-maven.version}'
-gem 'ruby-maven-libs', '3.9.0'
+gem 'ruby-maven-libs', '3.9.2'
 
 jruby_plugin :gem, '${jruby.plugins.version}' do
   execute_goal :initialize
