@@ -13,7 +13,8 @@ module Helper
       org/jruby/yecht/yecht.jar
     ]
     result = array.collect do |a|
-      a.sub(/-native.jar$/, '.jar')
+      a.sub(/\.jar.*$/, '.jar')
+       .sub(/-native.jar$/, '.jar')
        .sub(/-[^-]+$/, '.jar')
        .sub(%r{[^/]+/([^/]+)$}, '\1')
        .sub(/^.*META-INF.jruby.home.lib.ruby.s....../, '')
