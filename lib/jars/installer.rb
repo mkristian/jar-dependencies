@@ -204,7 +204,7 @@ module Jars
       end
       deps = install_dependencies
       self.class.write_require_jars(deps, jars_file)
-      self.class.vendor_jars(target_dir, write_require_file: deps) if vendor_dir
+      self.class.vendor_jars(deps, target_dir) if vendor_dir
     end
 
     def install_dependencies
