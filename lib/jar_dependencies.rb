@@ -270,7 +270,7 @@ module Jars
     end
 
     def warn(msg = nil)
-      return if !verbose? || quiet?
+      return if (verbose? == nil && quiet?) || (verbose? == false && !debug?)
 
       Kernel.warn(msg || yield)
     end
