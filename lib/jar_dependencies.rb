@@ -52,6 +52,7 @@ module Jars
   end
 
   autoload :MavenSettings, 'jars/maven_settings'
+  autoload :Classpath, 'jars/classpath'
 
   @jars_lock = false
   @jars = {}
@@ -137,11 +138,11 @@ module Jars
     end
 
     def lock
-      to_prop(LOCK) || 'Jars.lock'
+      @lock ||= to_prop(LOCK) || 'Jars.lock'
     end
 
     def jars_lock_from_class_loader
-      return unless to_prop(LOCK).nil? && defined?(JRUBY_VERSION)
+      return unless defined?(JRUBY_VERSION)
 
       if JRuby::Util.respond_to?(:class_loader_resources)
         JRuby::Util.class_loader_resources('Jars.lock')
@@ -152,8 +153,7 @@ module Jars
     end
 
     def lock_path(basedir = nil)
-      deps = lock
-      return deps if File.exist?(deps)
+      return lock if File.exist?(lock)
 
       basedir ||= '.'
       ['.', 'jars', 'vendor/jars'].each do |dir|
@@ -202,12 +202,10 @@ module Jars
     end
 
     def require_jars_lock!(scope = :runtime)
-      urls = jars_lock_from_class_loader
+      urls = jars_lock_from_class_loader if to_prop(LOCK).nil?
       if urls && !urls.empty?
         @jars_lock = true
-        # funny error during spec where it tries to load it again
-        # and finds it as gem instead of the LOAD_PATH
-        require 'jars/classpath' unless defined? Jars::Classpath
+
         done = []
         while done != urls
           urls.each do |url|
@@ -218,15 +216,12 @@ module Jars
             classpath.require(scope)
             done << url
           end
-          urls = jars_lock_from_class_loader
         end
         no_more_warnings
       elsif (jars_lock = Jars.lock_path)
         Jars.debug { "--- load jars from #{jars_lock}" }
         @jars_lock = jars_lock
-        # funny error during spec where it tries to load it again
-        # and finds it as gem instead of the LOAD_PATH
-        require 'jars/classpath' unless defined? Jars::Classpath
+
         classpath = Jars::Classpath.new(nil, jars_lock)
         classpath.require(scope)
         no_more_warnings
@@ -243,7 +238,7 @@ module Jars
         require_jars_lock!(options)
       when Hash
         @home = options[:jars_home]
-        @jars_lock = options[:jars_lock]
+        @lock = options[:jars_lock]
         require_jars_lock!(options[:scope] || :runtime)
       else
         require_jars_lock!
@@ -275,11 +270,16 @@ module Jars
     end
 
     def warn(msg = nil)
-      Kernel.warn(msg || yield) unless quiet? && !verbose?
+      return if (verbose? == nil && quiet?) || (verbose? == false && !debug?)
+
+      Kernel.warn(msg || yield)
     end
 
     def debug(msg = nil)
-      Kernel.warn(msg || yield) if verbose?
+      return unless debug?
+
+      msg = "#{msg.inspect}\n\t#{(msg.backtrace || []).join("\n\t")}" if msg.is_a?(Exception)
+      Kernel.warn(msg || yield)
     end
 
     def absolute(file)
@@ -327,8 +327,9 @@ module Jars
       end
       local_repo = nil if local_repo.empty? || !File.exist?(local_repo)
       local_repo
-    rescue
-      Jars.warn { "error reading or parsing #{settings}" }
+    rescue => e
+      Jars.debug(e)
+      Jars.warn "error reading or parsing local settings from: #{settings}"
       nil
     end
 
