@@ -22,7 +22,7 @@ GEM
     rack (1.6.13)
     rack-protection (1.5.5)
       rack
-    ruby-maven (3.9.2)
+    ruby-maven (3.9.3)
       ruby-maven-libs (~> 3.9.9)
     ruby-maven-libs (3.9.9)
     sinatra (1.4.8)
@@ -37,7 +37,7 @@ PLATFORMS
 DEPENDENCIES
   jar-dependencies (= 0.3.0)
   leafy-complete (= 0.6.2)
-  ruby-maven (~> 3.9, >= 3.9.2)
+  ruby-maven (~> 3.9, >= 3.9.3)
   sinatra (~> 1.4)
 
 BUNDLED WITH
