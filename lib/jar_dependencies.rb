@@ -61,7 +61,7 @@ module Jars
     def lock_down(debug: false, verbose: false, **kwargs)
       ENV[SKIP_LOCK] = 'true'
       require 'jars/lock_down' # do this lazy to keep things clean
-      Jars::LockDown.new(debug, verbose).lock_down(**kwargs)
+      Jars::LockDown.new(debug, verbose).lock_down(kwargs.delete(:vendor_dir), **kwargs)
     ensure
       ENV[SKIP_LOCK] = nil
     end

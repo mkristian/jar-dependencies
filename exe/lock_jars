@@ -51,4 +51,4 @@ optparse = OptionParser.new do |opts|
 end
 optparse.parse!
 
-Jars.lock_down(options[:debug], options[:verbose], options)
+Jars.lock_down(debug: options.delete(:debug), verbose: options.delete(:verbose), **options)
